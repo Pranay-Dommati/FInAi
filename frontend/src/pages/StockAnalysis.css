@@ -369,6 +369,37 @@
   border: 2px dashed #cbd5e1;
 }
 
+/* TradingView Widget Specific Styles */
+.chart-frame {
+  min-height: 500px !important;
+  width: 100% !important;
+  position: relative;
+}
+
+.tradingview-widget-container {
+  height: 100% !important;
+  width: 100% !important;
+}
+
+.tradingview-widget-container__widget {
+  height: 100% !important;
+  width: 100% !important;
+}
+
+.tradingview-chart iframe {
+  border-radius: 8px !important;
+  border: none !important;
+}
+
+/* Override any conflicting styles */
+.chart-frame * {
+  box-sizing: border-box;
+}
+
+.chart-frame script {
+  display: block;
+}
+
 /* Analysis Grid */
 .analysis-grid {
   display: grid;

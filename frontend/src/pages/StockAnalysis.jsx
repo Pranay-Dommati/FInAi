@@ -163,52 +163,161 @@ const StockAnalysis = () => {
     }).format(value);
   };
 
-  // TradingView Widget
+  // TradingView Widget - Working HTML embed approach
   const initTradingViewWidget = (symbol) => {
     console.log("Initializing TradingView widget for", symbol);
     
-    setTimeout(() => {
-      if (chartContainerRef.current) {
-        try {
-          // Clear any existing content
-          chartContainerRef.current.innerHTML = '';
-          
-          // Create a placeholder message
-          const tempEl = document.createElement('div');
-          tempEl.innerHTML = `<div style="padding: 20px; text-align: center;">Loading chart for ${symbol}...</div>`;
-          chartContainerRef.current.appendChild(tempEl);
-          
-          // Create the TradingView widget with a short delay
-          setTimeout(() => {
-            chartContainerRef.current.innerHTML = '';
-            
-            const script = document.createElement('script');
-            script.src = 'https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js';
-            script.type = 'text/javascript';
-            script.async = true;
-            script.innerHTML = JSON.stringify({
-              autosize: true,
-              symbol: `NASDAQ:${symbol}`,
-              interval: "D",
-              timezone: "Etc/UTC",
-              theme: "light",
-              style: "1",
-              locale: "en",
-              toolbar_bg: "#f1f3f6",
-              enable_publishing: false,
-              allow_symbol_change: true,
-              container_id: "tradingview_chart"
-            });
-            
-            chartContainerRef.current.appendChild(script);
-          }, 300);
-        } catch (error) {
-          console.error("Error initializing TradingView widget:", error);
-        }
-      } else {
-        console.error("Chart container reference not available");
-      }
-    }, 100);
+    if (!chartContainerRef.current) {
+      console.error("Chart container reference not available");
+      return;
+    }
+
+    // Clear container
+    chartContainerRef.current.innerHTML = '';
+    
+    try {
+      // Generate unique container ID
+      const widgetId = `tradingview_${symbol.replace(/[^a-zA-Z0-9]/g, '')}_${Date.now()}`;
+      
+      // Create the TradingView widget HTML directly
+      const widgetHTML = `
+        <!-- TradingView Widget BEGIN -->
+        <div class="tradingview-widget-container" style="height:500px;width:100%">
+          <div class="tradingview-widget-container__widget" id="${widgetId}"></div>
+          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+          {
+            "autosize": true,
+            "symbol": "NASDAQ:${symbol}",
+            "interval": "D",
+            "timezone": "Etc/UTC",
+            "theme": "light",
+            "style": "1",
+            "locale": "en",
+            "toolbar_bg": "#f1f3f6",
+            "enable_publishing": false,
+            "allow_symbol_change": true,
+            "details": true,
+            "hotlist": false,
+            "calendar": false,
+            "studies": [
+              "Volume@tv-basicstudies"
+            ],
+            "container_id": "${widgetId}"
+          }
+          </script>
+        </div>
+        <!-- TradingView Widget END -->
+      `;
+
+      // Show loading message first
+      chartContainerRef.current.innerHTML = `
+        <div style="
+          height: 500px; 
+          display: flex; 
+          align-items: center; 
+          justify-content: center; 
+          background: #f8f9fa;
+          border: 1px solid #e9ecef;
+          border-radius: 8px;
+          font-family: Arial, sans-serif;
+          color: #6c757d;
+        ">
+          <div style="text-align: center;">
+            <div style="font-size: 20px; margin-bottom: 10px;">📈</div>
+            <div>Initializing ${symbol} chart...</div>
+            <div style="font-size: 12px; margin-top: 8px;">Powered by TradingView</div>
+          </div>
+        </div>
+      `;
+
+      // Load the actual widget after a delay
+      setTimeout(() => {
+        chartContainerRef.current.innerHTML = widgetHTML;
+        console.log(`TradingView widget HTML set for ${symbol}`);
+        
+        // Force script execution by recreating it
+        setTimeout(() => {
+          const scripts = chartContainerRef.current.getElementsByTagName('script');
+          for (let script of scripts) {
+            const newScript = document.createElement('script');
+            newScript.type = script.type;
+            newScript.src = script.src;
+            newScript.async = script.async;
+            newScript.innerHTML = script.innerHTML;
+            script.parentNode.replaceChild(newScript, script);
+          }
+          console.log(`TradingView scripts reloaded for ${symbol}`);
+        }, 100);
+        
+        // Show fallback if TradingView doesn't load within 10 seconds
+        setTimeout(() => {
+          // Check if TradingView has loaded by looking for its elements
+          const tvElements = chartContainerRef.current.querySelectorAll('iframe, canvas, .tv-embed-widget-wrapper');
+          if (tvElements.length === 0) {
+            console.log('TradingView timeout - showing fallback chart');
+            showChartError(symbol, 'TradingView chart taking too long to load');
+          }
+        }, 10000);
+        
+      }, 800);
+      
+    } catch (error) {
+      console.error("Error creating TradingView widget:", error);
+      showChartError(symbol, error.message);
+    }
+  };
+  
+  // Show chart error with fallback
+  const showChartError = (symbol, errorMessage) => {
+    if (chartContainerRef.current) {
+      chartContainerRef.current.innerHTML = `
+        <div style="
+          height: 500px; 
+          display: flex; 
+          flex-direction: column;
+          align-items: center; 
+          justify-content: center; 
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          border-radius: 8px;
+          color: white;
+          font-family: Arial, sans-serif;
+          text-align: center;
+          padding: 40px;
+        ">
+          <div style="font-size: 48px; margin-bottom: 20px;">📊</div>
+          <div style="font-size: 24px; margin-bottom: 16px; font-weight: bold;">${symbol} Chart</div>
+          <div style="font-size: 16px; margin-bottom: 20px; opacity: 0.9;">
+            Interactive chart temporarily unavailable
+          </div>
+          <div style="font-size: 14px; opacity: 0.8; max-width: 400px; line-height: 1.4; margin-bottom: 20px;">
+            ${analysis && analysis.stockData ? 
+              `Current Price: $${analysis.stockData.currentPrice?.toFixed(2) || 'N/A'}<br>
+               Change: ${analysis.stockData.change >= 0 ? '+' : ''}${analysis.stockData.change?.toFixed(2) || '0.00'} 
+               (${analysis.stockData.changePercent?.toFixed(2) || '0.00'}%)<br>
+               Volume: ${analysis.stockData.volume?.toLocaleString() || 'N/A'}` 
+              : 'Loading stock data...'}
+          </div>
+          <div style="margin-top: 20px; padding: 12px 24px; background: rgba(255,255,255,0.2); border-radius: 20px; font-size: 12px;">
+            ${errorMessage || 'Chart loading...'}
+          </div>
+          <button 
+            onclick="window.location.reload()" 
+            style="
+              margin-top: 20px;
+              background: rgba(255,255,255,0.2); 
+              color: white; 
+              border: 1px solid rgba(255,255,255,0.3); 
+              padding: 10px 20px; 
+              border-radius: 6px; 
+              cursor: pointer;
+              font-size: 14px;
+            "
+          >
+            🔄 Refresh Page
+          </button>
+        </div>
+      `;
+    }
   };
 
   useEffect(() => {
@@ -237,6 +346,18 @@ const StockAnalysis = () => {
       clearTimeout(timer);
     };
   }, []);
+  
+  // Chart initialization effect
+  useEffect(() => {
+    if (selectedStock && selectedStock.symbol && chartContainerRef.current) {
+      console.log('Selected stock changed, initializing chart for:', selectedStock.symbol);
+      const timer = setTimeout(() => {
+        initTradingViewWidget(selectedStock.symbol);
+      }, 500);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [selectedStock]);
   
   // Debug Effects
   useEffect(() => {
@@ -397,12 +518,38 @@ const StockAnalysis = () => {
           {/* TradingView Chart */}
           <div className="chart-container">
             <div className="tradingview-chart">
-              <h3>Interactive Chart - {selectedStock?.symbol}</h3>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
+                <h3 style={{ margin: 0 }}>Interactive Chart - {selectedStock?.symbol}</h3>
+                <button 
+                  onClick={() => selectedStock && initTradingViewWidget(selectedStock.symbol)}
+                  style={{
+                    padding: '8px 16px',
+                    backgroundColor: '#667eea',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontSize: '12px',
+                    fontWeight: '500'
+                  }}
+                  onMouseOver={(e) => e.target.style.backgroundColor = '#5a67d8'}
+                  onMouseOut={(e) => e.target.style.backgroundColor = '#667eea'}
+                >
+                  🔄 Refresh Chart
+                </button>
+              </div>
               <div 
                 ref={chartContainerRef}
-                id="tradingview_chart"
                 className="chart-frame"
-                style={{ height: '500px', width: '100%', border: '1px solid #ddd', borderRadius: '8px' }}
+                style={{ 
+                  height: '500px', 
+                  width: '100%', 
+                  border: '1px solid #ddd', 
+                  borderRadius: '8px',
+                  backgroundColor: '#ffffff',
+                  position: 'relative',
+                  overflow: 'hidden'
+                }}
               />
             </div>
           </div>
