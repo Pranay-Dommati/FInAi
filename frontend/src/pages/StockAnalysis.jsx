@@ -43,7 +43,6 @@ const StockAnalysis = () => {
   const [analysis, setAnalysis] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [watchlist, setWatchlist] = useState([]);
   const [chartInitialized, setChartInitialized] = useState(false);
   const chartContainerRef = useRef(null);
   const searchContainerRef = useRef(null);
@@ -199,17 +198,6 @@ const StockAnalysis = () => {
       e.preventDefault();
       // Focus could be enhanced here to navigate through results
     }
-  };
-
-  // Watchlist functions
-  const addToWatchlist = (symbol) => {
-    if (!watchlist.includes(symbol)) {
-      setWatchlist([...watchlist, symbol]);
-    }
-  };
-
-  const removeFromWatchlist = (symbol) => {
-    setWatchlist(watchlist.filter(item => item !== symbol));
   };
 
   // Get sentiment color
@@ -686,27 +674,6 @@ const StockAnalysis = () => {
                 )}
               </div>
             )}
-            
-            {/* Action Buttons */}
-            <div className="action-buttons">
-              <button className="btn btn-buy">Buy</button>
-              <button className="btn btn-sell">Sell</button>
-              {watchlist.includes(selectedStock?.symbol) ? (
-                <button 
-                  className="btn btn-watchlist active"
-                  onClick={() => removeFromWatchlist(selectedStock.symbol)}
-                >
-                  Remove from Watchlist
-                </button>
-              ) : (
-                <button 
-                  className="btn btn-watchlist"
-                  onClick={() => addToWatchlist(selectedStock.symbol)}
-                >
-                  Add to Watchlist
-                </button>
-              )}
-            </div>
           </div>
 
           {/* TradingView Chart */}
