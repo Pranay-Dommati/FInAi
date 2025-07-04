@@ -12,7 +12,6 @@ function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navItems = [
-    { path: '/', label: 'Home', icon: <FaHome /> },
     { path: '/stockanalysis', label: 'Stock Analysis', icon: <FaChartLine /> },
     { path: '/trends', label: 'Economic Trends', icon: <FaChartBar /> },
     { path: '/planning', label: 'Planning', icon: <FaBriefcase /> }
@@ -25,9 +24,11 @@ function Navigation() {
           {/* Logo */}
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                FinAI
-              </h1>
+              <Link to="/" className="hover:opacity-80 transition-opacity">
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                  FinAI
+                </h1>
+              </Link>
             </div>
           </div>
 

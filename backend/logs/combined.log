@@ -6849,3 +6849,142 @@
 {"level":"error","message":"Error fetching FMP news for general:","service":"finai-backend","timestamp":"2025-07-04T19:00:01.896Z"}
 {"level":"info","message":"FMP general news failed, no news data available","service":"finai-backend","timestamp":"2025-07-04T19:00:01.897Z"}
 {"level":"info","message":"✅ News refresh completed","service":"finai-backend","timestamp":"2025-07-04T19:00:01.898Z"}
+{"level":"info","message":"GET /api/stock-analysis/search?q=a - ::1","service":"finai-backend","timestamp":"2025-07-04T19:02:05.235Z"}
+{"level":"info","message":"API request for stock search: a","service":"finai-backend","timestamp":"2025-07-04T19:02:05.243Z"}
+{"level":"info","message":"Searching for stocks with query: a","service":"finai-backend","timestamp":"2025-07-04T19:02:05.244Z"}
+{"level":"info","message":"GET /api/stock-analysis/search?q=ap - ::1","service":"finai-backend","timestamp":"2025-07-04T19:02:05.412Z"}
+{"level":"info","message":"API request for stock search: ap","service":"finai-backend","timestamp":"2025-07-04T19:02:05.413Z"}
+{"level":"info","message":"Searching for stocks with query: ap","service":"finai-backend","timestamp":"2025-07-04T19:02:05.413Z"}
+{"level":"info","message":"Found 7 search results for: a","service":"finai-backend","timestamp":"2025-07-04T19:02:05.536Z"}
+{"level":"info","message":"GET /api/stock-analysis/search?q=app - ::1","service":"finai-backend","timestamp":"2025-07-04T19:02:05.542Z"}
+{"level":"info","message":"API request for stock search: app","service":"finai-backend","timestamp":"2025-07-04T19:02:05.543Z"}
+{"level":"info","message":"Searching for stocks with query: app","service":"finai-backend","timestamp":"2025-07-04T19:02:05.544Z"}
+{"level":"info","message":"Found 7 search results for: ap","service":"finai-backend","timestamp":"2025-07-04T19:02:05.566Z"}
+{"level":"info","message":"Found 7 search results for: app","service":"finai-backend","timestamp":"2025-07-04T19:02:05.660Z"}
+{"level":"info","message":"GET /api/stock-analysis/search?q=appl - ::1","service":"finai-backend","timestamp":"2025-07-04T19:02:05.725Z"}
+{"level":"info","message":"API request for stock search: appl","service":"finai-backend","timestamp":"2025-07-04T19:02:05.726Z"}
+{"level":"info","message":"Searching for stocks with query: appl","service":"finai-backend","timestamp":"2025-07-04T19:02:05.727Z"}
+{"level":"info","message":"GET /api/stock-analysis/search?q=apple - ::1","service":"finai-backend","timestamp":"2025-07-04T19:02:05.832Z"}
+{"level":"info","message":"API request for stock search: apple","service":"finai-backend","timestamp":"2025-07-04T19:02:05.837Z"}
+{"level":"info","message":"Searching for stocks with query: apple","service":"finai-backend","timestamp":"2025-07-04T19:02:05.841Z"}
+{"level":"info","message":"Found 7 search results for: appl","service":"finai-backend","timestamp":"2025-07-04T19:02:05.859Z"}
+{"level":"info","message":"Found 7 search results for: apple","service":"finai-backend","timestamp":"2025-07-04T19:02:05.997Z"}
+{"level":"info","message":"GET /api/stock-analysis/analyze/AAPL - ::1","service":"finai-backend","timestamp":"2025-07-04T19:02:07.247Z"}
+{"level":"info","message":"API request for stock analysis: AAPL","service":"finai-backend","timestamp":"2025-07-04T19:02:07.248Z"}
+{"level":"info","message":"Starting comprehensive analysis for AAPL","service":"finai-backend","timestamp":"2025-07-04T19:02:07.249Z"}
+{"level":"info","message":"Fetching Alpha Vantage quote for AAPL","service":"finai-backend","timestamp":"2025-07-04T19:02:07.249Z"}
+{"level":"info","message":"Fetching Yahoo Finance data for AAPL","service":"finai-backend","timestamp":"2025-07-04T19:02:07.253Z"}
+{"level":"info","message":"Fetching Alpha Vantage news for AAPL","service":"finai-backend","timestamp":"2025-07-04T19:02:07.254Z"}
+{"level":"info","message":"Fetching Alpha Vantage company overview for AAPL","service":"finai-backend","timestamp":"2025-07-04T19:02:07.257Z"}
+{"level":"info","message":"Returning cached Alpha Vantage overview for AAPL","service":"finai-backend","timestamp":"2025-07-04T19:02:07.258Z"}
+{"level":"info","message":"Fetching Alpha Vantage RSI for AAPL","service":"finai-backend","timestamp":"2025-07-04T19:02:07.258Z"}
+{"level":"info","message":"Fetching Alpha Vantage MACD for AAPL","service":"finai-backend","timestamp":"2025-07-04T19:02:07.261Z"}
+{"level":"info","message":"Fetching Alpha Vantage SMA for AAPL","service":"finai-backend","timestamp":"2025-07-04T19:02:07.265Z"}
+{"level":"info","message":"Fetching FRED data for series: GDP","service":"finai-backend","timestamp":"2025-07-04T19:02:07.268Z"}
+{"level":"info","message":"Returning cached FRED data for GDP","service":"finai-backend","timestamp":"2025-07-04T19:02:07.268Z"}
+{"level":"info","message":"Fetching FRED data for series: CPIAUCSL","service":"finai-backend","timestamp":"2025-07-04T19:02:07.269Z"}
+{"level":"info","message":"Returning cached FRED data for CPIAUCSL","service":"finai-backend","timestamp":"2025-07-04T19:02:07.269Z"}
+{"level":"info","message":"Fetching FRED data for series: UNRATE","service":"finai-backend","timestamp":"2025-07-04T19:02:07.270Z"}
+{"level":"info","message":"Returning cached FRED data for UNRATE","service":"finai-backend","timestamp":"2025-07-04T19:02:07.270Z"}
+{"level":"info","message":"Yahoo Finance data fetched successfully for AAPL","service":"finai-backend","timestamp":"2025-07-04T19:02:07.343Z"}
+{"level":"warn","message":"No Alpha Vantage RSI data found for AAPL:","service":"finai-backend","timestamp":"2025-07-04T19:02:07.544Z"}
+{"level":"warn","message":"No Alpha Vantage SMA data found for AAPL:","service":"finai-backend","timestamp":"2025-07-04T19:02:07.559Z"}
+{"level":"warn","message":"No Alpha Vantage data found for AAPL","service":"finai-backend","timestamp":"2025-07-04T19:02:07.559Z"}
+{"level":"warn","message":"No Alpha Vantage MACD data found for AAPL:","service":"finai-backend","timestamp":"2025-07-04T19:02:07.929Z"}
+{"level":"info","message":"Generated comprehensive analysis for AAPL","service":"finai-backend","timestamp":"2025-07-04T19:02:07.930Z"}
+{"level":"info","message":"GET /api/stock-analysis/analyze/AAPL - ::1","service":"finai-backend","timestamp":"2025-07-04T19:02:07.936Z"}
+{"level":"info","message":"API request for stock analysis: AAPL","service":"finai-backend","timestamp":"2025-07-04T19:02:07.937Z"}
+{"level":"info","message":"Starting comprehensive analysis for AAPL","service":"finai-backend","timestamp":"2025-07-04T19:02:07.938Z"}
+{"level":"info","message":"Returning cached analysis for AAPL","service":"finai-backend","timestamp":"2025-07-04T19:02:07.938Z"}
+{"level":"info","message":"GET /api/stock-analysis/analyze/AAPL - ::1","service":"finai-backend","timestamp":"2025-07-04T19:02:08.245Z"}
+{"level":"info","message":"API request for stock analysis: AAPL","service":"finai-backend","timestamp":"2025-07-04T19:02:08.247Z"}
+{"level":"info","message":"Starting comprehensive analysis for AAPL","service":"finai-backend","timestamp":"2025-07-04T19:02:08.248Z"}
+{"level":"info","message":"Returning cached analysis for AAPL","service":"finai-backend","timestamp":"2025-07-04T19:02:08.248Z"}
+{"level":"info","message":"GET /api/stock-analysis/search?q=a - ::1","service":"finai-backend","timestamp":"2025-07-04T19:03:05.789Z"}
+{"level":"info","message":"API request for stock search: a","service":"finai-backend","timestamp":"2025-07-04T19:03:05.792Z"}
+{"level":"info","message":"Searching for stocks with query: a","service":"finai-backend","timestamp":"2025-07-04T19:03:05.793Z"}
+{"level":"info","message":"Found 7 search results for: a","service":"finai-backend","timestamp":"2025-07-04T19:03:05.879Z"}
+{"level":"info","message":"GET /api/stock-analysis/search?q=ap - ::1","service":"finai-backend","timestamp":"2025-07-04T19:03:05.925Z"}
+{"level":"info","message":"API request for stock search: ap","service":"finai-backend","timestamp":"2025-07-04T19:03:05.927Z"}
+{"level":"info","message":"Searching for stocks with query: ap","service":"finai-backend","timestamp":"2025-07-04T19:03:05.928Z"}
+{"level":"info","message":"Found 7 search results for: ap","service":"finai-backend","timestamp":"2025-07-04T19:03:06.045Z"}
+{"level":"info","message":"GET /api/stock-analysis/search?q=app - ::1","service":"finai-backend","timestamp":"2025-07-04T19:03:06.077Z"}
+{"level":"info","message":"API request for stock search: app","service":"finai-backend","timestamp":"2025-07-04T19:03:06.079Z"}
+{"level":"info","message":"Searching for stocks with query: app","service":"finai-backend","timestamp":"2025-07-04T19:03:06.084Z"}
+{"level":"info","message":"Found 7 search results for: app","service":"finai-backend","timestamp":"2025-07-04T19:03:06.114Z"}
+{"level":"info","message":"GET /api/stock-analysis/search?q=ap - ::1","service":"finai-backend","timestamp":"2025-07-04T19:03:21.206Z"}
+{"level":"info","message":"API request for stock search: ap","service":"finai-backend","timestamp":"2025-07-04T19:03:21.208Z"}
+{"level":"info","message":"Searching for stocks with query: ap","service":"finai-backend","timestamp":"2025-07-04T19:03:21.208Z"}
+{"level":"info","message":"Found 7 search results for: ap","service":"finai-backend","timestamp":"2025-07-04T19:03:21.361Z"}
+{"level":"info","message":"GET /api/stock-analysis/search?q=a - ::1","service":"finai-backend","timestamp":"2025-07-04T19:03:21.366Z"}
+{"level":"info","message":"API request for stock search: a","service":"finai-backend","timestamp":"2025-07-04T19:03:21.366Z"}
+{"level":"info","message":"Searching for stocks with query: a","service":"finai-backend","timestamp":"2025-07-04T19:03:21.367Z"}
+{"level":"info","message":"Found 7 search results for: a","service":"finai-backend","timestamp":"2025-07-04T19:03:21.502Z"}
+{"level":"info","message":"GET /api/stock-analysis/search?q=a - ::1","service":"finai-backend","timestamp":"2025-07-04T19:04:27.273Z"}
+{"level":"info","message":"API request for stock search: a","service":"finai-backend","timestamp":"2025-07-04T19:04:27.283Z"}
+{"level":"info","message":"Searching for stocks with query: a","service":"finai-backend","timestamp":"2025-07-04T19:04:27.284Z"}
+{"level":"info","message":"GET /api/stock-analysis/search?q=ap - ::1","service":"finai-backend","timestamp":"2025-07-04T19:04:27.384Z"}
+{"level":"info","message":"API request for stock search: ap","service":"finai-backend","timestamp":"2025-07-04T19:04:27.385Z"}
+{"level":"info","message":"Searching for stocks with query: ap","service":"finai-backend","timestamp":"2025-07-04T19:04:27.386Z"}
+{"level":"info","message":"GET /api/stock-analysis/search?q=app - ::1","service":"finai-backend","timestamp":"2025-07-04T19:04:27.546Z"}
+{"level":"info","message":"API request for stock search: app","service":"finai-backend","timestamp":"2025-07-04T19:04:27.548Z"}
+{"level":"info","message":"Searching for stocks with query: app","service":"finai-backend","timestamp":"2025-07-04T19:04:27.548Z"}
+{"level":"info","message":"Found 7 search results for: ap","service":"finai-backend","timestamp":"2025-07-04T19:04:27.599Z"}
+{"level":"info","message":"Found 7 search results for: a","service":"finai-backend","timestamp":"2025-07-04T19:04:27.634Z"}
+{"level":"info","message":"Found 7 search results for: app","service":"finai-backend","timestamp":"2025-07-04T19:04:27.745Z"}
+{"level":"info","message":"GET /api/stock-analysis/search?q=a - ::1","service":"finai-backend","timestamp":"2025-07-04T19:04:36.600Z"}
+{"level":"info","message":"API request for stock search: a","service":"finai-backend","timestamp":"2025-07-04T19:04:36.601Z"}
+{"level":"info","message":"Searching for stocks with query: a","service":"finai-backend","timestamp":"2025-07-04T19:04:36.601Z"}
+{"level":"info","message":"Found 7 search results for: a","service":"finai-backend","timestamp":"2025-07-04T19:04:36.835Z"}
+{"level":"info","message":"GET /api/stock-analysis/search?q=ap - ::1","service":"finai-backend","timestamp":"2025-07-04T19:04:36.910Z"}
+{"level":"info","message":"API request for stock search: ap","service":"finai-backend","timestamp":"2025-07-04T19:04:36.912Z"}
+{"level":"info","message":"Searching for stocks with query: ap","service":"finai-backend","timestamp":"2025-07-04T19:04:36.912Z"}
+{"level":"info","message":"Found 7 search results for: ap","service":"finai-backend","timestamp":"2025-07-04T19:04:37.058Z"}
+{"level":"info","message":"GET /api/stock-analysis/search?q=app - ::1","service":"finai-backend","timestamp":"2025-07-04T19:04:37.077Z"}
+{"level":"info","message":"API request for stock search: app","service":"finai-backend","timestamp":"2025-07-04T19:04:37.079Z"}
+{"level":"info","message":"Searching for stocks with query: app","service":"finai-backend","timestamp":"2025-07-04T19:04:37.079Z"}
+{"level":"info","message":"Found 7 search results for: app","service":"finai-backend","timestamp":"2025-07-04T19:04:37.221Z"}
+{"level":"info","message":"GET /api/stock-analysis/search?q=a - ::1","service":"finai-backend","timestamp":"2025-07-04T19:04:46.891Z"}
+{"level":"info","message":"API request for stock search: a","service":"finai-backend","timestamp":"2025-07-04T19:04:46.892Z"}
+{"level":"info","message":"Searching for stocks with query: a","service":"finai-backend","timestamp":"2025-07-04T19:04:46.893Z"}
+{"level":"info","message":"GET /api/stock-analysis/search?q=ap - ::1","service":"finai-backend","timestamp":"2025-07-04T19:04:47.008Z"}
+{"level":"info","message":"API request for stock search: ap","service":"finai-backend","timestamp":"2025-07-04T19:04:47.009Z"}
+{"level":"info","message":"Searching for stocks with query: ap","service":"finai-backend","timestamp":"2025-07-04T19:04:47.009Z"}
+{"level":"info","message":"GET /api/stock-analysis/search?q=app - ::1","service":"finai-backend","timestamp":"2025-07-04T19:04:47.137Z"}
+{"level":"info","message":"API request for stock search: app","service":"finai-backend","timestamp":"2025-07-04T19:04:47.138Z"}
+{"level":"info","message":"Searching for stocks with query: app","service":"finai-backend","timestamp":"2025-07-04T19:04:47.138Z"}
+{"level":"info","message":"Found 7 search results for: a","service":"finai-backend","timestamp":"2025-07-04T19:04:47.169Z"}
+{"level":"info","message":"Found 7 search results for: ap","service":"finai-backend","timestamp":"2025-07-04T19:04:47.203Z"}
+{"level":"info","message":"Found 7 search results for: app","service":"finai-backend","timestamp":"2025-07-04T19:04:47.324Z"}
+{"level":"info","message":"GET /api/stock-analysis/search?q=appp - ::1","service":"finai-backend","timestamp":"2025-07-04T19:04:47.697Z"}
+{"level":"info","message":"API request for stock search: appp","service":"finai-backend","timestamp":"2025-07-04T19:04:47.698Z"}
+{"level":"info","message":"Searching for stocks with query: appp","service":"finai-backend","timestamp":"2025-07-04T19:04:47.699Z"}
+{"level":"info","message":"Found 0 search results for: appp","service":"finai-backend","timestamp":"2025-07-04T19:04:47.826Z"}
+{"level":"info","message":"GET /api/stock-analysis/search?q=apppl - ::1","service":"finai-backend","timestamp":"2025-07-04T19:04:47.895Z"}
+{"level":"info","message":"API request for stock search: apppl","service":"finai-backend","timestamp":"2025-07-04T19:04:47.896Z"}
+{"level":"info","message":"Searching for stocks with query: apppl","service":"finai-backend","timestamp":"2025-07-04T19:04:47.896Z"}
+{"level":"info","message":"Found 0 search results for: apppl","service":"finai-backend","timestamp":"2025-07-04T19:04:48.024Z"}
+{"level":"info","message":"GET /api/stock-analysis/search?q=appple - ::1","service":"finai-backend","timestamp":"2025-07-04T19:04:48.029Z"}
+{"level":"info","message":"API request for stock search: appple","service":"finai-backend","timestamp":"2025-07-04T19:04:48.031Z"}
+{"level":"info","message":"Searching for stocks with query: appple","service":"finai-backend","timestamp":"2025-07-04T19:04:48.032Z"}
+{"level":"info","message":"Found 0 search results for: appple","service":"finai-backend","timestamp":"2025-07-04T19:04:48.164Z"}
+{"level":"info","message":"GET /api/stock-analysis/search?q=apppl - ::1","service":"finai-backend","timestamp":"2025-07-04T19:04:49.042Z"}
+{"level":"info","message":"API request for stock search: apppl","service":"finai-backend","timestamp":"2025-07-04T19:04:49.045Z"}
+{"level":"info","message":"Searching for stocks with query: apppl","service":"finai-backend","timestamp":"2025-07-04T19:04:49.045Z"}
+{"level":"info","message":"Found 0 search results for: apppl","service":"finai-backend","timestamp":"2025-07-04T19:04:49.071Z"}
+{"level":"info","message":"GET /api/stock-analysis/search?q=appp - ::1","service":"finai-backend","timestamp":"2025-07-04T19:04:49.203Z"}
+{"level":"info","message":"API request for stock search: appp","service":"finai-backend","timestamp":"2025-07-04T19:04:49.204Z"}
+{"level":"info","message":"Searching for stocks with query: appp","service":"finai-backend","timestamp":"2025-07-04T19:04:49.204Z"}
+{"level":"info","message":"Found 0 search results for: appp","service":"finai-backend","timestamp":"2025-07-04T19:04:49.231Z"}
+{"level":"info","message":"GET /api/stock-analysis/search?q=app - ::1","service":"finai-backend","timestamp":"2025-07-04T19:04:49.926Z"}
+{"level":"info","message":"API request for stock search: app","service":"finai-backend","timestamp":"2025-07-04T19:04:49.927Z"}
+{"level":"info","message":"Searching for stocks with query: app","service":"finai-backend","timestamp":"2025-07-04T19:04:49.927Z"}
+{"level":"info","message":"Found 7 search results for: app","service":"finai-backend","timestamp":"2025-07-04T19:04:49.953Z"}
+{"level":"info","message":"GET /api/stock-analysis/search?q=ap - ::1","service":"finai-backend","timestamp":"2025-07-04T19:04:50.474Z"}
+{"level":"info","message":"API request for stock search: ap","service":"finai-backend","timestamp":"2025-07-04T19:04:50.476Z"}
+{"level":"info","message":"Searching for stocks with query: ap","service":"finai-backend","timestamp":"2025-07-04T19:04:50.477Z"}
+{"level":"info","message":"Found 7 search results for: ap","service":"finai-backend","timestamp":"2025-07-04T19:04:50.504Z"}
+{"level":"info","message":"GET /api/stock-analysis/search?q=a - ::1","service":"finai-backend","timestamp":"2025-07-04T19:04:50.507Z"}
+{"level":"info","message":"API request for stock search: a","service":"finai-backend","timestamp":"2025-07-04T19:04:50.507Z"}
+{"level":"info","message":"Searching for stocks with query: a","service":"finai-backend","timestamp":"2025-07-04T19:04:50.508Z"}
+{"level":"info","message":"Found 7 search results for: a","service":"finai-backend","timestamp":"2025-07-04T19:04:50.705Z"}
