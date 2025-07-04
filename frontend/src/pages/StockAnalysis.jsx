@@ -613,14 +613,6 @@ const StockAnalysis = () => {
         </div>
       )}
 
-      {/* Debug Info - Visible during development to help troubleshoot */}
-      <div style={{ padding: '10px', background: '#f0f0f0', margin: '10px 0', fontSize: '12px' }}>
-        <p>Analysis Data: {analysis ? 'Present' : 'Not Present'}</p>
-        <p>Loading: {loading ? 'Yes' : 'No'}</p>
-        <p>Selected Stock: {selectedStock ? selectedStock.symbol : 'None'}</p>
-        <p>Error: {error ? error : 'None'}</p>
-      </div>
-      
       {/* Waiting for data - informative message */}
       {selectedStock && !loading && !analysis && !error && (
         <div className="waiting-container" style={{ padding: '20px', margin: '20px 0', textAlign: 'center', border: '1px dashed #ccc' }}>
@@ -853,44 +845,6 @@ const StockAnalysis = () => {
                       <p>{analysis.riskAssessment.recommendation}</p>
                     </div>
                   )}
-                </div>
-              )}
-            </div>
-
-            {/* News Analysis */}
-            <div className="analysis-card news-card">
-              <h3>Recent News & Analysis</h3>
-              {analysis.recentNews?.error ? (
-                <ErrorDisplay 
-                  error={analysis.recentNews} 
-                  title="News Data Unavailable" 
-                />
-              ) : analysis.recentNews && analysis.recentNews.length > 0 ? (
-                <div className="news-content">
-                  {analysis.recentNews.slice(0, 5).map((article, index) => (
-                    <div key={index} className="news-item">
-                      <h4>{article.title}</h4>
-                      <div className="news-meta">
-                        <span className="news-source">{article.source}</span>
-                        <span className="news-date">
-                          {new Date(article.timestamp || article.publishedAt).toLocaleDateString()}
-                        </span>
-                        {article.sentiment && (
-                          <span 
-                            className="news-sentiment"
-                            style={{ color: getSentimentColor(article.sentiment) }}
-                          >
-                            {article.sentiment}
-                          </span>
-                        )}
-                      </div>
-                      <p className="news-summary">{article.summary}</p>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="no-data">
-                  <p>No recent news available for this stock</p>
                 </div>
               )}
             </div>
