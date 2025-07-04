@@ -125,9 +125,9 @@ const WelcomePage = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-[calc(100vh-4rem)] px-4">
-      <div className="max-w-3xl w-full rounded-xl p-8 flex flex-col items-center backdrop-blur-sm">
-        <div className="text-center mb-10">
+    <div className="fixed inset-0 flex flex-col items-center justify-center px-4">
+      <div className="max-w-3xl w-full rounded-xl p-6 flex flex-col items-center backdrop-blur-sm">
+        <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-2">
             <RiRobot2Fill className="text-indigo-500 text-5xl" />
             <h1 className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
@@ -135,7 +135,7 @@ const WelcomePage = () => {
             </h1>
           </div>
           <p className="text-gray-500 max-w-lg mx-auto">
-            FinBERT sentiment analysis • Real-time data • AI risk assessment • Smart recommendations
+            Real-time data • AI risk assessment • Smart recommendations
           </p>
         </div>
 
@@ -156,7 +156,7 @@ const WelcomePage = () => {
 
           {/* Search results dropdown */}
           {searchResults.length > 0 && (
-            <div className="absolute w-full mt-2 bg-white rounded-lg shadow-lg border border-gray-200 z-50 overflow-hidden max-h-60 overflow-y-auto">
+            <div className="absolute w-full mt-2 bg-white rounded-lg shadow-lg border border-gray-200 z-50 overflow-hidden max-h-36 overflow-y-auto">
               {searchResults.map((result) => (
                 <div
                   key={result.symbol}
