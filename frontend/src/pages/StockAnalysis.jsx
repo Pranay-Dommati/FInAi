@@ -132,6 +132,23 @@ const StockAnalysis = () => {
     searchStocks(value);
   };
 
+  // Handle search input key press
+  const handleSearchKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      
+      // If there are search results, select the first one
+      if (searchResults.length > 0) {
+        handleStockSelect(searchResults[0]);
+      } else if (searchTerm.trim()) {
+        // If no search results but there's a search term, try direct analysis
+        // This handles cases where the user types a symbol directly
+        const symbol = searchTerm.trim().toUpperCase();
+        handleStockSelect({ symbol, name: symbol });
+      }
+    }
+  };
+
   // Watchlist functions
   const addToWatchlist = (symbol) => {
     if (!watchlist.includes(symbol)) {
@@ -155,7 +172,12 @@ const StockAnalysis = () => {
 
   // Format percentage
   const formatPercent = (value) => {
-    return value > 0 ? `+${value.toFixed(2)}%` : `${value.toFixed(2)}%`;
+    // Ensure value is a number before formatting
+    const numValue = parseFloat(value);
+    if (isNaN(numValue)) {
+      return 'N/A';
+    }
+    return numValue > 0 ? `+${numValue.toFixed(2)}%` : `${numValue.toFixed(2)}%`;
   };
 
   // Format currency
@@ -178,8 +200,13 @@ const StockAnalysis = () => {
     // Reset chart initialization state
     setChartInitialized(false);
 
-    // Clear container
-    chartContainerRef.current.innerHTML = '';
+    // Clear container with null check
+    if (chartContainerRef.current) {
+      chartContainerRef.current.innerHTML = '';
+    } else {
+      console.error("Chart container reference is null");
+      return;
+    }
     
     try {
       // Generate unique container ID
@@ -215,54 +242,62 @@ const StockAnalysis = () => {
         <!-- TradingView Widget END -->
       `;
 
-      // Show loading message first
-      chartContainerRef.current.innerHTML = `
-        <div style="
-          height: 500px; 
-          display: flex; 
-          align-items: center; 
-          justify-content: center; 
-          background: #f8f9fa;
-          border: 1px solid #e9ecef;
-          border-radius: 8px;
-          font-family: Arial, sans-serif;
-          color: #6c757d;
-        ">
-          <div style="text-align: center;">
-            <div style="font-size: 20px; margin-bottom: 10px;">📈</div>
-            <div>Initializing ${symbol} chart...</div>
-            <div style="font-size: 12px; margin-top: 8px;">Powered by TradingView</div>
+      // Show loading message first (with null check)
+      if (chartContainerRef.current) {
+        chartContainerRef.current.innerHTML = `
+          <div style="
+            height: 500px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            font-family: Arial, sans-serif;
+            color: #6c757d;
+          ">
+            <div style="text-align: center;">
+              <div style="font-size: 20px; margin-bottom: 10px;">📈</div>
+              <div>Initializing ${symbol} chart...</div>
+              <div style="font-size: 12px; margin-top: 8px;">Powered by TradingView</div>
+            </div>
           </div>
-        </div>
-      `;
+        `;
+      }
 
       // Load the actual widget after a delay
       setTimeout(() => {
-        chartContainerRef.current.innerHTML = widgetHTML;
-        console.log(`TradingView widget HTML set for ${symbol}`);
+        if (chartContainerRef.current) {
+          chartContainerRef.current.innerHTML = widgetHTML;
+          console.log(`TradingView widget HTML set for ${symbol}`);
+        }
         
         // Force script execution by recreating it
         setTimeout(() => {
-          const scripts = chartContainerRef.current.getElementsByTagName('script');
-          for (let script of scripts) {
-            const newScript = document.createElement('script');
-            newScript.type = script.type;
-            newScript.src = script.src;
-            newScript.async = script.async;
-            newScript.innerHTML = script.innerHTML;
-            script.parentNode.replaceChild(newScript, script);
+          if (chartContainerRef.current) {
+            const scripts = chartContainerRef.current.getElementsByTagName('script');
+            for (let script of scripts) {
+              const newScript = document.createElement('script');
+              newScript.type = script.type;
+              newScript.src = script.src;
+              newScript.async = script.async;
+              newScript.innerHTML = script.innerHTML;
+              script.parentNode.replaceChild(newScript, script);
+            }
+            console.log(`TradingView scripts reloaded for ${symbol}`);
+            setChartInitialized(true);
           }
-          console.log(`TradingView scripts reloaded for ${symbol}`);
-          setChartInitialized(true);
         }, 200);
         
         // Show fallback if TradingView doesn't load within 10 seconds
         setTimeout(() => {
-          // Check if TradingView has loaded by looking for its elements
-          const tvElements = chartContainerRef.current.querySelectorAll('iframe, canvas, .tv-embed-widget-wrapper');
-          if (tvElements.length === 0) {
-            console.log('TradingView timeout - showing fallback chart');
-            showChartError(symbol, 'TradingView chart taking too long to load');
+          if (chartContainerRef.current) {
+            // Check if TradingView has loaded by looking for its elements
+            const tvElements = chartContainerRef.current.querySelectorAll('iframe, canvas, .tv-embed-widget-wrapper');
+            if (tvElements.length === 0) {
+              console.log('TradingView timeout - showing fallback chart');
+              showChartError(symbol, 'TradingView chart taking too long to load');
+            }
           }
         }, 10000);
         
@@ -407,6 +442,7 @@ const StockAnalysis = () => {
             placeholder="Search stocks (e.g., AAPL, Tesla, Microsoft)..."
             value={searchTerm}
             onChange={handleSearchChange}
+            onKeyDown={handleSearchKeyPress}
             className="search-input"
           />
           {searchResults.length > 0 && (
@@ -417,8 +453,25 @@ const StockAnalysis = () => {
                   className="search-result-item"
                   onClick={() => handleStockSelect(stock)}
                 >
-                  <div className="search-result-symbol">{stock.symbol}</div>
-                  <div className="search-result-name">{stock.name}</div>
+                  <div className="search-result-content">
+                    {stock.logo && (
+                      <img 
+                        src={stock.logo} 
+                        alt={`${stock.name} logo`}
+                        className="search-result-logo"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                        }}
+                      />
+                    )}
+                    <div className="search-result-info">
+                      <div className="search-result-symbol">{stock.symbol}</div>
+                      <div className="search-result-name">{stock.name}</div>
+                      {stock.sector && (
+                        <div className="search-result-sector">{stock.sector}</div>
+                      )}
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
@@ -484,11 +537,28 @@ const StockAnalysis = () => {
               />
             ) : (
               <div className="stock-info">
-                <h2>{analysis.stockData?.name || selectedStock?.name || 'Unknown Company'}</h2>
-                <div className="stock-symbol">{analysis.stockData?.symbol || selectedStock?.symbol}</div>
+                <div className="stock-header">
+                  {selectedStock?.logo && (
+                    <img 
+                      src={selectedStock.logo} 
+                      alt={`${selectedStock.name} logo`}
+                      className="stock-logo"
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                      }}
+                    />
+                  )}
+                  <div className="stock-title-info">
+                    <h2>{analysis.stockData?.name || selectedStock?.name || 'Unknown Company'}</h2>
+                    <div className="stock-symbol">{analysis.stockData?.symbol || selectedStock?.symbol}</div>
+                    {selectedStock?.sector && (
+                      <div className="stock-sector">{selectedStock.sector}</div>
+                    )}
+                  </div>
+                </div>
                 <div className="stock-price">
                   {analysis.stockData?.currentPrice && formatCurrency(analysis.stockData.currentPrice)}
-                  {analysis.stockData?.changePercent && (
+                  {analysis.stockData?.changePercent != null && !isNaN(analysis.stockData.changePercent) && (
                     <span 
                       className={`price-change ${analysis.stockData.changePercent >= 0 ? 'positive' : 'negative'}`}
                     >

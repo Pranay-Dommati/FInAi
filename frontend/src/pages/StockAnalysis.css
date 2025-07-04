@@ -183,16 +183,45 @@
   border-bottom: none;
 }
 
+.search-result-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.search-result-logo {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  object-fit: contain;
+  background: #f9fafb;
+  padding: 2px;
+  border: 1px solid #e5e7eb;
+}
+
+.search-result-info {
+  flex: 1;
+  min-width: 0;
+}
+
 .search-result-symbol {
   font-weight: 600;
   color: #1f2937;
   font-size: 1rem;
+  margin-bottom: 2px;
 }
 
 .search-result-name {
-  color: #6b7280;
+  color: #374151;
   font-size: 0.9rem;
-  margin-top: 2px;
+  margin-bottom: 2px;
+  line-height: 1.2;
+}
+
+.search-result-sector {
+  color: #6b7280;
+  font-size: 0.8rem;
+  font-style: italic;
 }
 
 /* Loading & Error States */
@@ -250,6 +279,40 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 20px;
+}
+
+.stock-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.stock-logo {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  object-fit: contain;
+  background: #f9fafb;
+  padding: 4px;
+  border: 2px solid #e5e7eb;
+  flex-shrink: 0;
+}
+
+.stock-title-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.stock-title-info h2 {
+  margin: 0 0 5px 0;
+}
+
+.stock-sector {
+  font-size: 0.9rem;
+  color: #6b7280;
+  font-style: italic;
+  margin-top: 2px;
 }
 
 .stock-info h2 {

@@ -51,23 +51,23 @@ router.get('/search', async (req, res) => {
 
     logger.info(`API request for stock search: ${query}`);
     
-    // Popular stocks database for demo purposes
+    // Popular stocks database with logo URLs
     const popularStocks = [
-      { symbol: 'AAPL', name: 'Apple Inc.', sector: 'Technology' },
-      { symbol: 'MSFT', name: 'Microsoft Corporation', sector: 'Technology' },
-      { symbol: 'GOOGL', name: 'Alphabet Inc.', sector: 'Technology' },
-      { symbol: 'AMZN', name: 'Amazon.com Inc.', sector: 'Consumer Discretionary' },
-      { symbol: 'TSLA', name: 'Tesla Inc.', sector: 'Consumer Discretionary' },
-      { symbol: 'META', name: 'Meta Platforms Inc.', sector: 'Technology' },
-      { symbol: 'NVDA', name: 'NVIDIA Corporation', sector: 'Technology' },
-      { symbol: 'JPM', name: 'JPMorgan Chase & Co.', sector: 'Financial Services' },
-      { symbol: 'JNJ', name: 'Johnson & Johnson', sector: 'Healthcare' },
-      { symbol: 'V', name: 'Visa Inc.', sector: 'Financial Services' },
-      { symbol: 'PG', name: 'Procter & Gamble', sector: 'Consumer Staples' },
-      { symbol: 'UNH', name: 'UnitedHealth Group', sector: 'Healthcare' },
-      { symbol: 'HD', name: 'Home Depot Inc.', sector: 'Consumer Discretionary' },
-      { symbol: 'BAC', name: 'Bank of America', sector: 'Financial Services' },
-      { symbol: 'MA', name: 'Mastercard Inc.', sector: 'Financial Services' }
+      { symbol: 'AAPL', name: 'Apple Inc.', sector: 'Technology', logo: 'https://logo.clearbit.com/apple.com' },
+      { symbol: 'MSFT', name: 'Microsoft Corporation', sector: 'Technology', logo: 'https://logo.clearbit.com/microsoft.com' },
+      { symbol: 'GOOGL', name: 'Alphabet Inc.', sector: 'Technology', logo: 'https://logo.clearbit.com/google.com' },
+      { symbol: 'AMZN', name: 'Amazon.com Inc.', sector: 'Consumer Discretionary', logo: 'https://logo.clearbit.com/amazon.com' },
+      { symbol: 'TSLA', name: 'Tesla Inc.', sector: 'Consumer Discretionary', logo: 'https://logo.clearbit.com/tesla.com' },
+      { symbol: 'META', name: 'Meta Platforms Inc.', sector: 'Technology', logo: 'https://logo.clearbit.com/meta.com' },
+      { symbol: 'NVDA', name: 'NVIDIA Corporation', sector: 'Technology', logo: 'https://logo.clearbit.com/nvidia.com' },
+      { symbol: 'JPM', name: 'JPMorgan Chase & Co.', sector: 'Financial Services', logo: 'https://logo.clearbit.com/jpmorgan.com' },
+      { symbol: 'JNJ', name: 'Johnson & Johnson', sector: 'Healthcare', logo: 'https://logo.clearbit.com/jnj.com' },
+      { symbol: 'V', name: 'Visa Inc.', sector: 'Financial Services', logo: 'https://logo.clearbit.com/visa.com' },
+      { symbol: 'PG', name: 'Procter & Gamble', sector: 'Consumer Staples', logo: 'https://logo.clearbit.com/pg.com' },
+      { symbol: 'UNH', name: 'UnitedHealth Group', sector: 'Healthcare', logo: 'https://logo.clearbit.com/unitedhealthgroup.com' },
+      { symbol: 'HD', name: 'Home Depot Inc.', sector: 'Consumer Discretionary', logo: 'https://logo.clearbit.com/homedepot.com' },
+      { symbol: 'BAC', name: 'Bank of America', sector: 'Financial Services', logo: 'https://logo.clearbit.com/bankofamerica.com' },
+      { symbol: 'MA', name: 'Mastercard Inc.', sector: 'Financial Services', logo: 'https://logo.clearbit.com/mastercard.com' }
     ];
 
     const searchTerm = query.toLowerCase();
@@ -84,7 +84,8 @@ router.get('/search', async (req, res) => {
         results.push({
           symbol: query.toUpperCase(),
           name: `${query.toUpperCase()} Inc.`,
-          sector: 'Unknown'
+          sector: 'Unknown',
+          logo: `https://via.placeholder.com/32x32/6366f1/ffffff?text=${query.charAt(0).toUpperCase()}`
         });
       }
     }
