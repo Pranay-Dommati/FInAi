@@ -625,51 +625,100 @@ const StockAnalysis = () => {
       {analysis && !loading && (
         <div className="analysis-container">
           {/* Stock Header */}
-          <div className="stock-header">
+          <div className="bg-gradient-to-br from-indigo-600 via-purple-600 to-purple-700 rounded-2xl p-8 mb-8 text-white shadow-2xl relative overflow-hidden">
+            {/* Background decorative elements */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full transform translate-x-20 -translate-y-20"></div>
+            <div className="absolute bottom-0 left-0 w-32 h-32 bg-white opacity-5 rounded-full transform -translate-x-10 translate-y-10"></div>
+            
             {analysis.stockData?.error ? (
               <ErrorDisplay 
                 error={analysis.stockData} 
                 title="Stock Data Unavailable" 
               />
             ) : (
-              <div className="stock-info">
-                <div className="stock-header">
-                  {selectedStock?.logo && (
-                    <img 
-                      src={selectedStock.logo} 
-                      alt={`${selectedStock.name} logo`}
-                      className="stock-logo"
-                      onError={(e) => {
-                        e.target.style.display = 'none';
-                      }}
-                    />
-                  )}
-                  <div className="stock-title-info">
-                    <h2>{analysis.stockData?.name || selectedStock?.name || 'Unknown Company'}</h2>
-                    <div className="stock-symbol">{analysis.stockData?.symbol || selectedStock?.symbol}</div>
-                    {selectedStock?.sector && (
-                      <div className="stock-sector">{selectedStock.sector}</div>
+              <div className="relative z-10">
+                {/* Main Stock Info */}
+                <div className="flex items-start justify-between mb-6">
+                  <div className="flex items-start gap-6">
+                    {selectedStock?.logo && (
+                      <img 
+                        src={selectedStock.logo} 
+                        alt={`${selectedStock.name} logo`}
+                        className="w-20 h-20 rounded-xl bg-white/90 p-2 shadow-lg flex-shrink-0"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                        }}
+                      />
+                    )}
+                    <div className="flex-1">
+                      <h1 className="text-3xl font-bold mb-2 text-white drop-shadow-sm">
+                        {analysis.stockData?.name || selectedStock?.name || 'Unknown Company'}
+                      </h1>
+                      <div className="flex items-center gap-4 mb-3">
+                        <span className="text-xl font-semibold text-white/90 tracking-wide">
+                          {analysis.stockData?.symbol || selectedStock?.symbol}
+                        </span>
+                        {selectedStock?.exchange && (
+                          <span className="px-3 py-1 bg-white/20 rounded-full text-sm font-medium backdrop-blur-sm">
+                            {selectedStock.exchange}
+                          </span>
+                        )}
+                      </div>
+                      {selectedStock?.sector && (
+                        <span className="inline-block px-4 py-1 bg-white/10 rounded-full text-sm font-medium text-white/80 backdrop-blur-sm">
+                          {selectedStock.sector}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Price Information */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-6">
+                    <div className="text-4xl font-bold text-white drop-shadow-sm">
+                      {analysis.stockData?.currentPrice && formatCurrency(analysis.stockData.currentPrice, selectedStock?.exchange)}
+                    </div>
+                    {analysis.stockData?.changePercent != null && !isNaN(analysis.stockData.changePercent) && (
+                      <div className={`flex items-center px-4 py-2 rounded-full font-bold text-lg shadow-lg ${
+                        analysis.stockData.changePercent >= 0 
+                          ? 'bg-green-500 text-white' 
+                          : 'bg-red-500 text-white'
+                      }`}>
+                        <span className="mr-1">
+                          {analysis.stockData.changePercent >= 0 ? '↗' : '↘'}
+                        </span>
+                        {formatPercent(analysis.stockData.changePercent)}
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Additional Stats */}
+                  <div className="text-right">
+                    {analysis.stockData?.volume && (
+                      <div className="text-white/80 mb-1">
+                        <span className="text-sm">Volume: </span>
+                        <span className="font-semibold">{analysis.stockData.volume.toLocaleString()}</span>
+                      </div>
+                    )}
+                    {analysis.stockData?.marketCap && (
+                      <div className="text-white/80">
+                        <span className="text-sm">Market Cap: </span>
+                        <span className="font-semibold">{formatCurrency(analysis.stockData.marketCap, selectedStock?.exchange)}</span>
+                      </div>
                     )}
                   </div>
                 </div>
-                <div className="stock-price">
-                  {analysis.stockData?.currentPrice && formatCurrency(analysis.stockData.currentPrice, selectedStock?.exchange)}
-                  {analysis.stockData?.changePercent != null && !isNaN(analysis.stockData.changePercent) && (
-                    <span 
-                      className={`price-change ${analysis.stockData.changePercent >= 0 ? 'positive' : 'negative'}`}
-                    >
-                      {formatPercent(analysis.stockData.changePercent)}
-                    </span>
-                  )}
-                </div>
+
+                {/* Data Source */}
                 {analysis.stockData?.source && analysis.stockData.source === "Demo Data" && (
-                  <div className="data-source" style={{ backgroundColor: '#ffebee', padding: '5px 10px', margin: '5px 0', color: '#d32f2f', fontWeight: 'bold' }}>
+                  <div className="mt-4 p-3 bg-red-100 text-red-800 rounded-lg font-bold">
                     ⚠️ ERROR: Demo Data detected. This should not appear during development.
                   </div>
                 )}
                 {analysis.stockData?.source && analysis.stockData.source !== "Demo Data" && (
-                  <div className="data-source">
-                    <small>Data source: {analysis.stockData.source}</small>
+                  <div className="mt-4 inline-block px-4 py-2 bg-white/10 rounded-full text-sm font-medium text-white/70 backdrop-blur-sm">
+                    Data source: {analysis.stockData.source}
                   </div>
                 )}
               </div>
@@ -677,50 +726,32 @@ const StockAnalysis = () => {
           </div>
 
           {/* TradingView Chart */}
-          <div className="chart-container">
-            <div className="tradingview-chart">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
-                <h3 style={{ margin: 0 }}>Interactive Chart - {selectedStock?.symbol}</h3>
-                <button 
-                  onClick={() => {
-                    if (selectedStock) {
-                      console.log('Force refreshing chart for', selectedStock.symbol);
-                      setChartInitialized(false);
-                      setTimeout(() => {
-                        initTradingViewWidget(selectedStock.symbol, selectedStock.exchange);
-                      }, 100);
-                    }
-                  }}
-                  style={{
-                    padding: '8px 16px',
-                    backgroundColor: '#667eea',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                    fontSize: '12px',
-                    fontWeight: '500'
-                  }}
-                  onMouseOver={(e) => e.target.style.backgroundColor = '#5a67d8'}
-                  onMouseOut={(e) => e.target.style.backgroundColor = '#667eea'}
-                >
-                  🔄 Refresh Chart
-                </button>
-              </div>
-              <div 
-                ref={chartContainerRef}
-                className="chart-frame"
-                style={{ 
-                  height: '500px', 
-                  width: '100%', 
-                  border: '1px solid #ddd', 
-                  borderRadius: '8px',
-                  backgroundColor: '#ffffff',
-                  position: 'relative',
-                  overflow: 'hidden'
+          <div className="bg-white rounded-2xl p-8 mb-8 shadow-xl border border-gray-100">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-2xl font-bold text-gray-800 flex items-center gap-3">
+                <span className="text-2xl">📈</span>
+                Interactive Chart - {selectedStock?.symbol}
+              </h3>
+              <button 
+                onClick={() => {
+                  if (selectedStock) {
+                    console.log('Force refreshing chart for', selectedStock.symbol);
+                    setChartInitialized(false);
+                    setTimeout(() => {
+                      initTradingViewWidget(selectedStock.symbol, selectedStock.exchange);
+                    }, 100);
+                  }
                 }}
-              />
+                className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg hover:from-indigo-600 hover:to-purple-700 transition-all duration-200 font-medium shadow-md hover:shadow-lg"
+              >
+                <span>🔄</span>
+                Refresh Chart
+              </button>
             </div>
+            <div 
+              ref={chartContainerRef}
+              className="w-full h-[500px] border border-gray-200 rounded-xl bg-white relative overflow-hidden"
+            />
           </div>
 
           {/* Analysis Grid */}
