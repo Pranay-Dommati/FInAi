@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { TbChartLine, TbRefresh, TbRobot, TbBrain, TbAlertTriangle, TbShield, TbTrendingUp, TbZap, TbBulb, TbTarget, TbCircleDot } from 'react-icons/tb';
+import { TbChartLine, TbRefresh, TbRobot, TbBrain, TbAlertTriangle, TbShield, TbTrendingUp, TbBolt, TbBulb, TbTarget, TbCircleDot } from 'react-icons/tb';
 import ErrorDisplay from '../components/ErrorDisplay';
 import './StockAnalysis.css';
 
@@ -530,7 +530,7 @@ const StockAnalysis = () => {
           <span className="feature-badge"><TbBrain className="inline-block mr-1" /> FinBERT AI</span>
           <span className="feature-badge">📊 Real-time Data</span>
           <span className="feature-badge">🎯 Smart Predictions</span>
-          <span className="feature-badge">⚡ Risk Assessment</span>
+          <span className="feature-badge"><TbBolt className="inline-block mr-1" /> Risk Assessment</span>
         </div>
       </div>
 
@@ -854,7 +854,7 @@ const StockAnalysis = () => {
             {/* Risk Assessment */}
             <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-100">
               <h3 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-3">
-                <TbZap className="text-2xl text-orange-500" /> 
+                <TbBolt className="text-2xl text-orange-500" /> 
                 AI Risk Assessment
               </h3>
               <div className="mb-6">
