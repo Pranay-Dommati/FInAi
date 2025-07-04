@@ -6654,3 +6654,9 @@
 {"level":"error","message":"Error fetching FMP news for general:","service":"finai-backend","timestamp":"2025-07-04T16:15:02.720Z"}
 {"level":"info","message":"FMP general news failed, no news data available","service":"finai-backend","timestamp":"2025-07-04T16:15:02.720Z"}
 {"level":"info","message":"✅ News refresh completed","service":"finai-backend","timestamp":"2025-07-04T16:15:02.721Z"}
+{"level":"info","message":"Mock Plaid Service initialized - for demonstration purposes","service":"finai-backend","timestamp":"2025-07-04T18:46:02.449Z"}
+{"level":"info","message":"🚀 Financial Research AI Backend running on port 5000","service":"finai-backend","timestamp":"2025-07-04T18:46:02.509Z"}
+{"level":"info","message":"🌍 Environment: development","service":"finai-backend","timestamp":"2025-07-04T18:46:02.511Z"}
+{"level":"info","message":"📊 Market data integration active","service":"finai-backend","timestamp":"2025-07-04T18:46:02.511Z"}
+{"level":"info","message":"🕒 Starting scheduled data refresh jobs","service":"finai-backend","timestamp":"2025-07-04T18:46:02.512Z"}
+{"level":"info","message":"✅ All scheduled jobs initialized","service":"finai-backend","timestamp":"2025-07-04T18:46:02.518Z"}

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import ErrorDisplay from '../components/ErrorDisplay';
 import './StockAnalysis.css';
 
@@ -46,6 +47,7 @@ const StockAnalysis = () => {
   const [chartInitialized, setChartInitialized] = useState(false);
   const chartContainerRef = useRef(null);
   const searchContainerRef = useRef(null);
+  const [searchParams] = useSearchParams();
 
   // Handle ESC key and click outside to close search dropdown
   useEffect(() => {
@@ -71,6 +73,16 @@ const StockAnalysis = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  // Check for URL parameters
+  useEffect(() => {
+    const symbol = searchParams.get('symbol');
+    if (symbol) {
+      setSearchTerm(symbol);
+      setSelectedStock({ symbol, name: symbol });
+      fetchAnalysis(symbol);
+    }
+  }, [searchParams]);
 
   // Search for stocks
   const searchStocks = async (term) => {

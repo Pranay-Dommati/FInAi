@@ -1,7 +1,9 @@
 // src/App.jsx
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { useState } from 'react';
+import { FaHome, FaChartLine, FaChartBar, FaBriefcase } from 'react-icons/fa';
 import StockAnalysis from './pages/StockAnalysis';
+import WelcomePage from './pages/WelcomePage';
 import EconomicTrends from './pages/EconomicTrends';
 import FinancialPlanning from './pages/FinancialPlanning';
 
@@ -10,9 +12,10 @@ function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navItems = [
-    { path: '/', label: 'Stock Analysis', icon: '📈' },
-    { path: '/trends', label: 'Economic Trends', icon: '📊' },
-    { path: '/planning', label: 'Planning', icon: '💼' }
+    { path: '/', label: 'Home', icon: <FaHome /> },
+    { path: '/stockanalysis', label: 'Stock Analysis', icon: <FaChartLine /> },
+    { path: '/trends', label: 'Economic Trends', icon: <FaChartBar /> },
+    { path: '/planning', label: 'Planning', icon: <FaBriefcase /> }
   ];
 
   return (
@@ -100,7 +103,8 @@ function App() {
         
         <main className="container mx-auto px-4 py-8 max-w-7xl">
           <Routes>
-            <Route path="/" element={<StockAnalysis />} />
+            <Route path="/" element={<WelcomePage />} />
+            <Route path="/stockanalysis" element={<StockAnalysis />} />
             <Route path="/trends" element={<EconomicTrends />} />
             <Route path="/planning" element={<FinancialPlanning />} />
           </Routes>
