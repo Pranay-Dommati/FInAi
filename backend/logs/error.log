@@ -1,0 +1,108 @@
+{"level":"error","message":"Error getting CIK for AAPL:","service":"finai-backend","timestamp":"2025-07-04T10:02:26.097Z"}
+{"level":"error","message":"Company filings service health check failed:","service":"finai-backend","timestamp":"2025-07-04T10:02:26.098Z"}
+{"level":"error","message":"Error getting CIK for AAPL:","service":"finai-backend","timestamp":"2025-07-04T10:03:22.846Z"}
+{"level":"error","message":"Company filings service health check failed:","service":"finai-backend","timestamp":"2025-07-04T10:03:22.846Z"}
+{"level":"error","message":"Error getting CIK for AAPL:","service":"finai-backend","timestamp":"2025-07-04T10:04:49.987Z"}
+{"level":"error","message":"Company filings service health check failed:","service":"finai-backend","timestamp":"2025-07-04T10:04:49.987Z"}
+{"level":"error","message":"Error getting CIK for AAPL:","service":"finai-backend","timestamp":"2025-07-04T10:04:56.477Z"}
+{"level":"error","message":"Error in company CIK API for AAPL:","service":"finai-backend","timestamp":"2025-07-04T10:04:56.478Z"}
+{"level":"error","message":"Error getting CIK for AAPL:","service":"finai-backend","timestamp":"2025-07-04T10:06:59.805Z"}
+{"level":"error","message":"Company filings service health check failed:","service":"finai-backend","timestamp":"2025-07-04T10:06:59.806Z"}
+{"level":"error","message":"Error getting CIK for AAPL:","service":"finai-backend","timestamp":"2025-07-04T10:07:27.016Z"}
+{"level":"error","message":"Error in company CIK API for AAPL:","service":"finai-backend","timestamp":"2025-07-04T10:07:27.016Z"}
+{"level":"error","message":"Error getting CIK for AAPL:","service":"finai-backend","timestamp":"2025-07-04T10:07:47.258Z"}
+{"level":"error","message":"Company filings service health check failed:","service":"finai-backend","timestamp":"2025-07-04T10:07:47.259Z"}
+{"level":"error","message":"Plaid health check failed:","service":"finai-backend","timestamp":"2025-07-04T10:24:50.410Z"}
+{"level":"error","message":"Error creating link token for user test_user_1751624690414:","service":"finai-backend","timestamp":"2025-07-04T10:24:50.649Z"}
+{"level":"error","message":"Plaid health check failed:","service":"finai-backend","timestamp":"2025-07-04T10:26:07.408Z"}
+{"level":"error","message":"Error creating link token for user test_user_123:","service":"finai-backend","timestamp":"2025-07-04T10:31:32.578Z"}
+{"level":"error","message":"Error in create link token API:","service":"finai-backend","timestamp":"2025-07-04T10:31:32.580Z"}
+{"level":"error","message":"Plaid health check failed:","service":"finai-backend","timestamp":"2025-07-04T10:33:05.153Z"}
+{"level":"error","message":"Plaid health check failed:","service":"finai-backend","timestamp":"2025-07-04T10:35:14.118Z"}
+{"level":"error","message":"Error fetching Alpha Vantage data for AAPL:","service":"finai-backend","timestamp":"2025-07-04T10:42:21.528Z"}
+{"level":"error","message":"Error fetching Yahoo Finance news:","service":"finai-backend","timestamp":"2025-07-04T11:19:54.738Z"}
+{"level":"error","message":"Error fetching Yahoo Finance news:","service":"finai-backend","timestamp":"2025-07-04T11:20:13.888Z"}
+{"level":"error","message":"Error fetching stock data for AAPL:","service":"finai-backend","timestamp":"2025-07-04T11:53:54.981Z"}
+{"level":"error","message":"Error fetching company overview for AAPL:","service":"finai-backend","timestamp":"2025-07-04T11:53:54.984Z"}
+{"level":"error","message":"Error fetching technical indicators for AAPL:","service":"finai-backend","timestamp":"2025-07-04T11:53:54.985Z"}
+{"level":"error","message":"Error fetching stock data for AAPL:","service":"finai-backend","timestamp":"2025-07-04T12:12:22.086Z"}
+{"level":"error","message":"Error fetching company overview for AAPL:","service":"finai-backend","timestamp":"2025-07-04T12:12:22.094Z"}
+{"level":"error","message":"Error fetching technical indicators for AAPL:","service":"finai-backend","timestamp":"2025-07-04T12:12:22.095Z"}
+{"level":"error","message":"Error fetching stock data for AAPL:","service":"finai-backend","timestamp":"2025-07-04T12:17:51.424Z"}
+{"level":"error","message":"Error fetching company overview for AAPL:","service":"finai-backend","timestamp":"2025-07-04T12:17:51.426Z"}
+{"level":"error","message":"Error fetching technical indicators for AAPL:","service":"finai-backend","timestamp":"2025-07-04T12:17:51.427Z"}
+{"level":"error","message":"Error fetching stock data for TSLA:","service":"finai-backend","timestamp":"2025-07-04T12:18:11.875Z"}
+{"level":"error","message":"Error fetching company overview for TSLA:","service":"finai-backend","timestamp":"2025-07-04T12:18:11.878Z"}
+{"level":"error","message":"Error fetching technical indicators for TSLA:","service":"finai-backend","timestamp":"2025-07-04T12:18:11.879Z"}
+{"level":"error","message":"Error fetching Alpha Vantage data for TSLA:","service":"finai-backend","timestamp":"2025-07-04T12:18:12.169Z"}
+{"level":"error","message":"Error fetching stock data for AAPL:","service":"finai-backend","timestamp":"2025-07-04T12:20:43.825Z"}
+{"level":"error","message":"Error fetching company overview for AAPL:","service":"finai-backend","timestamp":"2025-07-04T12:20:43.827Z"}
+{"level":"error","message":"Error fetching technical indicators for AAPL:","service":"finai-backend","timestamp":"2025-07-04T12:20:43.828Z"}
+{"level":"error","message":"Error fetching Alpha Vantage news:","service":"finai-backend","timestamp":"2025-07-04T12:20:44.145Z"}
+{"level":"error","message":"Error fetching company overview for AAPL:","service":"finai-backend","timestamp":"2025-07-04T12:34:13.292Z"}
+{"level":"error","message":"Error fetching technical indicators for AAPL:","service":"finai-backend","timestamp":"2025-07-04T12:34:13.292Z"}
+{"level":"error","message":"Error fetching Alpha Vantage data for AAPL:","service":"finai-backend","timestamp":"2025-07-04T12:34:13.634Z"}
+{"level":"error","message":"Error fetching stock data for AAPL:","service":"finai-backend","timestamp":"2025-07-04T12:34:13.634Z"}
+{"level":"error","message":"Error fetching company overview for AAPL:","service":"finai-backend","timestamp":"2025-07-04T12:39:15.847Z"}
+{"level":"error","message":"Error fetching technical indicators for AAPL:","service":"finai-backend","timestamp":"2025-07-04T12:39:15.848Z"}
+{"level":"error","message":"Error fetching Alpha Vantage data for AAPL:","service":"finai-backend","timestamp":"2025-07-04T12:39:16.167Z"}
+{"level":"error","message":"Error fetching stock data for AAPL:","service":"finai-backend","timestamp":"2025-07-04T12:39:16.168Z"}
+{"level":"error","message":"Error fetching FMP news for general:","service":"finai-backend","timestamp":"2025-07-04T12:45:01.879Z"}
+{"level":"error","message":"Error fetching technical indicators for AAPL:","service":"finai-backend","timestamp":"2025-07-04T12:46:25.418Z"}
+{"level":"error","message":"Error fetching stock data for AAPL:","service":"finai-backend","timestamp":"2025-07-04T12:46:25.715Z"}
+{"level":"error","message":"Error fetching technical indicators for AAPL:","service":"finai-backend","timestamp":"2025-07-04T12:53:18.556Z"}
+{"level":"error","message":"Error fetching stock data for AAPL:","service":"finai-backend","timestamp":"2025-07-04T12:53:18.910Z"}
+{"level":"error","message":"Error fetching technical indicators for AAPL:","service":"finai-backend","timestamp":"2025-07-04T12:58:18.677Z"}
+{"level":"error","message":"Error fetching stock data for AAPL:","service":"finai-backend","timestamp":"2025-07-04T12:58:19.014Z"}
+{"level":"error","message":"Error fetching FMP news for general:","service":"finai-backend","timestamp":"2025-07-04T13:00:01.415Z"}
+{"level":"error","message":"Error fetching FMP news for general:","service":"finai-backend","timestamp":"2025-07-04T13:00:01.626Z"}
+{"level":"error","message":"Error fetching FMP news for general:","service":"finai-backend","timestamp":"2025-07-04T13:00:01.654Z"}
+{"level":"error","message":"Error fetching technical indicators for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:02:31.769Z"}
+{"level":"error","message":"Error fetching stock data for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:02:32.619Z"}
+{"level":"error","message":"Error fetching technical indicators for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:09:49.228Z"}
+{"level":"error","message":"Error fetching stock data for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:09:49.547Z"}
+{"level":"error","message":"Error fetching FMP news for general:","service":"finai-backend","timestamp":"2025-07-04T13:15:02.147Z"}
+{"level":"error","message":"Error fetching technical indicators for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:17:24.991Z"}
+{"level":"error","message":"Error fetching stock data for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:17:25.289Z"}
+{"level":"error","message":"Error fetching FMP news for general:","service":"finai-backend","timestamp":"2025-07-04T13:30:02.172Z"}
+{"level":"error","message":"Error fetching FMP news for general:","service":"finai-backend","timestamp":"2025-07-04T13:30:02.187Z"}
+{"level":"error","message":"Error fetching FMP news for general:","service":"finai-backend","timestamp":"2025-07-04T13:30:02.486Z"}
+{"level":"error","message":"Error fetching technical indicators for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:30:39.612Z"}
+{"level":"error","message":"Error fetching stock data for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:30:39.888Z"}
+{"level":"error","message":"Error in comprehensive stock analysis for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:30:39.909Z"}
+{"level":"error","message":"Error in stock analysis API for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:30:39.909Z"}
+{"level":"error","message":"Error fetching technical indicators for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:35:41.426Z"}
+{"level":"error","message":"Error fetching stock data for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:35:42.179Z"}
+{"level":"error","message":"Error in comprehensive stock analysis for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:35:42.180Z"}
+{"level":"error","message":"Error in stock analysis API for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:35:42.180Z"}
+{"level":"error","message":"Error fetching technical indicators for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:36:30.412Z"}
+{"level":"error","message":"Error fetching stock data for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:36:30.736Z"}
+{"level":"error","message":"Error in comprehensive stock analysis for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:36:30.896Z"}
+{"level":"error","message":"Error in stock analysis API for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:36:30.897Z"}
+{"level":"error","message":"Error fetching technical indicators for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:37:25.849Z"}
+{"level":"error","message":"Error fetching stock data for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:37:26.133Z"}
+{"level":"error","message":"Error in comprehensive stock analysis for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:37:26.138Z"}
+{"level":"error","message":"Error in stock analysis API for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:37:26.139Z"}
+{"level":"error","message":"Error fetching technical indicators for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:38:08.275Z"}
+{"level":"error","message":"Error fetching stock data for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:38:08.549Z"}
+{"level":"error","message":"Error in comprehensive stock analysis for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:38:08.574Z"}
+{"level":"error","message":"Error in stock analysis API for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:38:08.574Z"}
+{"level":"error","message":"Error fetching technical indicators for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:38:47.570Z"}
+{"level":"error","message":"Error fetching stock data for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:38:47.853Z"}
+{"level":"error","message":"Error in comprehensive stock analysis for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:38:47.854Z"}
+{"level":"error","message":"Error in stock analysis API for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:38:47.854Z"}
+{"level":"error","message":"Error fetching technical indicators for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:39:43.561Z"}
+{"level":"error","message":"Error fetching stock data for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:39:43.836Z"}
+{"level":"error","message":"Error in comprehensive stock analysis for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:39:43.850Z"}
+{"level":"error","message":"Error in stock analysis API for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:39:43.850Z"}
+{"level":"error","message":"Error fetching technical indicators for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:42:17.444Z"}
+{"level":"error","message":"Error fetching stock data for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:42:17.769Z"}
+{"level":"error","message":"Error in comprehensive stock analysis for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:42:17.791Z"}
+{"level":"error","message":"Error in stock analysis API for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:42:17.791Z"}
+{"level":"error","message":"Error fetching FMP news for general:","service":"finai-backend","timestamp":"2025-07-04T13:45:01.701Z"}
+{"level":"error","message":"Error fetching FMP news for general:","service":"finai-backend","timestamp":"2025-07-04T13:45:02.059Z"}
+{"level":"error","message":"Error fetching FMP news for general:","service":"finai-backend","timestamp":"2025-07-04T13:45:02.113Z"}
+{"level":"error","message":"Error fetching technical indicators for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:45:39.159Z"}
+{"level":"error","message":"Error fetching stock data for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:45:39.456Z"}
+{"level":"error","message":"Error in comprehensive stock analysis for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:45:39.471Z"}
+{"level":"error","message":"Error in stock analysis API for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:45:39.471Z"}
