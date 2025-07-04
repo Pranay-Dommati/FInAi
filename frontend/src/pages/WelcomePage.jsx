@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaSearch, FaChartLine } from 'react-icons/fa';
+import { RiRobot2Fill } from 'react-icons/ri';
 
 const WelcomePage = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -125,13 +126,16 @@ const WelcomePage = () => {
 
   return (
     <div className="flex flex-col items-center justify-center h-[calc(100vh-4rem)] px-4">
-      <div className="max-w-3xl w-full rounded-xl p-8 flex flex-col items-center bg-white/90 backdrop-blur-sm border border-gray-100">
+      <div className="max-w-3xl w-full rounded-xl p-8 flex flex-col items-center backdrop-blur-sm">
         <div className="text-center mb-10">
-          <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-            Financial AI Analysis
-          </h1>
-          <p className="text-gray-600 max-w-lg mx-auto">
-            Discover in-depth stock analysis, market trends, and financial insights powered by AI.
+          <div className="flex items-center justify-center gap-3 mb-2">
+            <RiRobot2Fill className="text-indigo-500 text-5xl" />
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+              AI-Powered Stock Analysis
+            </h1>
+          </div>
+          <p className="text-gray-500 max-w-lg mx-auto">
+            FinBERT sentiment analysis • Real-time data • AI risk assessment • Smart recommendations
           </p>
         </div>
 
@@ -142,8 +146,8 @@ const WelcomePage = () => {
               value={searchTerm}
               onChange={handleSearchChange}
               onKeyDown={handleSearchKeyPress}
-              placeholder="Search for a stock symbol or company name..."
-              className="w-full py-3 px-4 pr-12 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              placeholder="Search stocks (e.g., AAPL, Tesla, Microsoft)..."
+              className="w-full py-3 px-4 pr-12 rounded-lg border border-gray-200 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
             />
             <span className="absolute right-3 top-3 text-gray-400">
               <FaSearch />
@@ -168,14 +172,6 @@ const WelcomePage = () => {
             </div>
           )}
         </div>
-
-        <button 
-          onClick={() => navigate('/stockanalysis')} 
-          className="mt-8 inline-flex items-center gap-2 py-2 px-6 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white transition-colors duration-200"
-        >
-          <FaChartLine />
-          <span>Go to Stock Analysis</span>
-        </button>
       </div>
     </div>
   );
