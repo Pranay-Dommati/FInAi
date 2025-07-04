@@ -870,51 +870,71 @@ const StockAnalysis = () => {
             </div>
 
             {/* AI Recommendation */}
-            <div className="analysis-card recommendation-card">
-              <h3>🤖 AI Investment Recommendation</h3>
-              <div className="ai-powered-badge">
-                <span>Powered by FinBERT & Advanced ML</span>
+            <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-100 col-span-full">
+              <h3 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-3">
+                <TbRobot className="text-2xl text-purple-600" />
+                AI Investment Recommendation
+              </h3>
+              <div className="mb-6">
+                <span className="inline-block px-4 py-2 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-full text-sm font-semibold">
+                  Powered by FinBERT & Advanced ML
+                </span>
               </div>
               {analysis.overallRecommendation && (
-                <div className="recommendation-content">
-                  <div className="recommendation-action">
+                <div className="space-y-6">
+                  <div className="flex flex-wrap items-center gap-4">
                     <span 
-                      className={`action-badge ${analysis.overallRecommendation.action?.toLowerCase()}`}
+                      className={`px-6 py-3 rounded-lg text-white font-bold text-lg shadow-md ${
+                        analysis.overallRecommendation.action?.toLowerCase() === 'buy' ? 'bg-green-500' :
+                        analysis.overallRecommendation.action?.toLowerCase() === 'sell' ? 'bg-red-500' :
+                        'bg-yellow-500'
+                      }`}
                     >
                       {analysis.overallRecommendation.action}
                     </span>
-                    <span className="confidence-score">
+                    <span className="text-gray-600 font-medium">
                       {analysis.overallRecommendation.confidence} confidence
                     </span>
-                    <div className="ai-score">
+                    <div className="text-gray-700 font-semibold">
                       AI Score: {analysis.overallRecommendation.score}/100
                     </div>
                   </div>
                   
                   {analysis.overallRecommendation.targetPrice && (
-                    <div className="target-price">
-                      <span>AI Target Price: {formatCurrency(analysis.overallRecommendation.targetPrice, selectedStock?.exchange)}</span>
+                    <div className="p-4 bg-blue-50 rounded-lg">
+                      <span className="text-blue-800 font-semibold">
+                        AI Target Price: {formatCurrency(analysis.overallRecommendation.targetPrice, selectedStock?.exchange)}
+                      </span>
                     </div>
                   )}
 
                   {analysis.overallRecommendation.reasoning && (
-                    <div className="recommendation-reasoning">
-                      <h4 className="flex items-center gap-2"><TbBrain className="text-lg text-blue-600" /> AI Analysis Factors:</h4>
-                      <ul>
+                    <div className="bg-gray-50 p-6 rounded-lg">
+                      <h4 className="flex items-center gap-2 text-lg font-semibold text-gray-800 mb-3">
+                        <TbBrain className="text-lg text-blue-600" /> 
+                        AI Analysis Factors:
+                      </h4>
+                      <ul className="space-y-2">
                         {analysis.overallRecommendation.reasoning.map((reason, index) => (
-                          <li key={index}>{reason}</li>
+                          <li key={index} className="flex items-start gap-2 text-gray-700">
+                            <TbTrendingUp className="text-green-500 mt-1 flex-shrink-0" />
+                            {reason}
+                          </li>
                         ))}
                       </ul>
                     </div>
                   )}
 
                   {analysis.overallRecommendation.summary && (
-                    <p className="recommendation-summary">{analysis.overallRecommendation.summary}</p>
+                    <p className="text-gray-700 leading-relaxed bg-blue-50 p-4 rounded-lg">
+                      {analysis.overallRecommendation.summary}
+                    </p>
                   )}
 
                   {analysis.overallRecommendation.timeHorizon && (
-                    <div className="time-horizon">
-                      <strong>Recommended Time Horizon:</strong> {analysis.overallRecommendation.timeHorizon}
+                    <div className="border-t pt-4">
+                      <span className="text-gray-800 font-semibold">Recommended Time Horizon:</span>{' '}
+                      <span className="text-gray-700">{analysis.overallRecommendation.timeHorizon}</span>
                     </div>
                   )}
                 </div>
