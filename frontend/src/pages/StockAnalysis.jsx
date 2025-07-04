@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { TbChartLine, TbRefresh, TbRobot, TbBrain, TbAlertTriangle, TbShield, TbTrendingUp } from 'react-icons/tb';
+import { TbChartLine, TbRefresh, TbRobot, TbBrain, TbAlertTriangle, TbShield, TbTrendingUp, TbZap, TbBulb, TbTarget, TbCircleDot } from 'react-icons/tb';
 import ErrorDisplay from '../components/ErrorDisplay';
 import './StockAnalysis.css';
 
@@ -765,12 +765,17 @@ const StockAnalysis = () => {
           </div>
 
           {/* Analysis Grid */}
-          <div className="analysis-grid">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
             {/* Sentiment Analysis */}
-            <div className="analysis-card">
-              <h3 className="flex items-center gap-2"><TbBrain className="text-xl text-purple-600" /> FinBERT Sentiment Analysis</h3>
-              <div className="ai-powered-badge">
-                <span>Financial AI Language Model</span>
+            <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-100">
+              <h3 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-3">
+                <TbBrain className="text-2xl text-purple-600" /> 
+                FinBERT Sentiment Analysis
+              </h3>
+              <div className="mb-6">
+                <span className="inline-block px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full text-sm font-semibold">
+                  Financial AI Language Model
+                </span>
               </div>
               {analysis.sentimentAnalysis?.error ? (
                 <ErrorDisplay 
@@ -778,91 +783,136 @@ const StockAnalysis = () => {
                   title="AI Sentiment Analysis Unavailable" 
                 />
               ) : analysis.sentimentAnalysis ? (
-                <div className="sentiment-content">
-                  <div className="sentiment-score">
+                <div className="space-y-6">
+                  <div className="flex flex-wrap items-center gap-4">
                     <span 
-                      className="sentiment-badge"
-                      style={{ backgroundColor: getSentimentColor(analysis.sentimentAnalysis.overall) }}
+                      className={`px-6 py-3 rounded-lg text-white font-bold text-lg shadow-md ${
+                        analysis.sentimentAnalysis.overall?.toLowerCase() === 'positive' ? 'bg-green-500' :
+                        analysis.sentimentAnalysis.overall?.toLowerCase() === 'negative' ? 'bg-red-500' :
+                        'bg-yellow-500'
+                      }`}
                     >
                       {analysis.sentimentAnalysis.overall}
                     </span>
-                    <span className="sentiment-confidence">
+                    <span className="text-gray-600 font-medium">
                       {analysis.sentimentAnalysis.confidence} confidence
                     </span>
                   </div>
                   
                   {analysis.sentimentAnalysis.breakdown && (
-                    <div className="sentiment-breakdown">
-                      <div className="sentiment-item">
-                        <span>🟢 Positive:</span>
-                        <span>{analysis.sentimentAnalysis.breakdown.positive || 0}%</span>
-                      </div>
-                      <div className="sentiment-item">
-                        <span>⚪ Neutral:</span>
-                        <span>{analysis.sentimentAnalysis.breakdown.neutral || 0}%</span>
-                      </div>
-                      <div className="sentiment-item">
-                        <span>🔴 Negative:</span>
-                        <span>{analysis.sentimentAnalysis.breakdown.negative || 0}%</span>
+                    <div className="bg-gray-50 p-6 rounded-lg">
+                      <h4 className="text-lg font-semibold text-gray-800 mb-4">Sentiment Breakdown</h4>
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                          <div className="flex items-center gap-2">
+                            <TbCircleDot className="text-green-500 text-lg" />
+                            <span className="font-medium text-gray-700">Positive:</span>
+                          </div>
+                          <span className="font-bold text-green-600 text-lg">
+                            {analysis.sentimentAnalysis.breakdown.positive || 0}%
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                          <div className="flex items-center gap-2">
+                            <TbCircleDot className="text-gray-500 text-lg" />
+                            <span className="font-medium text-gray-700">Neutral:</span>
+                          </div>
+                          <span className="font-bold text-gray-600 text-lg">
+                            {analysis.sentimentAnalysis.breakdown.neutral || 0}%
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between p-3 bg-red-50 rounded-lg">
+                          <div className="flex items-center gap-2">
+                            <TbCircleDot className="text-red-500 text-lg" />
+                            <span className="font-medium text-gray-700">Negative:</span>
+                          </div>
+                          <span className="font-bold text-red-600 text-lg">
+                            {analysis.sentimentAnalysis.breakdown.negative || 0}%
+                          </span>
+                        </div>
                       </div>
                     </div>
                   )}
 
                   {analysis.sentimentAnalysis.reasoning && (
-                    <div className="ai-reasoning">
-                      <h4>🤖 AI Analysis:</h4>
-                      <p className="sentiment-summary">{analysis.sentimentAnalysis.reasoning}</p>
+                    <div className="bg-blue-50 p-6 rounded-lg">
+                      <h4 className="flex items-center gap-2 text-lg font-semibold text-gray-800 mb-3">
+                        <TbRobot className="text-blue-600" /> 
+                        AI Analysis:
+                      </h4>
+                      <p className="text-gray-700 leading-relaxed">{analysis.sentimentAnalysis.reasoning}</p>
                     </div>
                   )}
                 </div>
               ) : (
-                <div className="no-data">
+                <div className="text-center py-8 text-gray-500">
                   <p>No sentiment data available</p>
                 </div>
               )}
             </div>
 
             {/* Risk Assessment */}
-            <div className="analysis-card">
-              <h3>⚡ AI Risk Assessment</h3>
-              <div className="ai-powered-badge">
-                <span>Multi-factor AI Analysis</span>
+            <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-100">
+              <h3 className="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-3">
+                <TbZap className="text-2xl text-orange-500" /> 
+                AI Risk Assessment
+              </h3>
+              <div className="mb-6">
+                <span className="inline-block px-4 py-2 bg-gradient-to-r from-orange-500 to-red-600 text-white rounded-full text-sm font-semibold">
+                  Multi-factor AI Analysis
+                </span>
               </div>
               {analysis.riskAssessment && (
-                <div className="risk-content">
-                  <div className="risk-level">
+                <div className="space-y-6">
+                  <div className="flex flex-wrap items-center gap-4">
                     <span 
-                      className={`risk-badge ${analysis.riskAssessment.level?.toLowerCase()}`}
+                      className={`px-6 py-3 rounded-lg text-white font-bold text-lg shadow-md ${
+                        analysis.riskAssessment.level?.toLowerCase() === 'low' ? 'bg-green-500' :
+                        analysis.riskAssessment.level?.toLowerCase() === 'high' ? 'bg-red-500' :
+                        'bg-yellow-500'
+                      }`}
                     >
                       {analysis.riskAssessment.level} Risk
                     </span>
-                    <span className="risk-score">
+                    <div className="text-gray-700 font-semibold">
                       AI Risk Score: {analysis.riskAssessment.score}/10
-                    </span>
+                    </div>
                   </div>
                   
                   {analysis.riskAssessment.factors && analysis.riskAssessment.factors.length > 0 && (
-                    <div className="risk-factors">
-                      <h4>🎯 AI-Identified Risk Factors:</h4>
-                      <ul>
+                    <div className="bg-orange-50 p-6 rounded-lg">
+                      <h4 className="flex items-center gap-2 text-lg font-semibold text-gray-800 mb-4">
+                        <TbTarget className="text-orange-600" /> 
+                        AI-Identified Risk Factors:
+                      </h4>
+                      <ul className="space-y-2">
                         {analysis.riskAssessment.factors.map((factor, index) => (
-                          <li key={index}>{factor}</li>
+                          <li key={index} className="flex items-start gap-2 text-gray-700">
+                            <TbAlertTriangle className="text-orange-500 mt-1 flex-shrink-0" />
+                            {factor}
+                          </li>
                         ))}
                       </ul>
                     </div>
                   )}
 
                   {analysis.riskAssessment.assessment && (
-                    <div className="ai-reasoning">
-                      <h4>🤖 AI Assessment:</h4>
-                      <p className="risk-summary">{analysis.riskAssessment.assessment}</p>
+                    <div className="bg-blue-50 p-6 rounded-lg">
+                      <h4 className="flex items-center gap-2 text-lg font-semibold text-gray-800 mb-3">
+                        <TbRobot className="text-blue-600" /> 
+                        AI Assessment:
+                      </h4>
+                      <p className="text-gray-700 leading-relaxed">{analysis.riskAssessment.assessment}</p>
                     </div>
                   )}
 
                   {analysis.riskAssessment.recommendation && (
-                    <div className="risk-recommendation">
-                      <h4>💡 AI Recommendation:</h4>
-                      <p>{analysis.riskAssessment.recommendation}</p>
+                    <div className="bg-green-50 p-6 rounded-lg">
+                      <h4 className="flex items-center gap-2 text-lg font-semibold text-gray-800 mb-3">
+                        <TbBulb className="text-green-600" /> 
+                        AI Recommendation:
+                      </h4>
+                      <p className="text-gray-700 leading-relaxed">{analysis.riskAssessment.recommendation}</p>
                     </div>
                   )}
                 </div>
