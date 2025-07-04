@@ -106,3 +106,5 @@
 {"level":"error","message":"Error fetching stock data for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:45:39.456Z"}
 {"level":"error","message":"Error in comprehensive stock analysis for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:45:39.471Z"}
 {"level":"error","message":"Error in stock analysis API for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:45:39.471Z"}
+{"level":"error","message":"Error fetching FMP news for general:","service":"finai-backend","timestamp":"2025-07-04T14:00:01.976Z"}
+{"level":"error","message":"Error fetching FMP news for general:","service":"finai-backend","timestamp":"2025-07-04T14:15:01.444Z"}

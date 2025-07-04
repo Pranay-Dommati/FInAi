@@ -43,6 +43,7 @@ const StockAnalysis = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [watchlist, setWatchlist] = useState([]);
+  const [chartInitialized, setChartInitialized] = useState(false);
   const chartContainerRef = useRef(null);
 
   // Search for stocks
@@ -56,7 +57,9 @@ const StockAnalysis = () => {
       const response = await fetchWithPortFallback(`/api/stock-analysis/search?q=${encodeURIComponent(term)}`);
       if (response.ok) {
         const data = await response.json();
-        setSearchResults(data.results || []);
+        console.log('Search response:', data); // Debug log
+        // The backend returns { success: true, data: { results: [...] } }
+        setSearchResults(data.data?.results || []);
       }
     } catch (error) {
       console.error('Search error:', error);
@@ -163,7 +166,7 @@ const StockAnalysis = () => {
     }).format(value);
   };
 
-  // TradingView Widget - Working HTML embed approach
+  // TradingView Widget - Working HTML embed approach with state tracking
   const initTradingViewWidget = (symbol) => {
     console.log("Initializing TradingView widget for", symbol);
     
@@ -171,6 +174,9 @@ const StockAnalysis = () => {
       console.error("Chart container reference not available");
       return;
     }
+
+    // Reset chart initialization state
+    setChartInitialized(false);
 
     // Clear container
     chartContainerRef.current.innerHTML = '';
@@ -247,7 +253,8 @@ const StockAnalysis = () => {
             script.parentNode.replaceChild(newScript, script);
           }
           console.log(`TradingView scripts reloaded for ${symbol}`);
-        }, 100);
+          setChartInitialized(true);
+        }, 200);
         
         // Show fallback if TradingView doesn't load within 10 seconds
         setTimeout(() => {
@@ -259,7 +266,7 @@ const StockAnalysis = () => {
           }
         }, 10000);
         
-      }, 800);
+      }, 1200);
       
     } catch (error) {
       console.error("Error creating TradingView widget:", error);
@@ -328,11 +335,8 @@ const StockAnalysis = () => {
     
     console.log('Stock Analysis component mounted, initializing with', defaultStock.symbol);
     
-    // Add a small delay to ensure DOM is ready
+    // Add a small delay to ensure DOM is ready, then fetch data only
     const timer = setTimeout(() => {
-      console.log('Initializing chart for', defaultStock.symbol);
-      initTradingViewWidget(defaultStock.symbol);
-      
       console.log('Fetching initial data for', defaultStock.symbol);
       fetchAnalysis(defaultStock.symbol)
         .catch(err => {
@@ -347,13 +351,25 @@ const StockAnalysis = () => {
     };
   }, []);
   
-  // Chart initialization effect
+  // Chart initialization effect - improved timing and state tracking
   useEffect(() => {
-    if (selectedStock && selectedStock.symbol && chartContainerRef.current) {
+    if (selectedStock && selectedStock.symbol) {
       console.log('Selected stock changed, initializing chart for:', selectedStock.symbol);
-      const timer = setTimeout(() => {
-        initTradingViewWidget(selectedStock.symbol);
-      }, 500);
+      
+      // Wait for the DOM to be ready and chart container to be available
+      const initChart = () => {
+        if (chartContainerRef.current) {
+          console.log('Chart container is ready, initializing chart');
+          initTradingViewWidget(selectedStock.symbol);
+        } else {
+          console.log('Chart container not ready, retrying...');
+          // Retry after a short delay
+          setTimeout(initChart, 300);
+        }
+      };
+      
+      // Start initialization with a longer delay to ensure component is fully mounted
+      const timer = setTimeout(initChart, 1500);
       
       return () => clearTimeout(timer);
     }
@@ -521,7 +537,15 @@ const StockAnalysis = () => {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
                 <h3 style={{ margin: 0 }}>Interactive Chart - {selectedStock?.symbol}</h3>
                 <button 
-                  onClick={() => selectedStock && initTradingViewWidget(selectedStock.symbol)}
+                  onClick={() => {
+                    if (selectedStock) {
+                      console.log('Force refreshing chart for', selectedStock.symbol);
+                      setChartInitialized(false);
+                      setTimeout(() => {
+                        initTradingViewWidget(selectedStock.symbol);
+                      }, 100);
+                    }
+                  }}
                   style={{
                     padding: '8px 16px',
                     backgroundColor: '#667eea',
@@ -608,64 +632,6 @@ const StockAnalysis = () => {
               ) : (
                 <div className="no-data">
                   <p>No sentiment data available</p>
-                </div>
-              )}
-            </div>
-
-            {/* Technical Analysis */}
-            <div className="analysis-card">
-              <h3>Technical Analysis</h3>
-              {analysis.technicalAnalysis && (
-                <div className="technical-content">
-                  <div className="technical-signal">
-                    <span 
-                      className={`signal-badge ${analysis.technicalAnalysis.signal?.toLowerCase()}`}
-                    >
-                      {analysis.technicalAnalysis.signal}
-                    </span>
-                  </div>
-                  
-                  <div className="technical-indicators">
-                    {analysis.technicalAnalysis.indicators && Object.entries(analysis.technicalAnalysis.indicators).map(([key, value]) => (
-                      <div key={key} className="indicator-item">
-                        <span>{key.toUpperCase()}:</span>
-                        <span>{typeof value === 'number' ? value.toFixed(2) : value}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  {analysis.technicalAnalysis.summary && (
-                    <p className="technical-summary">{analysis.technicalAnalysis.summary}</p>
-                  )}
-                </div>
-              )}
-            </div>
-
-            {/* Fundamental Analysis */}
-            <div className="analysis-card">
-              <h3>Fundamental Analysis</h3>
-              {analysis.fundamentalAnalysis && (
-                <div className="fundamental-content">
-                  <div className="fundamental-score">
-                    <span 
-                      className={`score-badge ${analysis.fundamentalAnalysis.score >= 7 ? 'strong' : analysis.fundamentalAnalysis.score >= 4 ? 'moderate' : 'weak'}`}
-                    >
-                      {analysis.fundamentalAnalysis.score}/10
-                    </span>
-                  </div>
-                  
-                  <div className="fundamental-metrics">
-                    {analysis.fundamentalAnalysis.metrics && Object.entries(analysis.fundamentalAnalysis.metrics).map(([key, value]) => (
-                      <div key={key} className="metric-item">
-                        <span>{key}:</span>
-                        <span>{typeof value === 'number' ? value.toFixed(2) : value}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  {analysis.fundamentalAnalysis.summary && (
-                    <p className="fundamental-summary">{analysis.fundamentalAnalysis.summary}</p>
-                  )}
                 </div>
               )}
             </div>

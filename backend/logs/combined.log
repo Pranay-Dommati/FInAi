@@ -3452,3 +3452,402 @@
 {"level":"info","message":"Fetching Yahoo Finance data for TSLA","service":"finai-backend","timestamp":"2025-07-04T13:55:00.516Z"}
 {"level":"info","message":"Returning cached Yahoo data for TSLA","service":"finai-backend","timestamp":"2025-07-04T13:55:00.516Z"}
 {"level":"info","message":"✅ Stock data refresh completed","service":"finai-backend","timestamp":"2025-07-04T13:55:00.517Z"}
+{"level":"info","message":"GET /api/stock-analysis/analyze/AAPL - ::1","service":"finai-backend","timestamp":"2025-07-04T13:59:31.963Z"}
+{"level":"info","message":"API request for stock analysis: AAPL","service":"finai-backend","timestamp":"2025-07-04T13:59:31.977Z"}
+{"level":"info","message":"Starting comprehensive analysis for AAPL","service":"finai-backend","timestamp":"2025-07-04T13:59:31.979Z"}
+{"level":"info","message":"Fetching Alpha Vantage quote for AAPL","service":"finai-backend","timestamp":"2025-07-04T13:59:31.981Z"}
+{"level":"info","message":"Fetching Yahoo Finance data for AAPL","service":"finai-backend","timestamp":"2025-07-04T13:59:32.066Z"}
+{"level":"info","message":"Returning cached Yahoo data for AAPL","service":"finai-backend","timestamp":"2025-07-04T13:59:32.067Z"}
+{"level":"info","message":"Fetching Alpha Vantage news for AAPL","service":"finai-backend","timestamp":"2025-07-04T13:59:32.068Z"}
+{"level":"info","message":"Fetching Alpha Vantage company overview for AAPL","service":"finai-backend","timestamp":"2025-07-04T13:59:32.075Z"}
+{"level":"info","message":"Returning cached Alpha Vantage overview for AAPL","service":"finai-backend","timestamp":"2025-07-04T13:59:32.075Z"}
+{"level":"info","message":"Fetching Alpha Vantage RSI for AAPL","service":"finai-backend","timestamp":"2025-07-04T13:59:32.076Z"}
+{"level":"info","message":"Fetching Alpha Vantage MACD for AAPL","service":"finai-backend","timestamp":"2025-07-04T13:59:32.083Z"}
+{"level":"info","message":"Fetching Alpha Vantage SMA for AAPL","service":"finai-backend","timestamp":"2025-07-04T13:59:32.089Z"}
+{"level":"info","message":"Fetching FRED data for series: GDP","service":"finai-backend","timestamp":"2025-07-04T13:59:32.097Z"}
+{"level":"info","message":"Returning cached FRED data for GDP","service":"finai-backend","timestamp":"2025-07-04T13:59:32.097Z"}
+{"level":"info","message":"Fetching FRED data for series: CPIAUCSL","service":"finai-backend","timestamp":"2025-07-04T13:59:32.098Z"}
+{"level":"info","message":"Returning cached FRED data for CPIAUCSL","service":"finai-backend","timestamp":"2025-07-04T13:59:32.098Z"}
+{"level":"info","message":"Fetching FRED data for series: UNRATE","service":"finai-backend","timestamp":"2025-07-04T13:59:32.099Z"}
+{"level":"info","message":"Returning cached FRED data for UNRATE","service":"finai-backend","timestamp":"2025-07-04T13:59:32.100Z"}
+{"level":"warn","message":"No Alpha Vantage RSI data found for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:59:32.396Z"}
+{"level":"warn","message":"No Alpha Vantage SMA data found for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:59:32.401Z"}
+{"level":"warn","message":"No Alpha Vantage data found for AAPL","service":"finai-backend","timestamp":"2025-07-04T13:59:32.404Z"}
+{"level":"warn","message":"No Alpha Vantage MACD data found for AAPL:","service":"finai-backend","timestamp":"2025-07-04T13:59:32.414Z"}
+{"level":"info","message":"Generated comprehensive analysis for AAPL","service":"finai-backend","timestamp":"2025-07-04T13:59:32.418Z"}
+{"level":"info","message":"🔄 Running scheduled stock data refresh","service":"finai-backend","timestamp":"2025-07-04T14:00:00.620Z"}
+{"level":"info","message":"Fetching top Indian stocks data","service":"finai-backend","timestamp":"2025-07-04T14:00:00.621Z"}
+{"level":"info","message":"Fetching Indian stock data for RELIANCE","service":"finai-backend","timestamp":"2025-07-04T14:00:00.621Z"}
+{"level":"info","message":"Fetching Indian stock data for TCS","service":"finai-backend","timestamp":"2025-07-04T14:00:00.653Z"}
+{"level":"info","message":"Fetching Indian stock data for HDFCBANK","service":"finai-backend","timestamp":"2025-07-04T14:00:00.657Z"}
+{"level":"info","message":"Fetching Indian stock data for INFY","service":"finai-backend","timestamp":"2025-07-04T14:00:00.658Z"}
+{"level":"info","message":"Fetching Indian stock data for HINDUNILVR","service":"finai-backend","timestamp":"2025-07-04T14:00:00.662Z"}
+{"level":"info","message":"Fetching Indian stock data for ICICIBANK","service":"finai-backend","timestamp":"2025-07-04T14:00:00.664Z"}
+{"level":"info","message":"Fetching Indian stock data for KOTAKBANK","service":"finai-backend","timestamp":"2025-07-04T14:00:00.665Z"}
+{"level":"info","message":"Fetching Indian stock data for BHARTIARTL","service":"finai-backend","timestamp":"2025-07-04T14:00:00.667Z"}
+{"level":"info","message":"Fetching Indian stock data for ITC","service":"finai-backend","timestamp":"2025-07-04T14:00:00.671Z"}
+{"level":"info","message":"Fetching Indian stock data for SBIN","service":"finai-backend","timestamp":"2025-07-04T14:00:00.673Z"}
+{"level":"info","message":"🔄 Running scheduled economic indicators refresh","service":"finai-backend","timestamp":"2025-07-04T14:00:00.713Z"}
+{"level":"info","message":"Fetching Indian economic indicators","service":"finai-backend","timestamp":"2025-07-04T14:00:00.715Z"}
+{"0":"gdp","1":"inflation","2":"repoRate","3":"unemployment","4":"fiscalDeficit","5":"currentAccount","level":"info","message":"Indian economic data fetched successfully:","service":"finai-backend","timestamp":"2025-07-04T14:00:00.716Z"}
+{"level":"info","message":"Fetching forex data","service":"finai-backend","timestamp":"2025-07-04T14:00:00.716Z"}
+{"level":"info","message":"Fetching US economic indicators","service":"finai-backend","timestamp":"2025-07-04T14:00:00.723Z"}
+{"level":"info","message":"Fetching FRED data for series: GDP","service":"finai-backend","timestamp":"2025-07-04T14:00:00.723Z"}
+{"level":"info","message":"Returning cached FRED data for GDP","service":"finai-backend","timestamp":"2025-07-04T14:00:00.724Z"}
+{"level":"info","message":"Fetching FRED data for series: UNRATE","service":"finai-backend","timestamp":"2025-07-04T14:00:00.724Z"}
+{"level":"info","message":"Returning cached FRED data for UNRATE","service":"finai-backend","timestamp":"2025-07-04T14:00:00.724Z"}
+{"level":"info","message":"Fetching FRED data for series: CPIAUCSL","service":"finai-backend","timestamp":"2025-07-04T14:00:00.725Z"}
+{"level":"info","message":"Returning cached FRED data for CPIAUCSL","service":"finai-backend","timestamp":"2025-07-04T14:00:00.725Z"}
+{"level":"info","message":"Fetching FRED data for series: FEDFUNDS","service":"finai-backend","timestamp":"2025-07-04T14:00:00.725Z"}
+{"level":"info","message":"🔄 Running scheduled news refresh","service":"finai-backend","timestamp":"2025-07-04T14:00:00.728Z"}
+{"level":"info","message":"Generating mock general financial news","service":"finai-backend","timestamp":"2025-07-04T14:00:00.730Z"}
+{"level":"info","message":"Fetching general financial news","service":"finai-backend","timestamp":"2025-07-04T14:00:00.731Z"}
+{"level":"info","message":"Fetching Alpha Vantage news for general","service":"finai-backend","timestamp":"2025-07-04T14:00:00.731Z"}
+{"change":"9.50","changePercent":"0.63","level":"info","message":"Indian stock data fetched successfully for RELIANCE:","price":1527.3,"service":"finai-backend","timestamp":"2025-07-04T14:00:00.893Z"}
+{"change":"16.90","changePercent":"1.19","level":"info","message":"Indian stock data fetched successfully for ICICIBANK:","price":1442.8,"service":"finai-backend","timestamp":"2025-07-04T14:00:00.895Z"}
+{"change":"22.00","changePercent":"1.36","level":"info","message":"Indian stock data fetched successfully for INFY:","price":1640.7,"service":"finai-backend","timestamp":"2025-07-04T14:00:00.899Z"}
+{"change":"19.00","changePercent":"0.56","level":"info","message":"Indian stock data fetched successfully for TCS:","price":3419.8,"service":"finai-backend","timestamp":"2025-07-04T14:00:00.899Z"}
+{"change":"25.90","changePercent":"1.12","level":"info","message":"Indian stock data fetched successfully for HINDUNILVR:","price":2339.3,"service":"finai-backend","timestamp":"2025-07-04T14:00:00.904Z"}
+{"change":"-2.10","changePercent":"-0.10","level":"info","message":"Indian stock data fetched successfully for BHARTIARTL:","price":2017.2,"service":"finai-backend","timestamp":"2025-07-04T14:00:00.904Z"}
+{"change":"-0.80","changePercent":"-0.19","level":"info","message":"Indian stock data fetched successfully for ITC:","price":412.55,"service":"finai-backend","timestamp":"2025-07-04T14:00:00.905Z"}
+{"change":"3.20","changePercent":"0.15","level":"info","message":"Indian stock data fetched successfully for KOTAKBANK:","price":2129.8,"service":"finai-backend","timestamp":"2025-07-04T14:00:00.908Z"}
+{"change":"2.20","changePercent":"0.11","level":"info","message":"Indian stock data fetched successfully for HDFCBANK:","price":1989.3,"service":"finai-backend","timestamp":"2025-07-04T14:00:01.009Z"}
+{"change":"4.75","changePercent":"0.59","level":"info","message":"Indian stock data fetched successfully for SBIN:","price":811.85,"service":"finai-backend","timestamp":"2025-07-04T14:00:01.010Z"}
+{"level":"info","message":"Fetched data for 10 top Indian stocks","service":"finai-backend","timestamp":"2025-07-04T14:00:01.011Z"}
+{"level":"info","message":"Fetching stock data for AAPL with fallback support","service":"finai-backend","timestamp":"2025-07-04T14:00:01.013Z"}
+{"level":"info","message":"Fetching Yahoo Finance data for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:00:01.014Z"}
+{"level":"info","message":"Forex data fetched successfully for 4 pairs","service":"finai-backend","timestamp":"2025-07-04T14:00:01.016Z"}
+{"level":"info","message":"Alpha Vantage general news failed, trying FMP","service":"finai-backend","timestamp":"2025-07-04T14:00:01.043Z"}
+{"level":"info","message":"Fetching FMP news for general","service":"finai-backend","timestamp":"2025-07-04T14:00:01.045Z"}
+{"level":"info","message":"Yahoo Finance data fetched successfully for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:00:01.120Z"}
+{"level":"info","message":"Fetching stock data for GOOGL with fallback support","service":"finai-backend","timestamp":"2025-07-04T14:00:01.120Z"}
+{"level":"info","message":"Fetching Yahoo Finance data for GOOGL","service":"finai-backend","timestamp":"2025-07-04T14:00:01.120Z"}
+{"level":"info","message":"Yahoo Finance data fetched successfully for GOOGL","service":"finai-backend","timestamp":"2025-07-04T14:00:01.221Z"}
+{"level":"info","message":"Fetching stock data for MSFT with fallback support","service":"finai-backend","timestamp":"2025-07-04T14:00:01.222Z"}
+{"level":"info","message":"Fetching Yahoo Finance data for MSFT","service":"finai-backend","timestamp":"2025-07-04T14:00:01.222Z"}
+{"level":"info","message":"Yahoo Finance data fetched successfully for MSFT","service":"finai-backend","timestamp":"2025-07-04T14:00:01.323Z"}
+{"level":"info","message":"Fetching stock data for AMZN with fallback support","service":"finai-backend","timestamp":"2025-07-04T14:00:01.324Z"}
+{"level":"info","message":"Fetching Yahoo Finance data for AMZN","service":"finai-backend","timestamp":"2025-07-04T14:00:01.324Z"}
+{"level":"info","message":"FRED data fetched successfully for FEDFUNDS","service":"finai-backend","timestamp":"2025-07-04T14:00:01.356Z"}
+{"level":"info","message":"US economic data compiled successfully","service":"finai-backend","timestamp":"2025-07-04T14:00:01.356Z"}
+{"level":"info","message":"✅ Economic indicators refresh completed","service":"finai-backend","timestamp":"2025-07-04T14:00:01.357Z"}
+{"level":"info","message":"Yahoo Finance data fetched successfully for AMZN","service":"finai-backend","timestamp":"2025-07-04T14:00:01.534Z"}
+{"level":"info","message":"Fetching stock data for TSLA with fallback support","service":"finai-backend","timestamp":"2025-07-04T14:00:01.534Z"}
+{"level":"info","message":"Fetching Yahoo Finance data for TSLA","service":"finai-backend","timestamp":"2025-07-04T14:00:01.535Z"}
+{"level":"info","message":"Yahoo Finance data fetched successfully for TSLA","service":"finai-backend","timestamp":"2025-07-04T14:00:01.639Z"}
+{"level":"info","message":"✅ Stock data refresh completed","service":"finai-backend","timestamp":"2025-07-04T14:00:01.640Z"}
+{"level":"error","message":"Error fetching FMP news for general:","service":"finai-backend","timestamp":"2025-07-04T14:00:01.976Z"}
+{"level":"info","message":"FMP general news failed, no news data available","service":"finai-backend","timestamp":"2025-07-04T14:00:01.977Z"}
+{"level":"info","message":"✅ News refresh completed","service":"finai-backend","timestamp":"2025-07-04T14:00:01.977Z"}
+{"level":"info","message":"GET /api/stock-analysis/analyze/AAPL - ::1","service":"finai-backend","timestamp":"2025-07-04T14:00:07.792Z"}
+{"level":"info","message":"API request for stock analysis: AAPL","service":"finai-backend","timestamp":"2025-07-04T14:00:07.792Z"}
+{"level":"info","message":"Starting comprehensive analysis for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:00:07.793Z"}
+{"level":"info","message":"Returning cached analysis for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:00:07.793Z"}
+{"level":"info","message":"GET /api/stock-analysis/analyze/AAPL - ::1","service":"finai-backend","timestamp":"2025-07-04T14:00:07.966Z"}
+{"level":"info","message":"API request for stock analysis: AAPL","service":"finai-backend","timestamp":"2025-07-04T14:00:07.967Z"}
+{"level":"info","message":"Starting comprehensive analysis for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:00:07.967Z"}
+{"level":"info","message":"Returning cached analysis for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:00:07.967Z"}
+{"level":"info","message":"GET /api/stock-analysis/analyze/AAPL - ::1","service":"finai-backend","timestamp":"2025-07-04T14:03:49.909Z"}
+{"level":"info","message":"API request for stock analysis: AAPL","service":"finai-backend","timestamp":"2025-07-04T14:03:49.914Z"}
+{"level":"info","message":"Starting comprehensive analysis for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:03:49.914Z"}
+{"level":"info","message":"Returning cached analysis for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:03:49.915Z"}
+{"level":"info","message":"🔄 Running scheduled stock data refresh","service":"finai-backend","timestamp":"2025-07-04T14:05:00.220Z"}
+{"level":"info","message":"Fetching top Indian stocks data","service":"finai-backend","timestamp":"2025-07-04T14:05:00.229Z"}
+{"level":"info","message":"Fetching Indian stock data for RELIANCE","service":"finai-backend","timestamp":"2025-07-04T14:05:00.229Z"}
+{"level":"info","message":"Returning cached Indian stock data for RELIANCE","service":"finai-backend","timestamp":"2025-07-04T14:05:00.230Z"}
+{"level":"info","message":"Fetching Indian stock data for TCS","service":"finai-backend","timestamp":"2025-07-04T14:05:00.230Z"}
+{"level":"info","message":"Returning cached Indian stock data for TCS","service":"finai-backend","timestamp":"2025-07-04T14:05:00.231Z"}
+{"level":"info","message":"Fetching Indian stock data for HDFCBANK","service":"finai-backend","timestamp":"2025-07-04T14:05:00.231Z"}
+{"level":"info","message":"Returning cached Indian stock data for HDFCBANK","service":"finai-backend","timestamp":"2025-07-04T14:05:00.231Z"}
+{"level":"info","message":"Fetching Indian stock data for INFY","service":"finai-backend","timestamp":"2025-07-04T14:05:00.231Z"}
+{"level":"info","message":"Returning cached Indian stock data for INFY","service":"finai-backend","timestamp":"2025-07-04T14:05:00.232Z"}
+{"level":"info","message":"Fetching Indian stock data for HINDUNILVR","service":"finai-backend","timestamp":"2025-07-04T14:05:00.232Z"}
+{"level":"info","message":"Returning cached Indian stock data for HINDUNILVR","service":"finai-backend","timestamp":"2025-07-04T14:05:00.232Z"}
+{"level":"info","message":"Fetching Indian stock data for ICICIBANK","service":"finai-backend","timestamp":"2025-07-04T14:05:00.232Z"}
+{"level":"info","message":"Returning cached Indian stock data for ICICIBANK","service":"finai-backend","timestamp":"2025-07-04T14:05:00.233Z"}
+{"level":"info","message":"Fetching Indian stock data for KOTAKBANK","service":"finai-backend","timestamp":"2025-07-04T14:05:00.233Z"}
+{"level":"info","message":"Returning cached Indian stock data for KOTAKBANK","service":"finai-backend","timestamp":"2025-07-04T14:05:00.233Z"}
+{"level":"info","message":"Fetching Indian stock data for BHARTIARTL","service":"finai-backend","timestamp":"2025-07-04T14:05:00.233Z"}
+{"level":"info","message":"Returning cached Indian stock data for BHARTIARTL","service":"finai-backend","timestamp":"2025-07-04T14:05:00.233Z"}
+{"level":"info","message":"Fetching Indian stock data for ITC","service":"finai-backend","timestamp":"2025-07-04T14:05:00.234Z"}
+{"level":"info","message":"Returning cached Indian stock data for ITC","service":"finai-backend","timestamp":"2025-07-04T14:05:00.234Z"}
+{"level":"info","message":"Fetching Indian stock data for SBIN","service":"finai-backend","timestamp":"2025-07-04T14:05:00.234Z"}
+{"level":"info","message":"Returning cached Indian stock data for SBIN","service":"finai-backend","timestamp":"2025-07-04T14:05:00.234Z"}
+{"level":"info","message":"Fetched data for 10 top Indian stocks","service":"finai-backend","timestamp":"2025-07-04T14:05:00.236Z"}
+{"level":"info","message":"Fetching stock data for AAPL with fallback support","service":"finai-backend","timestamp":"2025-07-04T14:05:00.236Z"}
+{"level":"info","message":"Fetching Yahoo Finance data for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:05:00.236Z"}
+{"level":"info","message":"Returning cached Yahoo data for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:05:00.236Z"}
+{"level":"info","message":"Fetching stock data for GOOGL with fallback support","service":"finai-backend","timestamp":"2025-07-04T14:05:00.237Z"}
+{"level":"info","message":"Fetching Yahoo Finance data for GOOGL","service":"finai-backend","timestamp":"2025-07-04T14:05:00.237Z"}
+{"level":"info","message":"Returning cached Yahoo data for GOOGL","service":"finai-backend","timestamp":"2025-07-04T14:05:00.237Z"}
+{"level":"info","message":"Fetching stock data for MSFT with fallback support","service":"finai-backend","timestamp":"2025-07-04T14:05:00.237Z"}
+{"level":"info","message":"Fetching Yahoo Finance data for MSFT","service":"finai-backend","timestamp":"2025-07-04T14:05:00.243Z"}
+{"level":"info","message":"Returning cached Yahoo data for MSFT","service":"finai-backend","timestamp":"2025-07-04T14:05:00.243Z"}
+{"level":"info","message":"Fetching stock data for AMZN with fallback support","service":"finai-backend","timestamp":"2025-07-04T14:05:00.243Z"}
+{"level":"info","message":"Fetching Yahoo Finance data for AMZN","service":"finai-backend","timestamp":"2025-07-04T14:05:00.243Z"}
+{"level":"info","message":"Returning cached Yahoo data for AMZN","service":"finai-backend","timestamp":"2025-07-04T14:05:00.244Z"}
+{"level":"info","message":"Fetching stock data for TSLA with fallback support","service":"finai-backend","timestamp":"2025-07-04T14:05:00.244Z"}
+{"level":"info","message":"Fetching Yahoo Finance data for TSLA","service":"finai-backend","timestamp":"2025-07-04T14:05:00.244Z"}
+{"level":"info","message":"Returning cached Yahoo data for TSLA","service":"finai-backend","timestamp":"2025-07-04T14:05:00.244Z"}
+{"level":"info","message":"✅ Stock data refresh completed","service":"finai-backend","timestamp":"2025-07-04T14:05:00.244Z"}
+{"level":"info","message":"GET /api/stock-analysis/analyze/AAPL - ::1","service":"finai-backend","timestamp":"2025-07-04T14:05:45.982Z"}
+{"level":"info","message":"API request for stock analysis: AAPL","service":"finai-backend","timestamp":"2025-07-04T14:05:45.983Z"}
+{"level":"info","message":"Starting comprehensive analysis for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:05:45.984Z"}
+{"level":"info","message":"Fetching Alpha Vantage quote for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:05:45.985Z"}
+{"level":"info","message":"Fetching Yahoo Finance data for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:05:46.030Z"}
+{"level":"info","message":"Fetching Alpha Vantage news for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:05:46.034Z"}
+{"level":"info","message":"Fetching Alpha Vantage company overview for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:05:46.037Z"}
+{"level":"info","message":"Returning cached Alpha Vantage overview for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:05:46.038Z"}
+{"level":"info","message":"Fetching Alpha Vantage RSI for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:05:46.038Z"}
+{"level":"info","message":"Fetching Alpha Vantage MACD for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:05:46.042Z"}
+{"level":"info","message":"Fetching Alpha Vantage SMA for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:05:46.045Z"}
+{"level":"info","message":"Fetching FRED data for series: GDP","service":"finai-backend","timestamp":"2025-07-04T14:05:46.049Z"}
+{"level":"info","message":"Returning cached FRED data for GDP","service":"finai-backend","timestamp":"2025-07-04T14:05:46.050Z"}
+{"level":"info","message":"Fetching FRED data for series: CPIAUCSL","service":"finai-backend","timestamp":"2025-07-04T14:05:46.050Z"}
+{"level":"info","message":"Returning cached FRED data for CPIAUCSL","service":"finai-backend","timestamp":"2025-07-04T14:05:46.051Z"}
+{"level":"info","message":"Fetching FRED data for series: UNRATE","service":"finai-backend","timestamp":"2025-07-04T14:05:46.051Z"}
+{"level":"info","message":"Returning cached FRED data for UNRATE","service":"finai-backend","timestamp":"2025-07-04T14:05:46.051Z"}
+{"level":"info","message":"Yahoo Finance data fetched successfully for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:05:46.191Z"}
+{"level":"warn","message":"No Alpha Vantage MACD data found for AAPL:","service":"finai-backend","timestamp":"2025-07-04T14:05:46.339Z"}
+{"level":"warn","message":"No Alpha Vantage SMA data found for AAPL:","service":"finai-backend","timestamp":"2025-07-04T14:05:46.340Z"}
+{"level":"warn","message":"No Alpha Vantage data found for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:05:46.352Z"}
+{"level":"warn","message":"No Alpha Vantage RSI data found for AAPL:","service":"finai-backend","timestamp":"2025-07-04T14:05:46.722Z"}
+{"level":"info","message":"Generated comprehensive analysis for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:05:46.724Z"}
+{"level":"info","message":"GET /api/stock-analysis/analyze/AAPL - ::1","service":"finai-backend","timestamp":"2025-07-04T14:05:46.729Z"}
+{"level":"info","message":"API request for stock analysis: AAPL","service":"finai-backend","timestamp":"2025-07-04T14:05:46.730Z"}
+{"level":"info","message":"Starting comprehensive analysis for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:05:46.730Z"}
+{"level":"info","message":"Returning cached analysis for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:05:46.730Z"}
+{"level":"info","message":"GET /api/stock-analysis/analyze/AAPL - ::1","service":"finai-backend","timestamp":"2025-07-04T14:06:19.980Z"}
+{"level":"info","message":"API request for stock analysis: AAPL","service":"finai-backend","timestamp":"2025-07-04T14:06:19.982Z"}
+{"level":"info","message":"Starting comprehensive analysis for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:06:19.983Z"}
+{"level":"info","message":"Returning cached analysis for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:06:19.984Z"}
+{"level":"info","message":"GET /api/stock-analysis/analyze/AAPL - ::1","service":"finai-backend","timestamp":"2025-07-04T14:06:19.994Z"}
+{"level":"info","message":"API request for stock analysis: AAPL","service":"finai-backend","timestamp":"2025-07-04T14:06:19.995Z"}
+{"level":"info","message":"Starting comprehensive analysis for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:06:19.995Z"}
+{"level":"info","message":"Returning cached analysis for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:06:19.997Z"}
+{"level":"info","message":"GET /api/stock-analysis/analyze/AAPL - ::1","service":"finai-backend","timestamp":"2025-07-04T14:08:26.996Z"}
+{"level":"info","message":"API request for stock analysis: AAPL","service":"finai-backend","timestamp":"2025-07-04T14:08:27.006Z"}
+{"level":"info","message":"Starting comprehensive analysis for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:08:27.007Z"}
+{"level":"info","message":"Returning cached analysis for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:08:27.008Z"}
+{"level":"info","message":"GET /api/stock-analysis/analyze/AAPL - ::1","service":"finai-backend","timestamp":"2025-07-04T14:09:02.984Z"}
+{"level":"info","message":"API request for stock analysis: AAPL","service":"finai-backend","timestamp":"2025-07-04T14:09:02.986Z"}
+{"level":"info","message":"Starting comprehensive analysis for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:09:02.986Z"}
+{"level":"info","message":"Returning cached analysis for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:09:02.987Z"}
+{"level":"info","message":"GET /api/stock-analysis/analyze/AAPL - ::1","service":"finai-backend","timestamp":"2025-07-04T14:09:02.993Z"}
+{"level":"info","message":"API request for stock analysis: AAPL","service":"finai-backend","timestamp":"2025-07-04T14:09:02.995Z"}
+{"level":"info","message":"Starting comprehensive analysis for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:09:02.995Z"}
+{"level":"info","message":"Returning cached analysis for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:09:02.996Z"}
+{"level":"info","message":"🔄 Running scheduled stock data refresh","service":"finai-backend","timestamp":"2025-07-04T14:10:00.692Z"}
+{"level":"info","message":"Fetching top Indian stocks data","service":"finai-backend","timestamp":"2025-07-04T14:10:00.705Z"}
+{"level":"info","message":"Fetching Indian stock data for RELIANCE","service":"finai-backend","timestamp":"2025-07-04T14:10:00.706Z"}
+{"level":"info","message":"Fetching Indian stock data for TCS","service":"finai-backend","timestamp":"2025-07-04T14:10:00.799Z"}
+{"level":"info","message":"Fetching Indian stock data for HDFCBANK","service":"finai-backend","timestamp":"2025-07-04T14:10:00.802Z"}
+{"level":"info","message":"Fetching Indian stock data for INFY","service":"finai-backend","timestamp":"2025-07-04T14:10:00.805Z"}
+{"level":"info","message":"Fetching Indian stock data for HINDUNILVR","service":"finai-backend","timestamp":"2025-07-04T14:10:00.809Z"}
+{"level":"info","message":"Fetching Indian stock data for ICICIBANK","service":"finai-backend","timestamp":"2025-07-04T14:10:00.813Z"}
+{"level":"info","message":"Fetching Indian stock data for KOTAKBANK","service":"finai-backend","timestamp":"2025-07-04T14:10:00.818Z"}
+{"level":"info","message":"Fetching Indian stock data for BHARTIARTL","service":"finai-backend","timestamp":"2025-07-04T14:10:00.821Z"}
+{"level":"info","message":"Fetching Indian stock data for ITC","service":"finai-backend","timestamp":"2025-07-04T14:10:00.824Z"}
+{"level":"info","message":"Fetching Indian stock data for SBIN","service":"finai-backend","timestamp":"2025-07-04T14:10:00.826Z"}
+{"change":"25.90","changePercent":"1.12","level":"info","message":"Indian stock data fetched successfully for HINDUNILVR:","price":2339.3,"service":"finai-backend","timestamp":"2025-07-04T14:10:00.912Z"}
+{"change":"9.50","changePercent":"0.63","level":"info","message":"Indian stock data fetched successfully for RELIANCE:","price":1527.3,"service":"finai-backend","timestamp":"2025-07-04T14:10:00.951Z"}
+{"change":"-0.80","changePercent":"-0.19","level":"info","message":"Indian stock data fetched successfully for ITC:","price":412.55,"service":"finai-backend","timestamp":"2025-07-04T14:10:00.958Z"}
+{"change":"16.90","changePercent":"1.19","level":"info","message":"Indian stock data fetched successfully for ICICIBANK:","price":1442.8,"service":"finai-backend","timestamp":"2025-07-04T14:10:00.961Z"}
+{"change":"3.20","changePercent":"0.15","level":"info","message":"Indian stock data fetched successfully for KOTAKBANK:","price":2129.8,"service":"finai-backend","timestamp":"2025-07-04T14:10:00.979Z"}
+{"change":"-2.10","changePercent":"-0.10","level":"info","message":"Indian stock data fetched successfully for BHARTIARTL:","price":2017.2,"service":"finai-backend","timestamp":"2025-07-04T14:10:00.985Z"}
+{"change":"4.75","changePercent":"0.59","level":"info","message":"Indian stock data fetched successfully for SBIN:","price":811.85,"service":"finai-backend","timestamp":"2025-07-04T14:10:00.987Z"}
+{"change":"22.00","changePercent":"1.36","level":"info","message":"Indian stock data fetched successfully for INFY:","price":1640.7,"service":"finai-backend","timestamp":"2025-07-04T14:10:00.989Z"}
+{"change":"19.00","changePercent":"0.56","level":"info","message":"Indian stock data fetched successfully for TCS:","price":3419.8,"service":"finai-backend","timestamp":"2025-07-04T14:10:00.991Z"}
+{"change":"2.20","changePercent":"0.11","level":"info","message":"Indian stock data fetched successfully for HDFCBANK:","price":1989.3,"service":"finai-backend","timestamp":"2025-07-04T14:10:01.027Z"}
+{"level":"info","message":"Fetched data for 10 top Indian stocks","service":"finai-backend","timestamp":"2025-07-04T14:10:01.028Z"}
+{"level":"info","message":"Fetching stock data for AAPL with fallback support","service":"finai-backend","timestamp":"2025-07-04T14:10:01.029Z"}
+{"level":"info","message":"Fetching Yahoo Finance data for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:10:01.030Z"}
+{"level":"info","message":"Returning cached Yahoo data for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:10:01.031Z"}
+{"level":"info","message":"Fetching stock data for GOOGL with fallback support","service":"finai-backend","timestamp":"2025-07-04T14:10:01.031Z"}
+{"level":"info","message":"Fetching Yahoo Finance data for GOOGL","service":"finai-backend","timestamp":"2025-07-04T14:10:01.032Z"}
+{"level":"info","message":"Yahoo Finance data fetched successfully for GOOGL","service":"finai-backend","timestamp":"2025-07-04T14:10:01.170Z"}
+{"level":"info","message":"Fetching stock data for MSFT with fallback support","service":"finai-backend","timestamp":"2025-07-04T14:10:01.171Z"}
+{"level":"info","message":"Fetching Yahoo Finance data for MSFT","service":"finai-backend","timestamp":"2025-07-04T14:10:01.171Z"}
+{"level":"info","message":"Yahoo Finance data fetched successfully for MSFT","service":"finai-backend","timestamp":"2025-07-04T14:10:01.316Z"}
+{"level":"info","message":"Fetching stock data for AMZN with fallback support","service":"finai-backend","timestamp":"2025-07-04T14:10:01.317Z"}
+{"level":"info","message":"Fetching Yahoo Finance data for AMZN","service":"finai-backend","timestamp":"2025-07-04T14:10:01.317Z"}
+{"level":"info","message":"Yahoo Finance data fetched successfully for AMZN","service":"finai-backend","timestamp":"2025-07-04T14:10:01.386Z"}
+{"level":"info","message":"Fetching stock data for TSLA with fallback support","service":"finai-backend","timestamp":"2025-07-04T14:10:01.387Z"}
+{"level":"info","message":"Fetching Yahoo Finance data for TSLA","service":"finai-backend","timestamp":"2025-07-04T14:10:01.387Z"}
+{"level":"info","message":"Yahoo Finance data fetched successfully for TSLA","service":"finai-backend","timestamp":"2025-07-04T14:10:01.457Z"}
+{"level":"info","message":"✅ Stock data refresh completed","service":"finai-backend","timestamp":"2025-07-04T14:10:01.458Z"}
+{"level":"info","message":"Mock Plaid Service initialized - for demonstration purposes","service":"finai-backend","timestamp":"2025-07-04T14:10:49.813Z"}
+{"level":"warn","message":"Port 5000 is busy, trying next port...","service":"finai-backend","timestamp":"2025-07-04T14:10:49.855Z"}
+{"level":"info","message":"🚀 Financial Research AI Backend running on port 5000","service":"finai-backend","timestamp":"2025-07-04T14:10:49.857Z"}
+{"level":"info","message":"🌍 Environment: development","service":"finai-backend","timestamp":"2025-07-04T14:10:49.858Z"}
+{"level":"info","message":"📊 Market data integration active","service":"finai-backend","timestamp":"2025-07-04T14:10:49.858Z"}
+{"level":"info","message":"🕒 Starting scheduled data refresh jobs","service":"finai-backend","timestamp":"2025-07-04T14:10:49.859Z"}
+{"level":"info","message":"✅ All scheduled jobs initialized","service":"finai-backend","timestamp":"2025-07-04T14:10:49.863Z"}
+{"level":"info","message":"🚀 Financial Research AI Backend running on port 5001","service":"finai-backend","timestamp":"2025-07-04T14:10:49.864Z"}
+{"level":"info","message":"🌍 Environment: development","service":"finai-backend","timestamp":"2025-07-04T14:10:49.864Z"}
+{"level":"info","message":"📊 Market data integration active","service":"finai-backend","timestamp":"2025-07-04T14:10:49.865Z"}
+{"level":"info","message":"🕒 Starting scheduled data refresh jobs","service":"finai-backend","timestamp":"2025-07-04T14:10:49.865Z"}
+{"level":"info","message":"✅ All scheduled jobs initialized","service":"finai-backend","timestamp":"2025-07-04T14:10:49.866Z"}
+{"level":"info","message":"GET /api/stock-analysis/analyze/AAPL - ::1","service":"finai-backend","timestamp":"2025-07-04T14:13:30.058Z"}
+{"level":"info","message":"API request for stock analysis: AAPL","service":"finai-backend","timestamp":"2025-07-04T14:13:30.073Z"}
+{"level":"info","message":"Starting comprehensive analysis for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:13:30.075Z"}
+{"level":"info","message":"Fetching Alpha Vantage quote for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:13:30.078Z"}
+{"level":"info","message":"Fetching Yahoo Finance data for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:13:30.133Z"}
+{"level":"info","message":"Fetching Alpha Vantage news for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:13:30.141Z"}
+{"level":"info","message":"Fetching Alpha Vantage company overview for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:13:30.146Z"}
+{"level":"info","message":"Returning cached Alpha Vantage overview for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:13:30.147Z"}
+{"level":"info","message":"Fetching Alpha Vantage RSI for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:13:30.148Z"}
+{"level":"info","message":"Fetching Alpha Vantage MACD for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:13:30.151Z"}
+{"level":"info","message":"Fetching Alpha Vantage SMA for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:13:30.156Z"}
+{"level":"info","message":"Fetching FRED data for series: GDP","service":"finai-backend","timestamp":"2025-07-04T14:13:30.162Z"}
+{"level":"info","message":"Returning cached FRED data for GDP","service":"finai-backend","timestamp":"2025-07-04T14:13:30.163Z"}
+{"level":"info","message":"Fetching FRED data for series: CPIAUCSL","service":"finai-backend","timestamp":"2025-07-04T14:13:30.163Z"}
+{"level":"info","message":"Returning cached FRED data for CPIAUCSL","service":"finai-backend","timestamp":"2025-07-04T14:13:30.164Z"}
+{"level":"info","message":"Fetching FRED data for series: UNRATE","service":"finai-backend","timestamp":"2025-07-04T14:13:30.164Z"}
+{"level":"info","message":"Returning cached FRED data for UNRATE","service":"finai-backend","timestamp":"2025-07-04T14:13:30.165Z"}
+{"level":"info","message":"Yahoo Finance data fetched successfully for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:13:30.302Z"}
+{"level":"warn","message":"No Alpha Vantage MACD data found for AAPL:","service":"finai-backend","timestamp":"2025-07-04T14:13:30.467Z"}
+{"level":"warn","message":"No Alpha Vantage RSI data found for AAPL:","service":"finai-backend","timestamp":"2025-07-04T14:13:30.479Z"}
+{"level":"warn","message":"No Alpha Vantage data found for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:13:30.480Z"}
+{"level":"warn","message":"No Alpha Vantage SMA data found for AAPL:","service":"finai-backend","timestamp":"2025-07-04T14:13:30.486Z"}
+{"level":"info","message":"Generated comprehensive analysis for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:13:30.496Z"}
+{"level":"info","message":"GET /api/stock-analysis/analyze/AAPL - ::1","service":"finai-backend","timestamp":"2025-07-04T14:13:31.652Z"}
+{"level":"info","message":"API request for stock analysis: AAPL","service":"finai-backend","timestamp":"2025-07-04T14:13:31.653Z"}
+{"level":"info","message":"Starting comprehensive analysis for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:13:31.653Z"}
+{"level":"info","message":"Returning cached analysis for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:13:31.654Z"}
+{"level":"info","message":"🔄 Running scheduled stock data refresh","service":"finai-backend","timestamp":"2025-07-04T14:15:00.242Z"}
+{"level":"info","message":"Fetching top Indian stocks data","service":"finai-backend","timestamp":"2025-07-04T14:15:00.244Z"}
+{"level":"info","message":"Fetching Indian stock data for RELIANCE","service":"finai-backend","timestamp":"2025-07-04T14:15:00.245Z"}
+{"level":"info","message":"Returning cached Indian stock data for RELIANCE","service":"finai-backend","timestamp":"2025-07-04T14:15:00.246Z"}
+{"level":"info","message":"Fetching Indian stock data for TCS","service":"finai-backend","timestamp":"2025-07-04T14:15:00.246Z"}
+{"level":"info","message":"Returning cached Indian stock data for TCS","service":"finai-backend","timestamp":"2025-07-04T14:15:00.248Z"}
+{"level":"info","message":"Fetching Indian stock data for HDFCBANK","service":"finai-backend","timestamp":"2025-07-04T14:15:00.249Z"}
+{"level":"info","message":"Returning cached Indian stock data for HDFCBANK","service":"finai-backend","timestamp":"2025-07-04T14:15:00.250Z"}
+{"level":"info","message":"Fetching Indian stock data for INFY","service":"finai-backend","timestamp":"2025-07-04T14:15:00.250Z"}
+{"level":"info","message":"Returning cached Indian stock data for INFY","service":"finai-backend","timestamp":"2025-07-04T14:15:00.252Z"}
+{"level":"info","message":"Fetching Indian stock data for HINDUNILVR","service":"finai-backend","timestamp":"2025-07-04T14:15:00.253Z"}
+{"level":"info","message":"Returning cached Indian stock data for HINDUNILVR","service":"finai-backend","timestamp":"2025-07-04T14:15:00.254Z"}
+{"level":"info","message":"Fetching Indian stock data for ICICIBANK","service":"finai-backend","timestamp":"2025-07-04T14:15:00.255Z"}
+{"level":"info","message":"Returning cached Indian stock data for ICICIBANK","service":"finai-backend","timestamp":"2025-07-04T14:15:00.257Z"}
+{"level":"info","message":"Fetching Indian stock data for KOTAKBANK","service":"finai-backend","timestamp":"2025-07-04T14:15:00.257Z"}
+{"level":"info","message":"Returning cached Indian stock data for KOTAKBANK","service":"finai-backend","timestamp":"2025-07-04T14:15:00.258Z"}
+{"level":"info","message":"Fetching Indian stock data for BHARTIARTL","service":"finai-backend","timestamp":"2025-07-04T14:15:00.259Z"}
+{"level":"info","message":"Returning cached Indian stock data for BHARTIARTL","service":"finai-backend","timestamp":"2025-07-04T14:15:00.261Z"}
+{"level":"info","message":"Fetching Indian stock data for ITC","service":"finai-backend","timestamp":"2025-07-04T14:15:00.262Z"}
+{"level":"info","message":"Returning cached Indian stock data for ITC","service":"finai-backend","timestamp":"2025-07-04T14:15:00.263Z"}
+{"level":"info","message":"Fetching Indian stock data for SBIN","service":"finai-backend","timestamp":"2025-07-04T14:15:00.265Z"}
+{"level":"info","message":"Returning cached Indian stock data for SBIN","service":"finai-backend","timestamp":"2025-07-04T14:15:00.267Z"}
+{"level":"info","message":"Fetched data for 10 top Indian stocks","service":"finai-backend","timestamp":"2025-07-04T14:15:00.271Z"}
+{"level":"info","message":"Fetching stock data for AAPL with fallback support","service":"finai-backend","timestamp":"2025-07-04T14:15:00.272Z"}
+{"level":"info","message":"Fetching Yahoo Finance data for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:15:00.273Z"}
+{"level":"info","message":"Returning cached Yahoo data for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:15:00.274Z"}
+{"level":"info","message":"Fetching stock data for GOOGL with fallback support","service":"finai-backend","timestamp":"2025-07-04T14:15:00.274Z"}
+{"level":"info","message":"Fetching Yahoo Finance data for GOOGL","service":"finai-backend","timestamp":"2025-07-04T14:15:00.275Z"}
+{"level":"info","message":"Returning cached Yahoo data for GOOGL","service":"finai-backend","timestamp":"2025-07-04T14:15:00.277Z"}
+{"level":"info","message":"Fetching stock data for MSFT with fallback support","service":"finai-backend","timestamp":"2025-07-04T14:15:00.278Z"}
+{"level":"info","message":"Fetching Yahoo Finance data for MSFT","service":"finai-backend","timestamp":"2025-07-04T14:15:00.281Z"}
+{"level":"info","message":"Returning cached Yahoo data for MSFT","service":"finai-backend","timestamp":"2025-07-04T14:15:00.282Z"}
+{"level":"info","message":"Fetching stock data for AMZN with fallback support","service":"finai-backend","timestamp":"2025-07-04T14:15:00.284Z"}
+{"level":"info","message":"Fetching Yahoo Finance data for AMZN","service":"finai-backend","timestamp":"2025-07-04T14:15:00.285Z"}
+{"level":"info","message":"Returning cached Yahoo data for AMZN","service":"finai-backend","timestamp":"2025-07-04T14:15:00.300Z"}
+{"level":"info","message":"Fetching stock data for TSLA with fallback support","service":"finai-backend","timestamp":"2025-07-04T14:15:00.301Z"}
+{"level":"info","message":"Fetching Yahoo Finance data for TSLA","service":"finai-backend","timestamp":"2025-07-04T14:15:00.303Z"}
+{"level":"info","message":"Returning cached Yahoo data for TSLA","service":"finai-backend","timestamp":"2025-07-04T14:15:00.303Z"}
+{"level":"info","message":"✅ Stock data refresh completed","service":"finai-backend","timestamp":"2025-07-04T14:15:00.304Z"}
+{"level":"info","message":"🔄 Running scheduled news refresh","service":"finai-backend","timestamp":"2025-07-04T14:15:00.305Z"}
+{"level":"info","message":"Generating mock general financial news","service":"finai-backend","timestamp":"2025-07-04T14:15:00.306Z"}
+{"level":"info","message":"Fetching general financial news","service":"finai-backend","timestamp":"2025-07-04T14:15:00.309Z"}
+{"level":"info","message":"Fetching Alpha Vantage news for general","service":"finai-backend","timestamp":"2025-07-04T14:15:00.311Z"}
+{"level":"info","message":"Alpha Vantage general news failed, trying FMP","service":"finai-backend","timestamp":"2025-07-04T14:15:00.646Z"}
+{"level":"info","message":"Fetching FMP news for general","service":"finai-backend","timestamp":"2025-07-04T14:15:00.647Z"}
+{"level":"error","message":"Error fetching FMP news for general:","service":"finai-backend","timestamp":"2025-07-04T14:15:01.444Z"}
+{"level":"info","message":"FMP general news failed, no news data available","service":"finai-backend","timestamp":"2025-07-04T14:15:01.446Z"}
+{"level":"info","message":"✅ News refresh completed","service":"finai-backend","timestamp":"2025-07-04T14:15:01.446Z"}
+{"level":"info","message":"GET /api/stock-analysis/search?q=AAP - ::1","service":"finai-backend","timestamp":"2025-07-04T14:16:11.930Z"}
+{"level":"info","message":"API request for stock search: AAP","service":"finai-backend","timestamp":"2025-07-04T14:16:11.935Z"}
+{"level":"info","message":"GET /api/stock-analysis/search?q=AA - ::1","service":"finai-backend","timestamp":"2025-07-04T14:16:12.078Z"}
+{"level":"info","message":"API request for stock search: AA","service":"finai-backend","timestamp":"2025-07-04T14:16:12.079Z"}
+{"level":"info","message":"GET /api/stock-analysis/search?q=A - ::1","service":"finai-backend","timestamp":"2025-07-04T14:16:12.221Z"}
+{"level":"info","message":"API request for stock search: A","service":"finai-backend","timestamp":"2025-07-04T14:16:12.222Z"}
+{"level":"info","message":"GET /api/stock-analysis/search?q=g - ::1","service":"finai-backend","timestamp":"2025-07-04T14:16:12.626Z"}
+{"level":"info","message":"API request for stock search: g","service":"finai-backend","timestamp":"2025-07-04T14:16:12.626Z"}
+{"level":"info","message":"GET /api/stock-analysis/search?q=go - ::1","service":"finai-backend","timestamp":"2025-07-04T14:16:12.695Z"}
+{"level":"info","message":"API request for stock search: go","service":"finai-backend","timestamp":"2025-07-04T14:16:12.696Z"}
+{"level":"info","message":"GET /api/stock-analysis/search?q=goo - ::1","service":"finai-backend","timestamp":"2025-07-04T14:16:12.883Z"}
+{"level":"info","message":"API request for stock search: goo","service":"finai-backend","timestamp":"2025-07-04T14:16:12.884Z"}
+{"level":"info","message":"GET /api/stock-analysis/search?q=goog - ::1","service":"finai-backend","timestamp":"2025-07-04T14:16:13.013Z"}
+{"level":"info","message":"API request for stock search: goog","service":"finai-backend","timestamp":"2025-07-04T14:16:13.014Z"}
+{"level":"info","message":"GET /api/stock-analysis/analyze/AAPL - ::1","service":"finai-backend","timestamp":"2025-07-04T14:16:18.871Z"}
+{"level":"info","message":"API request for stock analysis: AAPL","service":"finai-backend","timestamp":"2025-07-04T14:16:18.873Z"}
+{"level":"info","message":"Starting comprehensive analysis for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:16:18.874Z"}
+{"level":"info","message":"Returning cached analysis for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:16:18.876Z"}
+{"level":"info","message":"GET /api/stock-analysis/analyze/AAPL - ::1","service":"finai-backend","timestamp":"2025-07-04T14:18:32.981Z"}
+{"level":"info","message":"API request for stock analysis: AAPL","service":"finai-backend","timestamp":"2025-07-04T14:18:32.986Z"}
+{"level":"info","message":"Starting comprehensive analysis for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:18:32.986Z"}
+{"level":"info","message":"Fetching Alpha Vantage quote for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:18:32.988Z"}
+{"level":"info","message":"Fetching Yahoo Finance data for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:18:33.046Z"}
+{"level":"info","message":"Fetching Alpha Vantage news for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:18:33.051Z"}
+{"level":"info","message":"Fetching Alpha Vantage company overview for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:18:33.054Z"}
+{"level":"info","message":"Returning cached Alpha Vantage overview for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:18:33.055Z"}
+{"level":"info","message":"Fetching Alpha Vantage RSI for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:18:33.055Z"}
+{"level":"info","message":"Fetching Alpha Vantage MACD for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:18:33.060Z"}
+{"level":"info","message":"Fetching Alpha Vantage SMA for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:18:33.063Z"}
+{"level":"info","message":"Fetching FRED data for series: GDP","service":"finai-backend","timestamp":"2025-07-04T14:18:33.066Z"}
+{"level":"info","message":"Fetching FRED data for series: CPIAUCSL","service":"finai-backend","timestamp":"2025-07-04T14:18:33.068Z"}
+{"level":"info","message":"Fetching FRED data for series: UNRATE","service":"finai-backend","timestamp":"2025-07-04T14:18:33.072Z"}
+{"level":"info","message":"Yahoo Finance data fetched successfully for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:18:33.200Z"}
+{"level":"warn","message":"No Alpha Vantage RSI data found for AAPL:","service":"finai-backend","timestamp":"2025-07-04T14:18:33.363Z"}
+{"level":"warn","message":"No Alpha Vantage SMA data found for AAPL:","service":"finai-backend","timestamp":"2025-07-04T14:18:33.364Z"}
+{"level":"warn","message":"No Alpha Vantage data found for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:18:33.368Z"}
+{"level":"warn","message":"No Alpha Vantage MACD data found for AAPL:","service":"finai-backend","timestamp":"2025-07-04T14:18:33.379Z"}
+{"level":"info","message":"FRED data fetched successfully for CPIAUCSL","service":"finai-backend","timestamp":"2025-07-04T14:18:33.575Z"}
+{"level":"info","message":"FRED data fetched successfully for UNRATE","service":"finai-backend","timestamp":"2025-07-04T14:18:33.579Z"}
+{"level":"info","message":"FRED data fetched successfully for GDP","service":"finai-backend","timestamp":"2025-07-04T14:18:33.597Z"}
+{"level":"info","message":"Generated comprehensive analysis for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:18:33.598Z"}
+{"level":"info","message":"GET /api/stock-analysis/analyze/AAPL - ::1","service":"finai-backend","timestamp":"2025-07-04T14:18:33.603Z"}
+{"level":"info","message":"API request for stock analysis: AAPL","service":"finai-backend","timestamp":"2025-07-04T14:18:33.603Z"}
+{"level":"info","message":"Starting comprehensive analysis for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:18:33.603Z"}
+{"level":"info","message":"Returning cached analysis for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:18:33.603Z"}
+{"level":"info","message":"GET /api/stock-analysis/analyze/AAPL - ::1","service":"finai-backend","timestamp":"2025-07-04T14:19:42.144Z"}
+{"level":"info","message":"API request for stock analysis: AAPL","service":"finai-backend","timestamp":"2025-07-04T14:19:42.147Z"}
+{"level":"info","message":"Starting comprehensive analysis for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:19:42.147Z"}
+{"level":"info","message":"Returning cached analysis for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:19:42.147Z"}
+{"level":"info","message":"🔄 Running scheduled stock data refresh","service":"finai-backend","timestamp":"2025-07-04T14:20:00.867Z"}
+{"level":"info","message":"Fetching top Indian stocks data","service":"finai-backend","timestamp":"2025-07-04T14:20:00.869Z"}
+{"level":"info","message":"Fetching Indian stock data for RELIANCE","service":"finai-backend","timestamp":"2025-07-04T14:20:00.870Z"}
+{"level":"info","message":"Fetching Indian stock data for TCS","service":"finai-backend","timestamp":"2025-07-04T14:20:00.952Z"}
+{"level":"info","message":"Fetching Indian stock data for HDFCBANK","service":"finai-backend","timestamp":"2025-07-04T14:20:00.956Z"}
+{"level":"info","message":"Fetching Indian stock data for INFY","service":"finai-backend","timestamp":"2025-07-04T14:20:00.959Z"}
+{"level":"info","message":"Fetching Indian stock data for HINDUNILVR","service":"finai-backend","timestamp":"2025-07-04T14:20:00.965Z"}
+{"level":"info","message":"Fetching Indian stock data for ICICIBANK","service":"finai-backend","timestamp":"2025-07-04T14:20:00.969Z"}
+{"level":"info","message":"Fetching Indian stock data for KOTAKBANK","service":"finai-backend","timestamp":"2025-07-04T14:20:00.975Z"}
+{"level":"info","message":"Fetching Indian stock data for BHARTIARTL","service":"finai-backend","timestamp":"2025-07-04T14:20:00.979Z"}
+{"level":"info","message":"Fetching Indian stock data for ITC","service":"finai-backend","timestamp":"2025-07-04T14:20:00.983Z"}
+{"level":"info","message":"Fetching Indian stock data for SBIN","service":"finai-backend","timestamp":"2025-07-04T14:20:00.989Z"}
+{"change":"19.00","changePercent":"0.56","level":"info","message":"Indian stock data fetched successfully for TCS:","price":3419.8,"service":"finai-backend","timestamp":"2025-07-04T14:20:01.194Z"}
+{"change":"9.50","changePercent":"0.63","level":"info","message":"Indian stock data fetched successfully for RELIANCE:","price":1527.3,"service":"finai-backend","timestamp":"2025-07-04T14:20:01.197Z"}
+{"change":"2.20","changePercent":"0.11","level":"info","message":"Indian stock data fetched successfully for HDFCBANK:","price":1989.3,"service":"finai-backend","timestamp":"2025-07-04T14:20:01.236Z"}
+{"change":"25.90","changePercent":"1.12","level":"info","message":"Indian stock data fetched successfully for HINDUNILVR:","price":2339.3,"service":"finai-backend","timestamp":"2025-07-04T14:20:01.241Z"}
+{"change":"22.00","changePercent":"1.36","level":"info","message":"Indian stock data fetched successfully for INFY:","price":1640.7,"service":"finai-backend","timestamp":"2025-07-04T14:20:01.243Z"}
+{"change":"-2.10","changePercent":"-0.10","level":"info","message":"Indian stock data fetched successfully for BHARTIARTL:","price":2017.2,"service":"finai-backend","timestamp":"2025-07-04T14:20:01.245Z"}
+{"change":"4.75","changePercent":"0.59","level":"info","message":"Indian stock data fetched successfully for SBIN:","price":811.85,"service":"finai-backend","timestamp":"2025-07-04T14:20:01.248Z"}
+{"change":"16.90","changePercent":"1.19","level":"info","message":"Indian stock data fetched successfully for ICICIBANK:","price":1442.8,"service":"finai-backend","timestamp":"2025-07-04T14:20:01.251Z"}
+{"change":"-0.80","changePercent":"-0.19","level":"info","message":"Indian stock data fetched successfully for ITC:","price":412.55,"service":"finai-backend","timestamp":"2025-07-04T14:20:01.254Z"}
+{"change":"3.20","changePercent":"0.15","level":"info","message":"Indian stock data fetched successfully for KOTAKBANK:","price":2129.8,"service":"finai-backend","timestamp":"2025-07-04T14:20:01.257Z"}
+{"level":"info","message":"Fetched data for 10 top Indian stocks","service":"finai-backend","timestamp":"2025-07-04T14:20:01.258Z"}
+{"level":"info","message":"Fetching stock data for AAPL with fallback support","service":"finai-backend","timestamp":"2025-07-04T14:20:01.258Z"}
+{"level":"info","message":"Fetching Yahoo Finance data for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:20:01.259Z"}
+{"level":"info","message":"Returning cached Yahoo data for AAPL","service":"finai-backend","timestamp":"2025-07-04T14:20:01.260Z"}
+{"level":"info","message":"Fetching stock data for GOOGL with fallback support","service":"finai-backend","timestamp":"2025-07-04T14:20:01.261Z"}
+{"level":"info","message":"Fetching Yahoo Finance data for GOOGL","service":"finai-backend","timestamp":"2025-07-04T14:20:01.262Z"}
+{"level":"info","message":"Yahoo Finance data fetched successfully for GOOGL","service":"finai-backend","timestamp":"2025-07-04T14:20:01.377Z"}
+{"level":"info","message":"Fetching stock data for MSFT with fallback support","service":"finai-backend","timestamp":"2025-07-04T14:20:01.378Z"}
+{"level":"info","message":"Fetching Yahoo Finance data for MSFT","service":"finai-backend","timestamp":"2025-07-04T14:20:01.379Z"}
+{"level":"info","message":"Yahoo Finance data fetched successfully for MSFT","service":"finai-backend","timestamp":"2025-07-04T14:20:01.480Z"}
+{"level":"info","message":"Fetching stock data for AMZN with fallback support","service":"finai-backend","timestamp":"2025-07-04T14:20:01.486Z"}
+{"level":"info","message":"Fetching Yahoo Finance data for AMZN","service":"finai-backend","timestamp":"2025-07-04T14:20:01.487Z"}
+{"level":"info","message":"Yahoo Finance data fetched successfully for AMZN","service":"finai-backend","timestamp":"2025-07-04T14:20:01.588Z"}
+{"level":"info","message":"Fetching stock data for TSLA with fallback support","service":"finai-backend","timestamp":"2025-07-04T14:20:01.588Z"}
+{"level":"info","message":"Fetching Yahoo Finance data for TSLA","service":"finai-backend","timestamp":"2025-07-04T14:20:01.588Z"}
+{"level":"info","message":"Yahoo Finance data fetched successfully for TSLA","service":"finai-backend","timestamp":"2025-07-04T14:20:01.690Z"}
+{"level":"info","message":"✅ Stock data refresh completed","service":"finai-backend","timestamp":"2025-07-04T14:20:01.691Z"}

@@ -543,51 +543,22 @@
   gap: 15px;
 }
 
-.fundamental-score {
-  text-align: center;
-}
-
-.score-badge {
-  padding: 10px 20px;
-  border-radius: 25px;
-  font-weight: 700;
-  font-size: 1.2rem;
-}
-
-.score-badge.strong {
-  background: #22c55e;
-  color: white;
-}
-
-.score-badge.moderate {
-  background: #f59e0b;
-  color: white;
-}
-
-.score-badge.weak {
-  background: #ef4444;
-  color: white;
-}
-
-.fundamental-metrics {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.metric-item {
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 12px;
-  background: #f8fafc;
-  border-radius: 8px;
-  font-size: 0.9rem;
-}
-
 .fundamental-summary {
   color: #4b5563;
   margin: 0;
   line-height: 1.5;
+}
+
+.fundamental-recommendation {
+  background: #f0f9ff;
+  border: 1px solid #0ea5e9;
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 10px;
+}
+
+.fundamental-recommendation strong {
+  color: #0369a1;
 }
 
 /* Risk Assessment */
