@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { TbChartLine, TbRefresh, TbRobot, TbBrain, TbAlertTriangle, TbShield, TbTrendingUp, TbBolt, TbBulb, TbTarget, TbCircleDot } from 'react-icons/tb';
+import { TbChartLine, TbRefresh, TbRobot, TbBrain, TbAlertTriangle, TbShield, TbTrendingUp, TbBolt, TbBulb, TbTarget, TbCircleDot, TbChartBar, TbEye } from 'react-icons/tb';
 import ErrorDisplay from '../components/ErrorDisplay';
 import './StockAnalysis.css';
 
@@ -426,7 +426,7 @@ const StockAnalysis = () => {
           text-align: center;
           padding: 40px;
         ">
-          <div style="font-size: 48px; margin-bottom: 20px;">📊</div>
+          <div style="font-size: 48px; margin-bottom: 20px;">�</div>
           <div style="font-size: 24px; margin-bottom: 16px; font-weight: bold;">${symbol} Chart (${exchange})</div>
           <div style="font-size: 16px; margin-bottom: 20px; opacity: 0.9;">
             Interactive chart temporarily unavailable
@@ -524,12 +524,15 @@ const StockAnalysis = () => {
   return (
     <div className="stock-analysis">
       <div className="stock-analysis__header">
-        <h1>🤖 AI-Powered Stock Analysis</h1>
+        <h1 className="flex items-center justify-center gap-3">
+          <TbRobot className="text-4xl text-purple-600" />
+          AI-Powered Stock Analysis
+        </h1>
         <p>FinBERT sentiment analysis • Real-time data • AI risk assessment • Smart recommendations</p>
         <div className="ai-features-badge">
           <span className="feature-badge"><TbBrain className="inline-block mr-1" /> FinBERT AI</span>
-          <span className="feature-badge">📊 Real-time Data</span>
-          <span className="feature-badge">🎯 Smart Predictions</span>
+          <span className="feature-badge"><TbChartBar className="inline-block mr-1" /> Real-time Data</span>
+          <span className="feature-badge"><TbTarget className="inline-block mr-1" /> Smart Predictions</span>
           <span className="feature-badge"><TbBolt className="inline-block mr-1" /> Risk Assessment</span>
         </div>
       </div>
