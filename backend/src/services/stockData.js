@@ -296,33 +296,128 @@ class StockDataService {
     }
   }
 
-  // Get stock search suggestions
+  // Search for stocks by symbol or company name
   async searchStocks(query) {
     try {
-      logger.info(`Searching stocks for query: ${query}`);
+      logger.info(`Searching for stocks with query: ${query}`);
       
-      // Using Yahoo Finance search
-      const url = `https://query1.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(query)}`;
-      const response = await axios.get(url, {
+      // Yahoo Finance search endpoint
+      const searchUrl = `https://query1.finance.yahoo.com/v1/finance/search?q=${encodeURIComponent(query)}`;
+      
+      const response = await axios.get(searchUrl, {
         headers: {
           'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-        }
+        },
+        timeout: 10000
       });
 
-      const quotes = response.data.quotes || [];
-      const results = quotes.slice(0, 10).map(quote => ({
-        symbol: quote.symbol,
-        shortname: quote.shortname,
-        longname: quote.longname,
-        exchDisp: quote.exchDisp,
-        typeDisp: quote.typeDisp
-      }));
+      if (!response.data || !response.data.quotes) {
+        logger.warn(`No search results found for: ${query}`);
+        return [];
+      }
 
-      logger.info(`Found ${results.length} search results for "${query}"`);
-      return results;
+      const quotes = response.data.quotes;
+      
+      // Filter and format the results
+      const formattedResults = quotes
+        .filter(quote => quote.symbol && quote.shortname) // Only include valid stocks
+        .slice(0, 10) // Limit to 10 results
+        .map(quote => {
+          // Determine exchange for TradingView
+          let exchange = 'NASDAQ';
+          
+          // Check symbol suffix for Indian exchanges
+          if (quote.symbol.endsWith('.NS')) {
+            exchange = 'NSE';
+          } else if (quote.symbol.endsWith('.BO')) {
+            exchange = 'BSE';
+          } else if (quote.exchange) {
+            // Check exchange field
+            const exchangeName = quote.exchange.toUpperCase();
+            if (exchangeName.includes('NSE') || exchangeName.includes('NATIONAL STOCK EXCHANGE')) {
+              exchange = 'NSE';
+            } else if (exchangeName.includes('BSE') || exchangeName.includes('BOMBAY STOCK EXCHANGE')) {
+              exchange = 'BSE';
+            } else if (exchangeName.includes('NYSE') || exchangeName.includes('NEW YORK STOCK EXCHANGE')) {
+              exchange = 'NYSE';
+            } else if (exchangeName.includes('NASDAQ')) {
+              exchange = 'NASDAQ';
+            }
+          }
+          
+          // Generate logo URL
+          const logoUrl = this.generateLogoUrl(quote.symbol, quote.shortname);
+          
+          return {
+            symbol: quote.symbol,
+            name: quote.shortname || quote.longname || `${quote.symbol} Inc.`,
+            sector: quote.sector || 'Unknown',
+            exchange: exchange,
+            logo: logoUrl,
+            marketType: quote.quoteType || 'EQUITY'
+          };
+        });
+
+      logger.info(`Found ${formattedResults.length} search results for: ${query}`);
+      return formattedResults;
+      
     } catch (error) {
-      logger.error(`Error searching stocks for "${query}":`, error.message);
-      throw new Error(`Failed to search stocks: ${error.message}`);
+      logger.error(`Error searching stocks for query "${query}":`, error.message);
+      
+      // Fallback to popular stocks if search fails
+      const popularStocks = [
+        // US Stocks
+        { symbol: 'AAPL', name: 'Apple Inc.', sector: 'Technology', logo: 'https://logo.clearbit.com/apple.com', exchange: 'NASDAQ' },
+        { symbol: 'MSFT', name: 'Microsoft Corporation', sector: 'Technology', logo: 'https://logo.clearbit.com/microsoft.com', exchange: 'NASDAQ' },
+        { symbol: 'GOOGL', name: 'Alphabet Inc.', sector: 'Technology', logo: 'https://logo.clearbit.com/google.com', exchange: 'NASDAQ' },
+        { symbol: 'TSLA', name: 'Tesla Inc.', sector: 'Consumer Discretionary', logo: 'https://logo.clearbit.com/tesla.com', exchange: 'NASDAQ' },
+        
+        // Indian Stocks
+        { symbol: 'RELIANCE', name: 'Reliance Industries Ltd.', sector: 'Energy', logo: 'https://logo.clearbit.com/ril.com', exchange: 'NSE' },
+        { symbol: 'TCS', name: 'Tata Consultancy Services Ltd.', sector: 'Technology', logo: 'https://logo.clearbit.com/tcs.com', exchange: 'NSE' },
+        { symbol: 'HDFCBANK', name: 'HDFC Bank Ltd.', sector: 'Financial Services', logo: 'https://logo.clearbit.com/hdfcbank.com', exchange: 'NSE' },
+        { symbol: 'INFY', name: 'Infosys Ltd.', sector: 'Technology', logo: 'https://logo.clearbit.com/infosys.com', exchange: 'NSE' }
+      ];
+      
+      const searchTerm = query.toLowerCase();
+      return popularStocks.filter(stock => 
+        stock.symbol.toLowerCase().includes(searchTerm) ||
+        stock.name.toLowerCase().includes(searchTerm) ||
+        stock.sector.toLowerCase().includes(searchTerm)
+      );
+    }
+  }
+
+  // Generate logo URL for a stock
+  generateLogoUrl(symbol, companyName) {
+    try {
+      // Try to guess the company domain for Clearbit
+      const cleanName = companyName.toLowerCase()
+        .replace(/\binc\.?|\bltd\.?|\bcorp\.?|\bco\.?|\bllc|\bplc/g, '')
+        .replace(/[^a-z0-9]/g, '')
+        .trim();
+      
+      // Special cases for known companies
+      const specialCases = {
+        'aapl': 'apple.com',
+        'msft': 'microsoft.com',
+        'googl': 'google.com',
+        'amzn': 'amazon.com',
+        'tsla': 'tesla.com',
+        'meta': 'meta.com',
+        'nvda': 'nvidia.com',
+        'reliance': 'ril.com',
+        'tcs': 'tcs.com',
+        'hdfcbank': 'hdfcbank.com',
+        'infy': 'infosys.com'
+      };
+      
+      const domain = specialCases[symbol.toLowerCase()] || specialCases[cleanName] || `${cleanName}.com`;
+      return `https://logo.clearbit.com/${domain}`;
+      
+    } catch (error) {
+      // Fallback to placeholder
+      return `https://via.placeholder.com/32x32/6366f1/ffffff?text=${symbol.charAt(0).toUpperCase()}`;
     }
   }
 

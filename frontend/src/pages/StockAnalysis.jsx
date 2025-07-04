@@ -45,6 +45,32 @@ const StockAnalysis = () => {
   const [watchlist, setWatchlist] = useState([]);
   const [chartInitialized, setChartInitialized] = useState(false);
   const chartContainerRef = useRef(null);
+  const searchContainerRef = useRef(null);
+
+  // Handle ESC key and click outside to close search dropdown
+  useEffect(() => {
+    const handleEscapeKey = (e) => {
+      if (e.key === 'Escape') {
+        setSearchResults([]);
+      }
+    };
+
+    const handleClickOutside = (e) => {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(e.target)) {
+        setSearchResults([]);
+      }
+    };
+
+    // Add event listeners
+    document.addEventListener('keydown', handleEscapeKey);
+    document.addEventListener('mousedown', handleClickOutside);
+
+    // Cleanup event listeners
+    return () => {
+      document.removeEventListener('keydown', handleEscapeKey);
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   // Search for stocks
   const searchStocks = async (term) => {
@@ -122,14 +148,20 @@ const StockAnalysis = () => {
     setSearchTerm(stock.symbol);
     setSearchResults([]);
     fetchAnalysis(stock.symbol);
-    initTradingViewWidget(stock.symbol);
+    initTradingViewWidget(stock.symbol, stock.exchange);
   };
 
   // Handle search input change
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
-    searchStocks(value);
+    
+    // If the search term is empty, clear results immediately
+    if (!value.trim()) {
+      setSearchResults([]);
+    } else {
+      searchStocks(value);
+    }
   };
 
   // Handle search input key press
@@ -146,6 +178,14 @@ const StockAnalysis = () => {
         const symbol = searchTerm.trim().toUpperCase();
         handleStockSelect({ symbol, name: symbol });
       }
+    } else if (e.key === 'Escape') {
+      // Close dropdown on Escape key
+      setSearchResults([]);
+      e.target.blur(); // Remove focus from input
+    } else if (e.key === 'ArrowDown' && searchResults.length > 0) {
+      // Prevent default scroll behavior
+      e.preventDefault();
+      // Focus could be enhanced here to navigate through results
     }
   };
 
@@ -180,17 +220,28 @@ const StockAnalysis = () => {
     return numValue > 0 ? `+${numValue.toFixed(2)}%` : `${numValue.toFixed(2)}%`;
   };
 
-  // Format currency
-  const formatCurrency = (value) => {
-    return new Intl.NumberFormat('en-US', {
+  // Format currency based on exchange/region
+  const formatCurrency = (value, exchange = 'NASDAQ') => {
+    // Determine currency based on exchange
+    let currency = 'USD';
+    let locale = 'en-US';
+    
+    if (exchange === 'NSE' || exchange === 'BSE') {
+      currency = 'INR';
+      locale = 'en-IN';
+    }
+    
+    return new Intl.NumberFormat(locale, {
       style: 'currency',
-      currency: 'USD'
+      currency: currency,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
     }).format(value);
   };
 
   // TradingView Widget - Working HTML embed approach with state tracking
-  const initTradingViewWidget = (symbol) => {
-    console.log("Initializing TradingView widget for", symbol);
+  const initTradingViewWidget = (symbol, exchange = 'NASDAQ') => {
+    console.log("Initializing TradingView widget for", symbol, "on", exchange);
     
     if (!chartContainerRef.current) {
       console.error("Chart container reference not available");
@@ -212,6 +263,47 @@ const StockAnalysis = () => {
       // Generate unique container ID
       const widgetId = `tradingview_${symbol.replace(/[^a-zA-Z0-9]/g, '')}_${Date.now()}`;
       
+      // Determine the correct exchange prefix for TradingView
+      const getTradingViewSymbol = (symbol, exchange) => {
+        // For Indian stocks, remove the .NS or .BO suffix
+        let cleanSymbol = symbol;
+        if (symbol.endsWith('.NS') || symbol.endsWith('.BO')) {
+          cleanSymbol = symbol.split('.')[0];
+        }
+        
+        switch (exchange) {
+          case 'NSE':
+            // Try both NSE: prefix and direct symbol for better compatibility
+            return `NSE:${cleanSymbol}`;
+          case 'BSE':
+            return `BSE:${cleanSymbol}`;
+          case 'NYSE':
+            return `NYSE:${cleanSymbol}`;
+          case 'NASDAQ':
+          default:
+            return `NASDAQ:${cleanSymbol}`;
+        }
+      };
+      
+      const tradingViewSymbol = getTradingViewSymbol(symbol, exchange);
+      console.log(`TradingView symbol: ${tradingViewSymbol} for ${symbol} on ${exchange}`);
+      
+      // Configure timezone and locale based on exchange
+      const getTimezoneAndLocale = (exchange) => {
+        if (exchange === 'NSE' || exchange === 'BSE') {
+          return {
+            timezone: "Asia/Kolkata",
+            locale: "en"
+          };
+        }
+        return {
+          timezone: "Etc/UTC",
+          locale: "en"
+        };
+      };
+      
+      const { timezone, locale } = getTimezoneAndLocale(exchange);
+      
       // Create the TradingView widget HTML directly
       const widgetHTML = `
         <!-- TradingView Widget BEGIN -->
@@ -220,12 +312,12 @@ const StockAnalysis = () => {
           <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
           {
             "autosize": true,
-            "symbol": "NASDAQ:${symbol}",
+            "symbol": "${tradingViewSymbol}",
             "interval": "D",
-            "timezone": "Etc/UTC",
+            "timezone": "${timezone}",
             "theme": "light",
             "style": "1",
-            "locale": "en",
+            "locale": "${locale}",
             "toolbar_bg": "#f1f3f6",
             "enable_publishing": false,
             "allow_symbol_change": true,
@@ -296,7 +388,7 @@ const StockAnalysis = () => {
             const tvElements = chartContainerRef.current.querySelectorAll('iframe, canvas, .tv-embed-widget-wrapper');
             if (tvElements.length === 0) {
               console.log('TradingView timeout - showing fallback chart');
-              showChartError(symbol, 'TradingView chart taking too long to load');
+              showChartError(symbol, 'TradingView chart taking too long to load', exchange);
             }
           }
         }, 10000);
@@ -305,13 +397,20 @@ const StockAnalysis = () => {
       
     } catch (error) {
       console.error("Error creating TradingView widget:", error);
-      showChartError(symbol, error.message);
+      showChartError(symbol, error.message, exchange);
     }
   };
   
   // Show chart error with fallback
-  const showChartError = (symbol, errorMessage) => {
+  const showChartError = (symbol, errorMessage, exchange = 'NASDAQ') => {
     if (chartContainerRef.current) {
+      // Determine currency symbol based on exchange
+      const getCurrencySymbol = (exchange) => {
+        return (exchange === 'NSE' || exchange === 'BSE') ? '₹' : '$';
+      };
+      
+      const currencySymbol = getCurrencySymbol(exchange);
+      
       chartContainerRef.current.innerHTML = `
         <div style="
           height: 500px; 
@@ -327,13 +426,13 @@ const StockAnalysis = () => {
           padding: 40px;
         ">
           <div style="font-size: 48px; margin-bottom: 20px;">📊</div>
-          <div style="font-size: 24px; margin-bottom: 16px; font-weight: bold;">${symbol} Chart</div>
+          <div style="font-size: 24px; margin-bottom: 16px; font-weight: bold;">${symbol} Chart (${exchange})</div>
           <div style="font-size: 16px; margin-bottom: 20px; opacity: 0.9;">
             Interactive chart temporarily unavailable
           </div>
           <div style="font-size: 14px; opacity: 0.8; max-width: 400px; line-height: 1.4; margin-bottom: 20px;">
             ${analysis && analysis.stockData ? 
-              `Current Price: $${analysis.stockData.currentPrice?.toFixed(2) || 'N/A'}<br>
+              `Current Price: ${currencySymbol}${analysis.stockData.currentPrice?.toFixed(2) || 'N/A'}<br>
                Change: ${analysis.stockData.change >= 0 ? '+' : ''}${analysis.stockData.change?.toFixed(2) || '0.00'} 
                (${analysis.stockData.changePercent?.toFixed(2) || '0.00'}%)<br>
                Volume: ${analysis.stockData.volume?.toLocaleString() || 'N/A'}` 
@@ -395,7 +494,7 @@ const StockAnalysis = () => {
       const initChart = () => {
         if (chartContainerRef.current) {
           console.log('Chart container is ready, initializing chart');
-          initTradingViewWidget(selectedStock.symbol);
+          initTradingViewWidget(selectedStock.symbol, selectedStock.exchange);
         } else {
           console.log('Chart container not ready, retrying...');
           // Retry after a short delay
@@ -435,7 +534,7 @@ const StockAnalysis = () => {
       </div>
 
       {/* Search Bar */}
-      <div className="search-container">
+      <div className="search-container" ref={searchContainerRef}>
         <div className="search-box">
           <input
             type="text"
@@ -467,9 +566,14 @@ const StockAnalysis = () => {
                     <div className="search-result-info">
                       <div className="search-result-symbol">{stock.symbol}</div>
                       <div className="search-result-name">{stock.name}</div>
-                      {stock.sector && (
-                        <div className="search-result-sector">{stock.sector}</div>
-                      )}
+                      <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginTop: '4px' }}>
+                        {stock.sector && (
+                          <div className="search-result-sector">{stock.sector}</div>
+                        )}
+                        {stock.exchange && (
+                          <div className="search-result-exchange">{stock.exchange}</div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -557,7 +661,7 @@ const StockAnalysis = () => {
                   </div>
                 </div>
                 <div className="stock-price">
-                  {analysis.stockData?.currentPrice && formatCurrency(analysis.stockData.currentPrice)}
+                  {analysis.stockData?.currentPrice && formatCurrency(analysis.stockData.currentPrice, selectedStock?.exchange)}
                   {analysis.stockData?.changePercent != null && !isNaN(analysis.stockData.changePercent) && (
                     <span 
                       className={`price-change ${analysis.stockData.changePercent >= 0 ? 'positive' : 'negative'}`}
@@ -612,7 +716,7 @@ const StockAnalysis = () => {
                       console.log('Force refreshing chart for', selectedStock.symbol);
                       setChartInitialized(false);
                       setTimeout(() => {
-                        initTradingViewWidget(selectedStock.symbol);
+                        initTradingViewWidget(selectedStock.symbol, selectedStock.exchange);
                       }, 100);
                     }
                   }}
@@ -815,7 +919,7 @@ const StockAnalysis = () => {
                   
                   {analysis.overallRecommendation.targetPrice && (
                     <div className="target-price">
-                      <span>AI Target Price: {formatCurrency(analysis.overallRecommendation.targetPrice)}</span>
+                      <span>AI Target Price: {formatCurrency(analysis.overallRecommendation.targetPrice, selectedStock?.exchange)}</span>
                     </div>
                   )}
 

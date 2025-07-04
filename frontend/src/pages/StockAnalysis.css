@@ -224,6 +224,17 @@
   font-style: italic;
 }
 
+.search-result-exchange {
+  color: #3b82f6;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: rgba(59, 130, 246, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-top: 4px;
+  display: inline-block;
+}
+
 /* Loading & Error States */
 .loading-container {
   text-align: center;
