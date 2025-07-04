@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { TbChartLine, TbRefresh, TbRobot, TbBrain, TbAlertTriangle, TbShield, TbTrendingUp } from 'react-icons/tb';
 import ErrorDisplay from '../components/ErrorDisplay';
 import './StockAnalysis.css';
 
@@ -526,7 +527,7 @@ const StockAnalysis = () => {
         <h1>🤖 AI-Powered Stock Analysis</h1>
         <p>FinBERT sentiment analysis • Real-time data • AI risk assessment • Smart recommendations</p>
         <div className="ai-features-badge">
-          <span className="feature-badge">🧠 FinBERT AI</span>
+          <span className="feature-badge"><TbBrain className="inline-block mr-1" /> FinBERT AI</span>
           <span className="feature-badge">📊 Real-time Data</span>
           <span className="feature-badge">🎯 Smart Predictions</span>
           <span className="feature-badge">⚡ Risk Assessment</span>
@@ -701,10 +702,18 @@ const StockAnalysis = () => {
                         <span className="font-semibold">{analysis.stockData.volume.toLocaleString()}</span>
                       </div>
                     )}
-                    {analysis.stockData?.marketCap && (
+                    {analysis.sentimentAnalysis?.overall && (
                       <div className="text-white/80">
-                        <span className="text-sm">Market Cap: </span>
-                        <span className="font-semibold">{formatCurrency(analysis.stockData.marketCap, selectedStock?.exchange)}</span>
+                        <span className="text-sm">AI Sentiment: </span>
+                        <span 
+                          className="font-semibold px-2 py-1 rounded text-xs uppercase tracking-wide"
+                          style={{ 
+                            backgroundColor: getSentimentColor(analysis.sentimentAnalysis.overall),
+                            color: 'white'
+                          }}
+                        >
+                          {analysis.sentimentAnalysis.overall}
+                        </span>
                       </div>
                     )}
                   </div>
@@ -712,14 +721,15 @@ const StockAnalysis = () => {
 
                 {/* Data Source */}
                 {analysis.stockData?.source && analysis.stockData.source === "Demo Data" && (
-                  <div className="mt-4 p-3 bg-red-100 text-red-800 rounded-lg font-bold">
-                    ⚠️ ERROR: Demo Data detected. This should not appear during development.
+                  <div className="mt-4 p-3 bg-red-100 text-red-800 rounded-lg font-bold flex items-center gap-2">
+                    <TbAlertTriangle className="text-xl flex-shrink-0" />
+                    ERROR: Demo Data detected. This should not appear during development.
                   </div>
                 )}
                 {analysis.stockData?.source && analysis.stockData.source !== "Demo Data" && (
                   <div className="mt-4 inline-block px-4 py-2 bg-white/10 rounded-full text-sm font-medium text-white/70 backdrop-blur-sm">
                     Data source: {analysis.stockData.source}
-                  </div>
+                  </div>  
                 )}
               </div>
             )}
@@ -729,7 +739,7 @@ const StockAnalysis = () => {
           <div className="bg-white rounded-2xl p-8 mb-8 shadow-xl border border-gray-100">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-2xl font-bold text-gray-800 flex items-center gap-3">
-                <span className="text-2xl">📈</span>
+                <TbChartLine className="text-2xl text-blue-600" />
                 Interactive Chart - {selectedStock?.symbol}
               </h3>
               <button 
@@ -744,7 +754,7 @@ const StockAnalysis = () => {
                 }}
                 className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg hover:from-indigo-600 hover:to-purple-700 transition-all duration-200 font-medium shadow-md hover:shadow-lg"
               >
-                <span>🔄</span>
+                <TbRefresh className="text-lg" />
                 Refresh Chart
               </button>
             </div>
@@ -758,7 +768,7 @@ const StockAnalysis = () => {
           <div className="analysis-grid">
             {/* Sentiment Analysis */}
             <div className="analysis-card">
-              <h3>🧠 FinBERT Sentiment Analysis</h3>
+              <h3 className="flex items-center gap-2"><TbBrain className="text-xl text-purple-600" /> FinBERT Sentiment Analysis</h3>
               <div className="ai-powered-badge">
                 <span>Financial AI Language Model</span>
               </div>
@@ -889,7 +899,7 @@ const StockAnalysis = () => {
 
                   {analysis.overallRecommendation.reasoning && (
                     <div className="recommendation-reasoning">
-                      <h4>🧠 AI Analysis Factors:</h4>
+                      <h4 className="flex items-center gap-2"><TbBrain className="text-lg text-blue-600" /> AI Analysis Factors:</h4>
                       <ul>
                         {analysis.overallRecommendation.reasoning.map((reason, index) => (
                           <li key={index}>{reason}</li>
