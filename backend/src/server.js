@@ -9,6 +9,7 @@ import newsRoutes from './routes/news.js';
 import companyFilingsRoutes from './routes/companyFilings.js';
 import plaidRoutes from './routes/plaid.js';
 import stockAnalysisRoutes from './routes/stockAnalysis.js';
+import financialPlanningRoutes from './routes/financialPlanning.js';
 import { startDataRefreshJobs } from './services/scheduler.js';
 
 // Load environment variables
@@ -94,6 +95,8 @@ app.use('/api/news', newsRoutes);
 app.use('/api/company-filings', companyFilingsRoutes);
 app.use('/api/plaid', plaidRoutes);
 app.use('/api/stock-analysis', stockAnalysisRoutes);
+app.use('/api/financial-planning', financialPlanningRoutes);
+app.use('/api/financial-planning', financialPlanningRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
