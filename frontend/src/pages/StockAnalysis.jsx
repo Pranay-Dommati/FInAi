@@ -463,28 +463,33 @@ const StockAnalysis = () => {
   };
 
   useEffect(() => {
-    // Load default stock (e.g., AAPL) on component mount
-    const defaultStock = { symbol: 'AAPL', name: 'Apple Inc.' };
-    setSelectedStock(defaultStock);
-    setSearchTerm(defaultStock.symbol);
+    // Only load default stock if no symbol is in the URL parameters
+    const symbolFromURL = searchParams.get('symbol');
     
-    console.log('Stock Analysis component mounted, initializing with', defaultStock.symbol);
-    
-    // Add a small delay to ensure DOM is ready, then fetch data only
-    const timer = setTimeout(() => {
-      console.log('Fetching initial data for', defaultStock.symbol);
-      fetchAnalysis(defaultStock.symbol)
-        .catch(err => {
-          console.error('Failed to fetch initial data:', err);
-          setError(`Initial data fetch failed: ${err.message || 'Unknown error'}`);
-        });
-    }, 1000);
-    
-    return () => {
-      console.log('Cleaning up Stock Analysis component');
-      clearTimeout(timer);
-    };
-  }, []);
+    if (!symbolFromURL) {
+      // Load default stock (e.g., AAPL) only if no symbol in URL
+      const defaultStock = { symbol: 'AAPL', name: 'Apple Inc.' };
+      setSelectedStock(defaultStock);
+      setSearchTerm(defaultStock.symbol);
+      
+      console.log('No symbol in URL, initializing with default:', defaultStock.symbol);
+      
+      // Add a small delay to ensure DOM is ready, then fetch data only
+      const timer = setTimeout(() => {
+        console.log('Fetching initial data for', defaultStock.symbol);
+        fetchAnalysis(defaultStock.symbol)
+          .catch(err => {
+            console.error('Failed to fetch initial data:', err);
+            setError(`Initial data fetch failed: ${err.message || 'Unknown error'}`);
+          });
+      }, 1000);
+      
+      return () => {
+        console.log('Cleaning up Stock Analysis component');
+        clearTimeout(timer);
+      };
+    }
+  }, [searchParams]);
   
   // Chart initialization effect - improved timing and state tracking
   useEffect(() => {
