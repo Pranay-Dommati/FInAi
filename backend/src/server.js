@@ -14,17 +14,62 @@ import { startDataRefreshJobs } from './services/scheduler.js';
 // Load environment variables
 dotenv.config();
 
+// Validate required environment variables
+const requiredEnvVars = [
+  'FRED_API_KEY',
+  'ALPHA_VANTAGE_API_KEY',
+  'NEWS_API_KEY'
+];
+
+const missingEnvVars = requiredEnvVars.filter(key => !process.env[key]);
+if (missingEnvVars.length > 0) {
+  logger.warn(`Missing environment variables: ${missingEnvVars.join(', ')}`);
+  // Set mock data flag if environment variables are missing
+  process.env.USE_MOCK_DATA = 'true';
+}
+
 const app = express();
 const server = createServer(app);
 const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' ? 'your-frontend-domain.com' : 'http://localhost:5173',
-  credentials: true
+  origin: ['http://localhost:5173', 'http://127.0.0.1:5173'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control', 'Pragma']
 }));
+
+// Body parsing middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+  logger.error('Unhandled error:', err);
+  res.status(500).json({
+    success: false,
+    error: process.env.NODE_ENV === 'development' 
+      ? err.message 
+      : 'An unexpected error occurred'
+  });
+});
+
+// Response formatting middleware
+app.use((req, res, next) => {
+  const originalJson = res.json;
+  res.json = function(data) {
+    if (data && typeof data === 'object' && !data.hasOwnProperty('success')) {
+      return originalJson.call(this, {
+        success: true,
+        data,
+        timestamp: new Date().toISOString()
+      });
+    }
+    return originalJson.call(this, data);
+  };
+  next();
+});
 
 // Logging middleware
 app.use((req, res, next) => {
