@@ -1,5 +1,4 @@
 import winston from 'winston';
-import { stringify } from 'flatted';
 
 const logger = winston.createLogger({
   level: 'info',
@@ -22,8 +21,15 @@ if (process.env.NODE_ENV !== 'production') {
       winston.format.colorize(),
       winston.format.simple(),
       winston.format.printf(({ timestamp, level, message, ...meta }) => {
-        return `${timestamp} [${level}]: ${message} ${
-          Object.keys(meta).length ? stringify(meta, null, 2) : ''
+        // Clean up meta data - only show simple values
+        const cleanMeta = {};
+        Object.keys(meta).forEach(key => {
+          if (typeof meta[key] === 'string' || typeof meta[key] === 'number') {
+            cleanMeta[key] = meta[key];
+          }
+        });
+        return `${timestamp} [${level}]: ${message}${
+          Object.keys(cleanMeta).length ? ` ${JSON.stringify(cleanMeta)}` : ''
         }`;
       })
     )

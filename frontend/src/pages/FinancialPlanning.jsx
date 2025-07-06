@@ -2,30 +2,54 @@
 import { useState, useEffect, useCallback } from 'react';
 import Card from '../components/Card';
 import InteractiveQuestionnaire from '../components/InteractiveQuestionnaire';
+import { fetchPlaidData, recommendStocks } from '../services/plaidService';
+import { fetchRealTimeStockData, fetchFinancialProjections } from '../services/stockAnalysisService';
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell
+} from 'recharts';
 
 function FinancialPlanning() {
   const [showQuestionnaire, setShowQuestionnaire] = useState(false);
   const [userProfile, setUserProfile] = useState({
-    age: 0,
-    income: 0,
-    riskTolerance: '',
-    investmentGoal: '',
-    timeHorizon: '',
-    currentSavings: 0,
-    monthlyExpenses: 0,
-    hasEmergencyFund: false,
-    has401k: false,
-    employerMatch: 0
+    monthlyIncome: 0,
+    recurringExpenses: 0,
+    monthlyInvestment: 0,
+    financialGoals: [],
+    riskTolerance: 'Moderate',
+    savingsSurplus: 0
   });
 
   const [activeTab, setActiveTab] = useState('overview');
   const [financialPlan, setFinancialPlan] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [plaidConnected, setPlaidConnected] = useState(false);
-  const [accessToken, setAccessToken] = useState(null);
   const [realTimeInsights, setRealTimeInsights] = useState([]);
   const [inputChanged, setInputChanged] = useState(false);
   const [goalProgress, setGoalProgress] = useState(null);
+  const [userInput, setUserInput] = useState(null);
+  const [stockRecommendations, setStockRecommendations] = useState([]);
+  const [dashboardData, setDashboardData] = useState(null);
+  const [aiTips, setAiTips] = useState([]);
+  const [stockSuggestions, setStockSuggestions] = useState([]);
+  const [projections, setProjections] = useState({
+    retirement: [],
+    investment: [],
+    savings: []
+  });
+  const [portfolioAllocation, setPortfolioAllocation] = useState([]);
+  const [riskAnalysis, setRiskAnalysis] = useState({
+    score: 0,
+    breakdown: []
+  });
 
   // Check if user has completed the questionnaire
   const hasValidProfile = () => {
@@ -66,9 +90,9 @@ function FinancialPlanning() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            field,
-            value,
-            currentProfile
+            field: field,
+            value: value,
+            currentProfile: currentProfile
           })
         });
 
@@ -79,6 +103,7 @@ function FinancialPlanning() {
               id: Date.now(),
               field,
               impact: result.data.impact,
+              realisticImpact: result.data.realisticImpact, // Added realistic impact
               timestamp: new Date().toLocaleString()
             },
             ...prev.slice(0, 4) // Keep only last 5 insights
@@ -113,21 +138,18 @@ function FinancialPlanning() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          profile: userProfile,
-          accessToken: accessToken
+          profile: userProfile
         })
       });
 
       if (response.ok) {
         const result = await response.json();
-        setFinancialPlan(result.data);
-        
-        // Track goal progress if we have savings data
-        if (userProfile.currentSavings > 0) {
-          trackGoalProgress();
-        }
+        setFinancialPlan({
+          ...result.data,
+          realisticProjection: result.data.realisticProjection // Added realistic projection
+        });
       } else {
-        console.error('Failed to generate financial plan');
+        console.error('Error generating financial plan:', response.statusText);
       }
     } catch (error) {
       console.error('Error generating financial plan:', error);
@@ -140,7 +162,7 @@ function FinancialPlanning() {
     try {
       // Validate numeric values before sending
       const currentSavings = parseFloat(userProfile.currentSavings) || 0;
-      const monthlyContribution = 500; // Default assumption
+      const monthlyContribution = parseFloat(userProfile.monthlyInvestment) || userProfile.savingsSurplus;
       const targetAmount = parseFloat(userProfile.income) * 10 || 500000; // 10x income rule for retirement
       const timeframe = parseInt(userProfile.timeHorizon.split(' ')[0]) || 30;
 
@@ -178,7 +200,7 @@ function FinancialPlanning() {
     
     // Validate and convert numeric values
     let processedValue = value;
-    if (['age', 'income', 'currentSavings', 'monthlyExpenses', 'employerMatch'].includes(field)) {
+    if (['age', 'income', 'currentSavings', 'monthlyExpenses', 'employerMatch', 'monthlyInvestment'].includes(field)) {
       processedValue = parseFloat(value) || 0;
       if (isNaN(processedValue)) {
         processedValue = 0;
@@ -236,13 +258,6 @@ function FinancialPlanning() {
     return [];
   };
 
-  const connectPlaid = async () => {
-    // In a real implementation, this would initiate Plaid Link
-    // For demo purposes, we'll simulate a connection
-    setPlaidConnected(true);
-    setAccessToken('mock-access-token');
-  };
-
   const portfolioOptions = {
     'Conservative': {
       expectedReturn: '6-8%',
@@ -264,6 +279,333 @@ function FinancialPlanning() {
     }
   };
 
+  // Fetch real-time financial data from Plaid API when user input is available
+  useEffect(() => {
+    if (userInput) {
+      fetchPlaidData(userInput).then(data => {
+        setFinancialPlan(data);
+        setStockRecommendations(recommendStocks(data));
+      });
+    }
+  }, [userInput]);
+
+  // Calculate savings surplus and update user profile
+  const calculateSurplus = () => {
+    const surplus = userProfile.monthlyIncome - userProfile.recurringExpenses;
+    setUserProfile(prev => ({ ...prev, savingsSurplus: surplus }));
+  };
+
+  // Generate dashboard data based on user profile
+  const generateDashboardData = () => {
+    const monthlyInvestment = parseFloat(userProfile.monthlyInvestment) || userProfile.savingsSurplus;
+    setDashboardData({
+      surplus: userProfile.savingsSurplus,
+      monthlyInvestment: monthlyInvestment,
+      deficit: userProfile.savingsSurplus < 0,
+      expenseBreakdown: userProfile.recurringExpenses,
+      goalTracking: userProfile.financialGoals
+    });
+  };
+
+  // Generate AI tips based on user profile
+  const generateAiTips = () => {
+    const tips = [];
+    const {
+      monthlyIncome,
+      recurringExpenses,
+      monthlyInvestment,
+      savingsSurplus,
+      riskAppetite,
+      lumpSum,
+      age,
+      investmentHorizon
+    } = userProfile;
+
+    // Savings and Investment Insights
+    if (savingsSurplus > 0) {
+      if (monthlyInvestment < savingsSurplus * 0.5) {
+        tips.push(`You have potential to invest more. Consider increasing your monthly investment from ₹${monthlyInvestment} to at least ₹${Math.round(savingsSurplus * 0.5)} to build long-term wealth.`);
+      }
+      if (!monthlyInvestment) {
+        tips.push(`You can save ₹${savingsSurplus} monthly. Start with a systematic investment plan (SIP) of ₹${Math.round(savingsSurplus * 0.3)} in mutual funds.`);
+      }
+    } else {
+      const expenseRatio = recurringExpenses / monthlyIncome;
+      if (expenseRatio > 0.7) {
+        tips.push(`Your expenses are ${Math.round(expenseRatio * 100)}% of income. Try to reduce non-essential expenses to maintain the 50-30-20 budget rule.`);
+      }
+    }
+
+    // Risk-based Portfolio Insights
+    if (riskAppetite) {
+      const portfolioSuggestions = {
+        Low: "Consider balanced mutual funds with 60:40 debt to equity ratio for stable returns.",
+        Medium: "Mix of index funds and actively managed mutual funds can provide good growth with managed risk.",
+        High: "Look into sectoral funds and mid-cap stocks for higher growth potential."
+      };
+      tips.push(portfolioSuggestions[riskAppetite]);
+    }
+
+    // Age-based Insights
+    if (age) {
+      if (age < 30) {
+        tips.push("Your young age allows for more risk. Consider allocating 70-80% to equity investments for long-term growth.");
+      } else if (age > 45) {
+        tips.push("As you approach retirement, gradually increase debt allocation. Consider shifting 40-50% of portfolio to debt instruments.");
+      }
+    }
+
+    // Lump Sum Insights
+    if (lumpSum > 50000) {
+      tips.push(`Consider staggering your lump sum investment of ₹${lumpSum} through Systematic Transfer Plan (STP) to average out market risks.`);
+    }
+
+    // Investment Horizon Insights
+    if (investmentHorizon) {
+      const horizonTips = {
+        '<1 year': "For short-term goals, focus on liquid funds and short-term debt funds to maintain capital safety.",
+        '1-3 years': "Consider hybrid funds with dynamic asset allocation for medium-term goals.",
+        '5+ years': "Long-term horizon allows for higher equity exposure. Look into multi-cap funds for diversified growth."
+      };
+      tips.push(horizonTips[investmentHorizon]);
+    }
+
+    // Tax Efficiency Tips
+    if (monthlyIncome * 12 > 500000) {
+      tips.push("Maximize tax benefits through ELSS mutual funds under Section 80C and NPS additional deduction under 80CCD(1B).");
+    }
+
+    // Emergency Fund Check
+    const recommendedEmergencyFund = recurringExpenses * 6;
+    if (!lumpSum || lumpSum < recommendedEmergencyFund) {
+      tips.push(`Build an emergency fund of ₹${Math.round(recommendedEmergencyFund)}(6 months of expenses) before aggressive investing.`);
+    }
+
+    // Investment Diversification Tips
+    if (monthlyInvestment > 10000) {
+      tips.push("Consider diversifying across asset classes: 60% equity mutual funds, 20% debt funds, 10% gold ETF, and 10% high-interest savings.");
+    }
+
+    // If just starting out
+    if (!monthlyInvestment && !lumpSum && savingsSurplus > 0) {
+      tips.push("Start your investment journey with low-cost index funds. They provide broad market exposure with minimal fees.");
+    }
+
+    setAiTips(tips);
+  };
+
+  // Generate stock suggestions based on user profile
+  const generateStockSuggestions = () => {
+    const suggestions = recommendStocks(userProfile);
+    setStockSuggestions(suggestions);
+  };
+
+  const generateRealisticProjections = async () => {
+    setLoading(true);
+    try {
+      const response = await fetchFinancialProjections(userProfile);
+      if (response.ok) {
+        const result = await response.json();
+        setFinancialPlan(result.data);
+      } else {
+        console.error('Error fetching realistic projections:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error fetching realistic projections:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const generateRealisticStockSuggestions = async () => {
+    try {
+      const response = await fetchRealTimeStockData(userProfile.riskTolerance);
+      if (response.ok) {
+        const result = await response.json();
+        setStockSuggestions(result.data);
+      } else {
+        console.error('Error fetching stock suggestions:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error fetching stock suggestions:', error);
+    }
+  };
+
+  // Calculate retirement projections with detailed metrics
+  const calculateRetirementProjections = () => {
+    const years = 30;
+    const inflationRate = 0.06;  // 6% average inflation
+    const taxRate = 0.30;        // 30% tax bracket
+    const epfRate = 0.0825;      // 8.25% EPF returns
+    
+    // Adjust returns based on risk appetite
+    const returnRates = {
+      Low: {
+        conservative: 0.06,  // 6% for conservative
+        moderate: 0.08,      // 8% for moderate
+        aggressive: 0.10     // 10% for aggressive
+      },
+      Medium: {
+        conservative: 0.08,  // 8% for conservative
+        moderate: 0.12,      // 12% for moderate
+        aggressive: 0.15     // 15% for aggressive
+      },
+      High: {
+        conservative: 0.10,  // 10% for conservative
+        moderate: 0.15,      // 15% for moderate
+        aggressive: 0.20     // 20% for aggressive
+      }
+    };
+    
+    const riskLevel = userProfile.riskAppetite || 'Medium';
+    const conservativeReturn = returnRates[riskLevel].conservative;
+    const moderateReturn = returnRates[riskLevel].moderate;
+    const aggressiveReturn = returnRates[riskLevel].aggressive;
+    
+    const monthlyContribution = parseFloat(userProfile.monthlyInvestment) || userProfile.savingsSurplus;
+    const currentAge = userProfile.age || 30;
+    let initialBalance = userProfile.lumpSum || 0;
+    let epfBalance = userProfile.epfBalance || 0;
+    
+    const projectionData = [];
+    
+    // Calculate different scenarios with compound interest
+    for (let year = 1; year <= years; year++) {
+      const age = currentAge + year;
+      
+      // EPF calculation with compound interest
+      const epfYearlyContribution = Math.min(userProfile.monthlyIncome * 0.12 * 12, 180000); // 12% of basic, max 15k monthly
+      epfBalance = (epfBalance + epfYearlyContribution) * (1 + epfRate);
+      
+      // Investment portfolio calculations with monthly compounding
+      const monthlyRate = {
+        conservative: conservativeReturn / 12,
+        moderate: moderateReturn / 12,
+        aggressive: aggressiveReturn / 12
+      };
+      
+      // Compound interest with monthly contributions
+      const conservative = initialBalance * Math.pow(1 + monthlyRate.conservative, 12) + 
+        monthlyContribution * ((Math.pow(1 + monthlyRate.conservative, 12) - 1) / monthlyRate.conservative);
+      
+      const moderate = initialBalance * Math.pow(1 + monthlyRate.moderate, 12) + 
+        monthlyContribution * ((Math.pow(1 + monthlyRate.moderate, 12) - 1) / monthlyRate.moderate);
+      
+      const aggressive = initialBalance * Math.pow(1 + monthlyRate.aggressive, 12) + 
+        monthlyContribution * ((Math.pow(1 + monthlyRate.aggressive, 12) - 1) / monthlyRate.aggressive);
+      
+      // Calculate inflation adjusted values
+      const inflationAdjusted = moderate / Math.pow(1 + inflationRate, year);
+      
+      // Calculate required retirement corpus considering inflation and tax
+      const yearsToRetirement = Math.max(0, 60 - age);
+      const monthlyExpenseAtRetirement = userProfile.recurringExpenses * Math.pow(1 + inflationRate, yearsToRetirement);
+      const requiredCorpus = (monthlyExpenseAtRetirement * 12 * 25); // 25 years post retirement
+      
+      // Calculate tax implications
+      const taxableAmount = moderate * 0.8; // Assuming 80% of returns are taxable
+      const taxPayable = taxableAmount * taxRate;
+      const postTaxValue = moderate - taxPayable;
+      
+      projectionData.push({
+        year,
+        age,
+        conservativeValue: Math.round(conservative),
+        projectedValue: Math.round(moderate),
+        aggressiveValue: Math.round(aggressive),
+        inflationAdjustedValue: Math.round(inflationAdjusted),
+        requiredCorpus: Math.round(requiredCorpus),
+        epfBalance: Math.round(epfBalance),
+        postTaxValue: Math.round(postTaxValue),
+        monthly: Math.round(inflationAdjusted / (25 * 12)), // Monthly income at retirement
+        totalSavings: Math.round(moderate + epfBalance),
+        shortfall: Math.round(Math.max(0, requiredCorpus - (moderate + epfBalance)))
+      });
+      
+      // Update balance for next iteration
+      initialBalance = moderate;
+    }
+    
+    setProjections(prev => ({ ...prev, retirement: projectionData }));
+  };
+
+  // Calculate portfolio allocation based on risk appetite
+  const calculatePortfolioAllocation = () => {
+    const allocations = {
+      Low: [
+        { name: 'Fixed Deposits', value: 40 },
+        { name: 'Government Bonds', value: 30 },
+        { name: 'Blue Chip Stocks', value: 20 },
+        { name: 'Gold', value: 10 }
+      ],
+      Medium: [
+        { name: 'Stocks', value: 40 },
+        { name: 'Mutual Funds', value: 30 },
+        { name: 'Bonds', value: 20 },
+        { name: 'Cash', value: 10 }
+      ],
+      High: [
+        { name: 'Growth Stocks', value: 50 },
+        { name: 'International Stocks', value: 20 },
+        { name: 'Cryptocurrency', value: 20 },
+        { name: 'Bonds', value: 10 }
+      ]
+    };
+
+    setPortfolioAllocation(allocations[userProfile.riskAppetite || 'Medium']);
+  };
+
+  // Calculate risk score
+  const calculateRiskAnalysis = () => {
+    let score = 0;
+    const factors = [];
+
+    // Age factor
+    const age = userProfile.age || 30;
+    const ageFactor = Math.max(0, Math.min(100 - age, 100)) / 100;
+    score += ageFactor * 25;
+    factors.push({ name: 'Age Factor', score: Math.round(ageFactor * 25) });
+
+    // Income stability
+    const incomeStability = userProfile.monthlyIncome > 0 ? 25 : 0;
+    score += incomeStability;
+    factors.push({ name: 'Income Stability', score: incomeStability });
+
+    // Debt ratio
+    const debtRatio = userProfile.recurringExpenses / userProfile.monthlyIncome;
+    const debtScore = Math.max(0, 25 * (1 - debtRatio));
+    score += debtScore;
+    factors.push({ name: 'Debt Management', score: Math.round(debtScore) });
+
+    // Investment horizon
+    const horizonScore = {
+      '<1 year': 5,
+      '1-3 years': 15,
+      '5+ years': 25
+    }[userProfile.investmentHorizon] || 15;
+    score += horizonScore;
+    factors.push({ name: 'Investment Horizon', score: horizonScore });
+
+    setRiskAnalysis({ score: Math.round(score), breakdown: factors });
+  };
+
+  useEffect(() => {
+    if (userProfile.monthlyIncome > 0) {
+      calculateRetirementProjections();
+      calculatePortfolioAllocation();
+      calculateRiskAnalysis();
+    }
+  }, [userProfile, userProfile.riskAppetite]);
+
+  useEffect(() => {
+    calculateSurplus();
+    generateDashboardData();
+    generateAiTips();
+    generateStockSuggestions();
+    generateRealisticProjections();
+    generateRealisticStockSuggestions();
+  }, [userProfile.monthlyIncome, userProfile.recurringExpenses, userProfile.financialGoals, userProfile.riskTolerance]);
+
   if (loading && !financialPlan) {
     return (
       <div className="flex items-center justify-center min-h-96">
@@ -275,1098 +617,326 @@ function FinancialPlanning() {
     );
   }
 
+  // Colors for charts
+  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+
   return (
-    <div className="space-y-6 animate-fade-in">
-      {/* Show Interactive Questionnaire */}
-      {showQuestionnaire && (
-        <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20">
-          <div className="p-6 border-b border-gray-200">
-            <div className="flex justify-between items-center">
-              <h2 className="text-2xl font-bold text-gray-900">
-                🎯 Let's Build Your Financial Plan
-              </h2>
+    <div className="p-6 bg-gray-100 min-h-screen">
+      <h1 className="text-3xl font-bold text-purple-700 mb-6">Professional Financial Planning</h1>
+      
+      {/* Grid layout for the dashboard */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Input Form - Takes 1/3 of the width */}
+        <div className="bg-white p-6 rounded-lg shadow-lg">
+          <h2 className="text-xl font-semibold mb-4">Financial Profile</h2>
+          {/* ... existing input form ... */}
+          <label className="block mb-2">Monthly Income:</label>
+          <input
+            type="number"
+            className="w-full p-2 border rounded mb-4"
+            value={userProfile.monthlyIncome}
+            onChange={(e) => handleProfileChange('monthlyIncome', e.target.value)}
+          />
+          <label className="block mb-2">Monthly Fixed Expenses:</label>
+          <input
+            type="number"
+            className="w-full p-2 border rounded mb-4"
+            value={userProfile.recurringExpenses}
+            onChange={(e) => handleProfileChange('recurringExpenses', e.target.value)}
+          />
+          <label className="block mb-2">Monthly Investment Amount:</label>
+          <input
+            type="number"
+            className="w-full p-2 border rounded mb-4"
+            placeholder="How much can you invest monthly?"
+            value={userProfile.monthlyInvestment}
+            onChange={(e) => handleProfileChange('monthlyInvestment', e.target.value)}
+          />
+          <div className="mb-4 text-sm text-gray-600">
+            <div className="flex justify-between">
+              <span>Savings Surplus: ₹{userProfile.savingsSurplus}</span>
               <button
-                onClick={() => setShowQuestionnaire(false)}
-                className="text-gray-500 hover:text-gray-700 text-sm px-3 py-1 rounded border border-gray-300 hover:border-gray-400 transition-colors"
+                className="text-purple-600 hover:text-purple-800"
+                onClick={() => handleProfileChange('monthlyInvestment', userProfile.savingsSurplus)}
               >
-                Skip for now
+                Use This Amount
               </button>
             </div>
-            <p className="text-gray-600 mt-2">
-              Answer a few quick questions to get personalized recommendations
-            </p>
           </div>
-          <InteractiveQuestionnaire
-            onComplete={handleQuestionnaireComplete}
-            initialProfile={userProfile}
+          <label className="block mb-2">Target Savings Rate (% or ₹):</label>
+          <input
+            type="text"
+            className="w-full p-2 border rounded mb-4"
+            value={userProfile.savingsRate}
+            onChange={(e) => handleProfileChange('savingsRate', e.target.value)}
+          />
+          <label className="block mb-2">Investment Horizon:</label>
+          <select
+            className="w-full p-2 border rounded mb-4"
+            value={userProfile.investmentHorizon}
+            onChange={(e) => handleProfileChange('investmentHorizon', e.target.value)}
+          >
+            <option value="<1 year">&lt;1 year</option>
+            <option value="1-3 years">1–3 years</option>
+            <option value="5+ years">5+ years</option>
+          </select>
+          <label className="block mb-2">Risk Appetite:</label>
+          <select
+            className="w-full p-2 border rounded mb-4"
+            value={userProfile.riskAppetite}
+            onChange={(e) => handleProfileChange('riskAppetite', e.target.value)}
+          >
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+          </select>
+          <label className="block mb-2">Financial Goals (Optional):</label>
+          <textarea
+            className="w-full p-2 border rounded mb-4"
+            value={userProfile.financialGoals}
+            onChange={(e) => handleProfileChange('financialGoals', e.target.value)}
+          ></textarea>
+          <label className="block mb-2">Lump Sum Available:</label>
+          <input
+            type="number"
+            className="w-full p-2 border rounded mb-4"
+            value={userProfile.lumpSum}
+            onChange={(e) => handleProfileChange('lumpSum', e.target.value)}
           />
         </div>
-      )}
 
-      {/* Main Planning Interface */}
-      {!showQuestionnaire && (
-        <>
-          {/* Header Section */}
-          <div className="bg-white/80 backdrop-blur-sm p-8 rounded-2xl shadow-xl border border-white/20">
-            <div className="flex justify-between items-start">
-              <div>
-                <h1 className="text-4xl font-bold text-gray-900 mb-2 flex items-center">
-                  <span className="mr-3">💼</span>
-                  Personalized Financial Planning
-                </h1>
-                <p className="text-gray-600 text-lg">
-                  Professional-grade financial planning powered by AI and real-time data
-                </p>
-              </div>
-              
-              {/* Action Buttons */}
-              <div className="flex space-x-3">
-                <button
-                  onClick={() => setShowQuestionnaire(true)}
-                  className="bg-gradient-to-r from-green-500 to-blue-600 text-white px-4 py-2 rounded-lg hover:from-green-600 hover:to-blue-700 transition-all duration-200 shadow-lg text-sm"
-                >
-                  {hasValidProfile() ? '✨ Update Profile' : '🚀 Get Started'}
-                </button>
-                {!plaidConnected ? (
-                  <button
-                    onClick={connectPlaid}
-                    className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-4 py-2 rounded-lg hover:from-indigo-600 hover:to-purple-700 transition-all duration-200 shadow-lg text-sm"
-                  >
-                    🔗 Connect Bank
-                  </button>
-                ) : (
-                  <div className="flex items-center space-x-2 text-green-600">
-                    <span className="w-3 h-3 bg-green-500 rounded-full"></span>
-                    <span className="font-medium">Bank Connected</span>
-                  </div>
-                )}
-              </div>
+        {/* Main dashboard area - Takes 2/3 of the width */}
+        <div className="lg:col-span-2 space-y-4">
+          {/* Key Metrics */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-white p-4 rounded-lg shadow-lg">
+              <h3 className="text-lg font-semibold text-gray-700">Risk Score</h3>
+              <div className="text-3xl font-bold text-purple-600">{riskAnalysis.score}/100</div>
+              <div className="text-sm text-gray-500">Based on your profile</div>
             </div>
-
-            {/* Financial Health Score */}
-            {financialPlan?.healthScore && (
-              <div className="mt-6 bg-gradient-to-r from-blue-50 to-indigo-100 p-6 rounded-xl">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-xl font-bold text-gray-900">Financial Health Score</h3>
-                  <div className="text-3xl font-bold text-indigo-600">
-                    {financialPlan.healthScore.totalScore}/100
-                  </div>
-                </div>
-                <div className="flex items-center space-x-4">
-              <div className="flex-1 bg-gray-200 rounded-full h-4">
-                <div 
-                  className="bg-gradient-to-r from-indigo-500 to-blue-600 h-4 rounded-full transition-all duration-1000"
-                  style={{ width: `${financialPlan.healthScore.totalScore}%` }}
-                ></div>
+            <div className="bg-white p-4 rounded-lg shadow-lg">
+              <h3 className="text-lg font-semibold text-gray-700">Monthly Surplus</h3>
+              <div className="text-3xl font-bold text-green-600">₹{userProfile.savingsSurplus}</div>
+              <div className="text-sm text-gray-500">Available for investment</div>
+            </div>
+            <div className="bg-white p-4 rounded-lg shadow-lg">
+              <h3 className="text-lg font-semibold text-gray-700">Investment Potential</h3>
+              <div className="text-3xl font-bold text-blue-600">
+                ₹{Math.round((parseFloat(userProfile.monthlyInvestment) || userProfile.savingsSurplus) * 12 * 1.15)}
               </div>
-              <span className="text-2xl font-bold text-indigo-600">
-                {financialPlan.healthScore.grade}
-              </span>
+              <div className="text-sm text-gray-500">Annual potential with returns</div>
             </div>
           </div>
-        )}
-      </div>
 
-      {/* Tab Navigation */}
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20">
-        <div className="flex overflow-x-auto border-b border-gray-200">
-          {[
-            { id: 'overview', label: 'Overview', icon: '📊' },
-            { id: 'portfolio', label: 'Portfolio', icon: '�' },
-            { id: 'retirement', label: 'Retirement', icon: '🏖️' },
-            { id: 'goals', label: 'Goals', icon: '🎯' },
-            { id: 'profile', label: 'Profile', icon: '👤' }
-          ].map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 min-w-max px-6 py-4 text-center font-medium transition-all duration-200 ${
-                activeTab === tab.id
-                  ? 'text-indigo-600 border-b-2 border-indigo-600 bg-indigo-50/50'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-              }`}
-            >
-              <span className="mr-2">{tab.icon}</span>
-              {tab.label}
-            </button>
-          ))}
-        </div>
-
-        <div className="p-8">
-          {/* Welcome Message for Empty Profile */}
-          {!hasValidProfile() && (
-            <div className="text-center py-12">
-              <div className="text-6xl mb-4">🎯</div>
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                Welcome to Your Financial Journey
-              </h2>
-              <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-                Let's create a personalized financial plan tailored to your goals, risk tolerance, and timeline. 
-                Our AI-powered system will provide professional-grade recommendations in just a few minutes.
-              </p>
-              <button
-                onClick={() => setShowQuestionnaire(true)}
-                className="bg-gradient-to-r from-green-500 to-blue-600 text-white px-8 py-4 rounded-xl hover:from-green-600 hover:to-blue-700 transition-all duration-200 shadow-lg text-lg font-semibold transform hover:scale-105"
-              >
-                🚀 Start Your Financial Plan
-              </button>
+          {/* Retirement Projection Chart */}
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <h3 className="text-xl font-semibold mb-4">Retirement Projection</h3>
+            <div className="h-[500px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart 
+                  data={projections.retirement}
+                  margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis 
+                    dataKey="age" 
+                    label={{ value: 'Age', position: 'bottom', offset: -10 }}
+                    tick={{ fontSize: 12 }}
+                  />
+                  <YAxis 
+                    label={{ 
+                      value: 'Portfolio Value (₹L)', 
+                      angle: -90, 
+                      position: 'insideLeft',
+                      offset: -5
+                    }}
+                    tickFormatter={(value) => `₹${(value/100000).toFixed(0)}L`}
+                    tick={{ fontSize: 12 }}
+                  />
+                  <Tooltip 
+                    formatter={(value, name) => {
+                      const formattedValue = (value/100000).toFixed(2);
+                      const labels = {
+                        aggressiveValue: 'Aggressive Growth',
+                        projectedValue: 'Expected Growth',
+                        conservativeValue: 'Conservative Growth',
+                        inflationAdjustedValue: 'Inflation Adjusted',
+                        requiredCorpus: 'Required Corpus',
+                        epfBalance: 'EPF Balance',
+                        postTaxValue: 'Post-Tax Value'
+                      };
+                      return [`₹${formattedValue}L`, labels[name] || name];
+                    }}
+                    labelFormatter={(age) => `Age: ${age} years`}
+                  />
+                  <Legend verticalAlign="top" height={36}/>
+                  <Line 
+                    type="monotone" 
+                    dataKey="aggressiveValue" 
+                    name="Aggressive Growth" 
+                    stroke="#ff4d4d" 
+                    strokeWidth={2}
+                    dot={false}
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="projectedValue" 
+                    name="Expected Growth" 
+                    stroke="#8884d8" 
+                    strokeWidth={2}
+                    dot={false}
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="conservativeValue" 
+                    name="Conservative Growth" 
+                    stroke="#82ca9d" 
+                    strokeWidth={2}
+                    dot={false}
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="epfBalance" 
+                    name="EPF Balance" 
+                    stroke="#40a9ff" 
+                    strokeWidth={2}
+                    dot={false}
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="postTaxValue" 
+                    name="Post-Tax Value" 
+                    stroke="#722ed1" 
+                    strokeWidth={2}
+                    dot={false}
+                    strokeDasharray="4 4"
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="inflationAdjustedValue" 
+                    name="Inflation Adjusted" 
+                    stroke="#ffc658" 
+                    strokeWidth={2}
+                    dot={false}
+                    strokeDasharray="5 5"
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="requiredCorpus" 
+                    name="Required Corpus" 
+                    stroke="#ff7300" 
+                    strokeWidth={2}
+                    dot={false}
+                    strokeDasharray="3 3"
+                  />
+                </LineChart>
+              </ResponsiveContainer>
             </div>
-          )}
-
-          {activeTab === 'overview' && financialPlan && (
-            <div className="space-y-8">
-              {/* Real-time Insights Panel */}
-              {realTimeInsights.length > 0 && (
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-6">🔍 Real-time Analysis</h2>
-                  <div className="space-y-3">
-                    {realTimeInsights.map((insight) => (
-                      <Card key={insight.id} className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
-                        <div className="flex items-start space-x-3">
-                          <div className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
-                            📊
-                          </div>
-                          <div className="flex-1">
-                            <h4 className="font-semibold text-gray-900 mb-1">
-                              Changed: {insight.field.charAt(0).toUpperCase() + insight.field.slice(1)}
-                            </h4>
-                            <div className="space-y-1 text-sm">
-                              {insight.impact.insights?.map((tip, index) => (
-                                <p key={index} className="text-gray-700">• {tip}</p>
-                              ))}
-                            </div>
-                            <p className="text-xs text-gray-500 mt-2">{insight.timestamp}</p>
-                          </div>
-                        </div>
-                      </Card>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Current Financial Snapshot */}
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">📊 Live Financial Dashboard</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                  <Card className="bg-gradient-to-br from-blue-50 to-indigo-100 hover:shadow-lg transition-all duration-300">
-                    <div className="text-center">
-                      <div className="text-3xl mb-2">💰</div>
-                      <p className="text-sm text-gray-600 mb-1">Total Assets</p>
-                      <p className="text-2xl font-bold text-gray-900">
-                        {(financialPlan.currentFinancials.totalAssets + userProfile.currentSavings).toLocaleString()}
-                      </p>
-                      <p className="text-xs text-gray-500 mt-1">
-                        {plaidConnected ? 'Live Data' : 'Manual Input'}
-                      </p>
-                    </div>
-                  </Card>
-                  
-                  <Card className="bg-gradient-to-br from-green-50 to-emerald-100 hover:shadow-lg transition-all duration-300">
-                    <div className="text-center">
-                      <div className="text-3xl mb-2">🏦</div>
-                      <p className="text-sm text-gray-600 mb-1">Monthly Savings Potential</p>
-                      <p className="text-2xl font-bold text-gray-900">
-                        {Math.max(0, (userProfile.income / 12) - userProfile.monthlyExpenses).toLocaleString()}
-                      </p>
-                      <p className="text-xs text-gray-500 mt-1">
-                        Based on current expenses
-                      </p>
-                    </div>
-                  </Card>
-                  
-                  <Card className="bg-gradient-to-br from-purple-50 to-pink-100 hover:shadow-lg transition-all duration-300">
-                    <div className="text-center">
-                      <div className="text-3xl mb-2">�</div>
-                      <p className="text-sm text-gray-600 mb-1">Expected Return</p>
-                      <p className="text-2xl font-bold text-gray-900">
-                        {financialPlan.portfolioAnalysis.expectedReturn}%
-                      </p>
-                      <p className="text-xs text-gray-500 mt-1">
-                        {financialPlan.portfolioAnalysis.riskLevel} Risk
-                      </p>
-                    </div>
-                  </Card>
-                  
-                  <Card className="bg-gradient-to-br from-orange-50 to-red-100 hover:shadow-lg transition-all duration-300">
-                    <div className="text-center">
-                      <div className="text-3xl mb-2">🎯</div>
-                      <p className="text-sm text-gray-600 mb-1">Goal Feasibility</p>
-                      <p className="text-2xl font-bold text-gray-900">
-                        {financialPlan.retirementPlan.feasibilityScore || 'N/A'}%
-                      </p>
-                      <p className="text-xs text-gray-500 mt-1">
-                        {financialPlan.retirementPlan.isRealistic ? '✅ Realistic' : '⚠️ Challenging'}
-                      </p>
-                    </div>
-                  </Card>
-                </div>
-              </div>
-
-              {/* Goal Progress Tracking */}
-              {goalProgress && (
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-6">🎯 Goal Progress Tracking</h2>
-                  <Card className="bg-gradient-to-br from-green-50 to-emerald-100">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                      <div className="text-center">
-                        <h4 className="font-semibold text-gray-900 mb-2">Current Progress</h4>
-                        <div className="text-3xl font-bold text-green-600 mb-1">
-                          {goalProgress.currentSavings.toLocaleString()}
-                        </div>
-                        <p className="text-sm text-gray-600">Starting Point</p>
-                      </div>
-                      
-                      <div className="text-center">
-                        <h4 className="font-semibold text-gray-900 mb-2">Projected Value</h4>
-                        <div className="text-3xl font-bold text-blue-600 mb-1">
-                          {goalProgress.projectedFinalValue.toLocaleString()}
-                        </div>
-                        <p className="text-sm text-gray-600">
-                          {goalProgress.willReachGoal ? '✅ Goal Achieved' : '⚠️ Shortfall'}
-                        </p>
-                      </div>
-                      
-                      <div className="text-center">
-                        <h4 className="font-semibold text-gray-900 mb-2">Monthly Needed</h4>
-                        <div className="text-3xl font-bold text-purple-600 mb-1">
-                          {(goalProgress.monthlyContribution + goalProgress.additionalMonthlyNeeded).toLocaleString()}
-                        </div>
-                        <p className="text-sm text-gray-600">
-                          {goalProgress.additionalMonthlyNeeded > 0 && (
-                            <span className="text-orange-600">
-                              +{goalProgress.additionalMonthlyNeeded.toLocaleString()} more needed
-                            </span>
-                          )}
-                        </p>
-                      </div>
-                    </div>
-                    
-                    <div className="mt-6">
-                      <div className="flex justify-between text-sm text-gray-600 mb-2">
-                        <span>Progress Timeline</span>
-                        <span>{goalProgress.timeframe} years</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-4">
-                        <div 
-                          className="bg-gradient-to-r from-green-500 to-blue-600 h-4 rounded-full transition-all duration-1000"
-                          style={{ 
-                            width: `${Math.min(100, (goalProgress.currentSavings / goalProgress.targetAmount) * 100)}%` 
-                          }}
-                        ></div>
-                      </div>
-                    </div>
-                  </Card>
-                </div>
-              )}
-
-              {/* Interactive Scenario Builder */}
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">🔮 What-If Scenarios</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <Card>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Adjustments</h3>
-                    <div className="space-y-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Test Monthly Contribution
-                        </label>
-                        <input
-                          type="range"
-                          min="0"
-                          max="2000"
-                          step="50"
-                          defaultValue="500"
-                          className="w-full"
-                          onChange={(e) => {
-                            // Real-time update for contribution impact
-                            const newContribution = parseInt(e.target.value);
-                            document.getElementById('contribution-display').textContent = `${newContribution}`;
-                          }}
-                        />
-                        <div className="flex justify-between text-sm text-gray-600">
-                          <span>0</span>
-                          <span id="contribution-display" className="font-semibold">500</span>
-                          <span>2000</span>
-                        </div>
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Test Different Age
-                        </label>
-                        <input
-                          type="range"
-                          min="22"
-                          max="65"
-                          defaultValue={userProfile.age}
-                          className="w-full"
-                          onChange={(e) => {
-                            const newAge = parseInt(e.target.value);
-                            document.getElementById('age-display').textContent = `${newAge} years old`;
-                          }}
-                        />
-                        <div className="flex justify-between text-sm text-gray-600">
-                          <span>22</span>
-                          <span id="age-display" className="font-semibold">{userProfile.age} years old</span>
-                          <span>65</span>
-                        </div>
-                      </div>
-                      
-                      <button
-                        onClick={async () => {
-                          const scenarios = await simulateScenarios();
-                          setRealTimeInsights(prev => [
-                            {
-                              id: Date.now(),
-                              field: 'scenarios',
-                              impact: { insights: scenarios.map(s => `${s.name}: ${s.results.isRealistic ? '✅' : '⚠️'} ${s.results.feasibilityScore}% feasible`) },
-                              timestamp: new Date().toLocaleString()
-                            },
-                            ...prev.slice(0, 4)
-                          ]);
-                        }}
-                        className="w-full bg-gradient-to-r from-purple-500 to-pink-600 text-white py-2 px-4 rounded-lg hover:from-purple-600 hover:to-pink-700 transition-all duration-200"
-                      >
-                        🚀 Run Scenarios
-                      </button>
-                    </div>
-                  </Card>
-                  
-                  <Card>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Live Calculations</h3>
-                    <div className="space-y-3 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Savings Rate:</span>
-                        <span className="font-semibold">
-                          {Math.round(((userProfile.income / 12 - userProfile.monthlyExpenses) / (userProfile.income / 12)) * 100)}%
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Emergency Fund Status:</span>
-                        <span className="font-semibold">
-                          {financialPlan.emergencyFund && userProfile.currentSavings >= financialPlan.emergencyFund.recommendedAmount ? 
-                            '✅ Adequate' : '⚠️ Needs Work'}
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Retirement Timeline:</span>
-                        <span className="font-semibold">
-                          {userProfile.age + parseInt(userProfile.timeHorizon.split(' ')[0])} years old
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Monthly Surplus:</span>
-                        <span className={`font-semibold ${(userProfile.income / 12 - userProfile.monthlyExpenses) > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                          {((userProfile.income / 12) - userProfile.monthlyExpenses).toLocaleString()}
-                        </span>
-                      </div>
-                    </div>
-                  </Card>
-                </div>
-              </div>
-
-              {/* Recommendations */}
-              {financialPlan.recommendations && financialPlan.recommendations.length > 0 && (
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-6">Professional Recommendations</h2>
-                  <div className="space-y-4">
-                    {financialPlan.recommendations.map((rec, index) => (
-                      <Card key={index} className={`border-l-4 ${
-                        rec.priority === 'high' ? 'border-red-500 bg-red-50' :
-                        rec.priority === 'medium' ? 'border-yellow-500 bg-yellow-50' :
-                        'border-green-500 bg-green-50'
-                      }`}>
-                        <div className="flex items-start space-x-4">
-                          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white ${
-                            rec.priority === 'high' ? 'bg-red-500' :
-                            rec.priority === 'medium' ? 'bg-yellow-500' :
-                            'bg-green-500'
-                          }`}>
-                            {rec.priority === 'high' ? '!' : rec.priority === 'medium' ? '⚠' : '✓'}
-                          </div>
-                          <div className="flex-1">
-                            <h3 className="font-bold text-gray-900 mb-1">{rec.title}</h3>
-                            <p className="text-gray-700 mb-2">{rec.description}</p>
-                            <p className="text-sm text-gray-600 mb-2"><strong>Action:</strong> {rec.action}</p>
-                            <p className="text-sm text-indigo-600 font-medium">{rec.impact}</p>
-                          </div>
-                        </div>
-                      </Card>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Health Score Breakdown */}
-              {financialPlan.healthScore && (
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-6">Health Score Breakdown</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {financialPlan.healthScore.factors.map((factor, index) => (
-                      <Card key={index}>
-                        <div className="flex justify-between items-center mb-2">
-                          <h3 className="font-medium text-gray-900">{factor.category}</h3>
-                          <span className="font-bold text-indigo-600">
-                            {factor.score}/{factor.maxScore}
-                          </span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-3 mb-2">
-                          <div 
-                            className="bg-gradient-to-r from-indigo-500 to-blue-600 h-3 rounded-full transition-all duration-1000"
-                            style={{ width: `${(factor.score / factor.maxScore) * 100}%` }}
-                          ></div>
-                        </div>
-                        <p className="text-sm text-gray-600">{factor.description}</p>
-                      </Card>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-          {activeTab === 'portfolio' && financialPlan && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Portfolio Allocation */}
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">Recommended Portfolio</h2>
-                
-                {/* Risk Tolerance Selector */}
-                <div className="mb-6">
-                  <label className="block text-sm font-medium text-gray-700 mb-3">Risk Tolerance</label>
-                  <div className="grid grid-cols-3 gap-3">
-                    {Object.keys(portfolioOptions).map((risk) => (
-                      <button
-                        key={risk}
-                        onClick={() => handleProfileChange('riskTolerance', risk)}
-                        className={`p-3 rounded-lg text-sm font-medium transition-all duration-200 ${
-                          userProfile.riskTolerance === risk
-                            ? `bg-gradient-to-r ${portfolioOptions[risk].color} text-white shadow-lg`
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                        }`}
-                      >
-                        {risk}
-                      </button>
-                    ))}
-                  </div>
-                  <p className="text-sm text-gray-600 mt-2">
-                    {portfolioOptions[userProfile.riskTolerance].description}
-                  </p>
-                </div>
-
-                {/* Portfolio Breakdown */}
-                <div className="space-y-4">
-                  {[
-                    { 
-                      name: 'Stocks', 
-                      percentage: financialPlan.portfolioAnalysis.allocation.stocks, 
-                      icon: '📈', 
-                      color: 'bg-blue-500' 
-                    },
-                    { 
-                      name: 'Bonds', 
-                      percentage: financialPlan.portfolioAnalysis.allocation.bonds, 
-                      icon: '📊', 
-                      color: 'bg-green-500' 
-                    },
-                    { 
-                      name: 'Real Estate', 
-                      percentage: financialPlan.portfolioAnalysis.allocation.realEstate, 
-                      icon: '🏠', 
-                      color: 'bg-purple-500' 
-                    },
-                    { 
-                      name: 'Cash', 
-                      percentage: financialPlan.portfolioAnalysis.allocation.cash, 
-                      icon: '💰', 
-                      color: 'bg-yellow-500' 
-                    }
-                  ].map((asset) => (
-                    <div key={asset.name} className="flex items-center space-x-4">
-                      <div className={`w-8 h-8 ${asset.color} rounded-lg flex items-center justify-center text-white text-sm`}>
-                        {asset.icon}
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex justify-between items-center mb-1">
-                          <span className="font-medium text-gray-900">{asset.name}</span>
-                          <span className="font-bold text-gray-900">{asset.percentage}%</span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div 
-                            className={`${asset.color} h-2 rounded-full transition-all duration-1000`}
-                            style={{ width: `${asset.percentage}%` }}
-                          ></div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Portfolio Stats */}
-                <div className="mt-6 grid grid-cols-2 gap-4">
-                  <div className="bg-gradient-to-br from-blue-50 to-indigo-100 p-4 rounded-xl">
-                    <p className="text-sm text-gray-600 mb-1">Expected Return</p>
-                    <p className="text-xl font-bold text-gray-900">{financialPlan.portfolioAnalysis.expectedReturn}%</p>
-                  </div>
-                  <div className="bg-gradient-to-br from-purple-50 to-pink-100 p-4 rounded-xl">
-                    <p className="text-sm text-gray-600 mb-1">Risk Level</p>
-                    <p className="text-xl font-bold text-gray-900">{financialPlan.portfolioAnalysis.riskLevel}</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Performance Projection */}
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">Growth Projection</h2>
-                
-                {/* Projection Chart Placeholder */}
-                <div className="bg-gradient-to-br from-slate-50 to-gray-100 p-8 rounded-xl border-2 border-dashed border-gray-300 mb-6">
-                  <div className="text-center">
-                    <div className="text-6xl mb-4">📊</div>
-                    <h3 className="text-xl font-semibold text-gray-700 mb-2">Growth Projection Chart</h3>
-                    <p className="text-gray-500">Portfolio value over time with compound growth</p>
-                  </div>
-                </div>
-
-                {/* Key Projections */}
-                <div className="space-y-4">
-                  <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-                    <h4 className="font-semibold text-gray-900 mb-2">10-Year Projection</h4>
-                    <div className="grid grid-cols-2 gap-4 text-sm">
-                      <div>
-                        <p className="text-gray-600">Initial Investment</p>
-                        <p className="font-bold text-gray-900">${userProfile.currentSavings.toLocaleString()}</p>
-                      </div>
-                      <div>
-                        <p className="text-gray-600">Projected Value</p>
-                        <p className="font-bold text-green-600">
-                          ${(userProfile.currentSavings * Math.pow(1 + financialPlan.portfolioAnalysis.expectedReturn / 100, 10)).toLocaleString()}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200">
-                    <h4 className="font-semibold text-gray-900 mb-2">Monthly Contribution Impact</h4>
-                    <div className="text-sm">
-                      <p className="text-gray-600 mb-1">With $500/month additional contribution:</p>
-                      <p className="font-bold text-green-600">
-                        Additional ${((500 * 12) * ((Math.pow(1 + financialPlan.portfolioAnalysis.expectedReturn / 100, 10) - 1) / (financialPlan.portfolioAnalysis.expectedReturn / 100))).toLocaleString()} over 10 years
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'retirement' && financialPlan && (
-            <div className="max-w-4xl mx-auto">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Retirement Planning</h2>
-              
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {/* Retirement Needs */}
-                <div className="space-y-6">
-                  <Card className="bg-gradient-to-br from-blue-50 to-indigo-100">
-                    <h3 className="text-lg font-bold text-gray-900 mb-4">Retirement Goal</h3>
-                    <div className="space-y-3">
-                      <div className="flex justify-between">
-                        <span className="text-gray-700">Target Retirement Age</span>
-                        <span className="font-semibold">{userProfile.age + parseInt(userProfile.timeHorizon.split(' ')[0])}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-700">Required Nest Egg</span>
-                        <span className="font-semibold text-green-600">
-                          ${financialPlan.retirementPlan.requiredNestEgg.toLocaleString()}
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-700">Annual Retirement Income</span>
-                        <span className="font-semibold">
-                          ${financialPlan.retirementPlan.annualRetirementIncome.toLocaleString()}
-                        </span>
-                      </div>
-                    </div>
-                  </Card>
-
-                  <Card className="bg-gradient-to-br from-purple-50 to-pink-100">
-                    <h3 className="text-lg font-bold text-gray-900 mb-4">Current Progress</h3>
-                    <div className="space-y-3">
-                      <div className="flex justify-between">
-                        <span className="text-gray-700">Current Projected Value</span>
-                        <span className="font-semibold">
-                          ${financialPlan.retirementPlan.currentProjectedValue.toLocaleString()}
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-700">Remaining Shortfall</span>
-                        <span className="font-semibold text-red-600">
-                          ${financialPlan.retirementPlan.shortfall.toLocaleString()}
-                        </span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-4">
-                        <div 
-                          className="bg-gradient-to-r from-purple-500 to-pink-600 h-4 rounded-full transition-all duration-1000"
-                          style={{ 
-                            width: `${Math.max(5, (financialPlan.retirementPlan.currentProjectedValue / financialPlan.retirementPlan.requiredNestEgg) * 100)}%` 
-                          }}
-                        ></div>
-                      </div>
-                      <p className="text-sm text-gray-600 text-center">
-                        {Math.round((financialPlan.retirementPlan.currentProjectedValue / financialPlan.retirementPlan.requiredNestEgg) * 100)}% of goal
-                      </p>
-                    </div>
-                  </Card>
-                </div>
-
-                {/* Action Plan */}
-                <div className="space-y-6">
-                  <Card>
-                    <h3 className="text-lg font-bold text-gray-900 mb-4">Required Action</h3>
-                    <div className="space-y-4">
-                      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                        <h4 className="font-semibold text-yellow-800 mb-2">Monthly Savings Needed</h4>
-                        <p className="text-2xl font-bold text-yellow-900">
-                          ${financialPlan.retirementPlan.monthlySavingsNeeded.toLocaleString()}
-                        </p>
-                        <p className="text-sm text-yellow-700 mt-1">
-                          To reach your retirement goal by age {userProfile.age + parseInt(userProfile.timeHorizon.split(' ')[0])}
-                        </p>
-                      </div>
-                      
-                      <div className="space-y-3">
-                        <h4 className="font-semibold text-gray-900">Recommended Strategy:</h4>
-                        <ul className="space-y-2 text-sm text-gray-700">
-                          <li className="flex items-start">
-                            <span className="text-green-500 mr-2">•</span>
-                            Maximize employer 401(k) match ({(userProfile.employerMatch * 100)}%)
-                          </li>
-                          <li className="flex items-start">
-                            <span className="text-green-500 mr-2">•</span>
-                            Contribute to Roth IRA for tax-free growth
-                          </li>
-                          <li className="flex items-start">
-                            <span className="text-green-500 mr-2">•</span>
-                            Consider catch-up contributions after age 50
-                          </li>
-                          <li className="flex items-start">
-                            <span className="text-green-500 mr-2">•</span>
-                            Automate investments to dollar-cost average
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </Card>
-
-                  <Card>
-                    <h3 className="text-lg font-bold text-gray-900 mb-4">Tax-Advantaged Accounts</h3>
-                    <div className="space-y-3">
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-700">401(k) Limit (2025)</span>
-                        <span className="font-semibold">$23,000</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-700">IRA Limit (2025)</span>
-                        <span className="font-semibold">$7,000</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-700">Employer Match</span>
-                        <span className="font-semibold text-green-600">
-                          ${(userProfile.income * userProfile.employerMatch).toLocaleString()}
-                        </span>
-                      </div>
-                      <div className="border-t pt-3">
-                        <div className="flex justify-between items-center font-semibold">
-                          <span>Total Available</span>
-                          <span className="text-green-600">
-                            ${(23000 + 7000 + userProfile.income * userProfile.employerMatch).toLocaleString()}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </Card>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'goals' && financialPlan && (
-            <div className="max-w-4xl mx-auto">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Financial Goals & Progress Tracking</h2>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                {/* Emergency Fund Goal */}
-                <Card className="bg-gradient-to-br from-green-50 to-emerald-100 border-green-200">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-green-500 to-emerald-600 flex items-center justify-center text-white text-xl">
-                      🛡️
-                    </div>
-                    <span className="text-sm text-gray-600">
-                      {financialPlan.emergencyFund.recommendedMonths} months expenses
-                    </span>
-                  </div>
-                  
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Emergency Fund</h3>
-                  
-                  <div className="mb-4">
-                    <div className="flex justify-between text-sm text-gray-600 mb-1">
-                      <span>${financialPlan.currentFinancials.liquidSavings.toLocaleString()}</span>
-                      <span>${financialPlan.emergencyFund.recommendedAmount.toLocaleString()}</span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-3">
-                      <div 
-                        className="bg-gradient-to-r from-green-500 to-emerald-600 h-3 rounded-full transition-all duration-1000"
-                        style={{ 
-                          width: `${Math.min(100, (financialPlan.currentFinancials.liquidSavings / financialPlan.emergencyFund.recommendedAmount) * 100)}%` 
-                        }}
-                      ></div>
-                    </div>
-                    <p className="text-sm text-gray-500 mt-1">
-                      {Math.round((financialPlan.currentFinancials.liquidSavings / financialPlan.emergencyFund.recommendedAmount) * 100)}% complete
+            
+            {/* Retirement Summary Cards */}
+            <div className="mt-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+              {projections.retirement.length > 0 && (
+                <>
+                  <div className="bg-gradient-to-r from-purple-50 to-purple-100 p-4 rounded-lg">
+                    <h4 className="text-sm font-semibold text-gray-600">Expected Corpus at 60</h4>
+                    <p className="text-2xl font-bold text-purple-600">
+                      ₹{(projections.retirement[Math.min(30, projections.retirement.length - 1)].totalSavings/100000).toFixed(1)}L
                     </p>
+                    <p className="text-xs text-gray-500">Including EPF balance</p>
                   </div>
-                  
-                  <div className="space-y-2 text-sm">
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">High-Yield Savings</span>
-                      <span className="font-medium">${financialPlan.emergencyFund.highYieldSavingsTarget.toLocaleString()}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Liquid Investments</span>
-                      <span className="font-medium">${financialPlan.emergencyFund.liquidInvestmentTarget.toLocaleString()}</span>
-                    </div>
-                  </div>
-                </Card>
-
-                {/* Retirement Goal */}
-                <Card className="bg-gradient-to-br from-blue-50 to-indigo-100 border-blue-200">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-600 flex items-center justify-center text-white text-xl">
-                      🏖️
-                    </div>
-                    <span className="text-sm text-gray-600">
-                      {parseInt(userProfile.timeHorizon.split(' ')[0])} years
-                    </span>
-                  </div>
-                  
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Retirement</h3>
-                  
-                  <div className="mb-4">
-                    <div className="flex justify-between text-sm text-gray-600 mb-1">
-                      <span>${financialPlan.retirementPlan.currentProjectedValue.toLocaleString()}</span>
-                      <span>${financialPlan.retirementPlan.requiredNestEgg.toLocaleString()}</span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-3">
-                      <div 
-                        className="bg-gradient-to-r from-blue-500 to-indigo-600 h-3 rounded-full transition-all duration-1000"
-                        style={{ 
-                          width: `${Math.max(2, (financialPlan.retirementPlan.currentProjectedValue / financialPlan.retirementPlan.requiredNestEgg) * 100)}%` 
-                        }}
-                      ></div>
-                    </div>
-                    <p className="text-sm text-gray-500 mt-1">
-                      {Math.round((financialPlan.retirementPlan.currentProjectedValue / financialPlan.retirementPlan.requiredNestEgg) * 100)}% of goal
+                  <div className="bg-gradient-to-r from-green-50 to-green-100 p-4 rounded-lg">
+                    <h4 className="text-sm font-semibold text-gray-600">Monthly Income at Retirement</h4>
+                    <p className="text-2xl font-bold text-green-600">
+                      ₹{(projections.retirement[Math.min(30, projections.retirement.length - 1)].monthly/1000).toFixed(1)}K
                     </p>
+                    <p className="text-xs text-gray-500">Inflation adjusted</p>
                   </div>
-                  
-                  <div className="text-sm">
-                    <p className="text-gray-600">Monthly contribution needed:</p>
-                    <p className="font-bold text-indigo-600 text-lg">
-                      ${financialPlan.retirementPlan.monthlySavingsNeeded.toLocaleString()}
+                  <div className="bg-gradient-to-r from-blue-50 to-blue-100 p-4 rounded-lg">
+                    <h4 className="text-sm font-semibold text-gray-600">Required Corpus</h4>
+                    <p className="text-2xl font-bold text-blue-600">
+                      ₹{(projections.retirement[Math.min(30, projections.retirement.length - 1)].requiredCorpus/100000).toFixed(1)}L
                     </p>
+                    <p className="text-xs text-gray-500">For desired lifestyle</p>
                   </div>
-                </Card>
-
-                {/* House Down Payment (if applicable) */}
-                {financialPlan.housePlan && (
-                  <Card className="bg-gradient-to-br from-purple-50 to-pink-100 border-purple-200">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-purple-500 to-pink-600 flex items-center justify-center text-white text-xl">
-                        🏠
-                      </div>
-                      <span className="text-sm text-gray-600">
-                        {financialPlan.housePlan.timeHorizon} years
-                      </span>
-                    </div>
-                    
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">House Down Payment</h3>
-                    
-                    <div className="mb-4">
-                      <div className="flex justify-between text-sm text-gray-600 mb-1">
-                        <span>$0</span>
-                        <span>${financialPlan.housePlan.totalNeeded.toLocaleString()}</span>
-                      </div>
-                      <div className="w-full bg-gray-200 rounded-full h-3">
-                        <div className="bg-gradient-to-r from-purple-500 to-pink-600 h-3 rounded-full transition-all duration-1000 w-0"></div>
-                      </div>
-                      <p className="text-sm text-gray-500 mt-1">0% complete</p>
-                    </div>
-                    
-                    <div className="space-y-2 text-sm">
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Down Payment ({financialPlan.housePlan.downPaymentPercent}%)</span>
-                        <span className="font-medium">${financialPlan.housePlan.targetDownPayment.toLocaleString()}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">Closing Costs</span>
-                        <span className="font-medium">${financialPlan.housePlan.closingCosts.toLocaleString()}</span>
-                      </div>
-                      <div className="flex justify-between border-t pt-2">
-                        <span className="text-gray-600">Monthly Savings Needed</span>
-                        <span className="font-bold text-purple-600">${financialPlan.housePlan.monthlyContribution.toLocaleString()}</span>
-                      </div>
-                    </div>
-                  </Card>
-                )}
-
-                {/* Custom Goal Template */}
-                <Card className="bg-gradient-to-br from-orange-50 to-yellow-100 border-orange-200 border-dashed">
-                  <div className="text-center py-8">
-                    <div className="text-4xl mb-4">➕</div>
-                    <h3 className="text-lg font-semibold text-gray-700 mb-2">Add Custom Goal</h3>
-                    <p className="text-gray-500 mb-4">Vacation, education, or any financial milestone</p>
-                    <button className="bg-gradient-to-r from-orange-500 to-yellow-500 text-white px-6 py-2 rounded-lg hover:from-orange-600 hover:to-yellow-600 transition-all duration-200">
-                      Create Goal
-                    </button>
+                  <div className="bg-gradient-to-r from-red-50 to-red-100 p-4 rounded-lg">
+                    <h4 className="text-sm font-semibold text-gray-600">Projected Shortfall</h4>
+                    <p className="text-2xl font-bold text-red-600">
+                      ₹{(projections.retirement[Math.min(30, projections.retirement.length - 1)].shortfall/100000).toFixed(1)}L
+                    </p>
+                    <p className="text-xs text-gray-500">Additional savings needed</p>
                   </div>
-                </Card>
-              </div>
-
-              {/* Goal Strategy Recommendations */}
-              <Card>
-                <h3 className="text-lg font-bold text-gray-900 mb-4">Goal Achievement Strategy</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <h4 className="font-semibold text-gray-900 mb-3">Priority Order</h4>
-                    <div className="space-y-3">
-                      <div className="flex items-center space-x-3 p-3 bg-red-50 rounded-lg border border-red-200">
-                        <span className="w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-sm font-bold">1</span>
-                        <span className="font-medium">Emergency Fund</span>
-                        <span className="text-red-600 text-sm">(Critical)</span>
-                      </div>
-                      <div className="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                        <span className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">2</span>
-                        <span className="font-medium">Employer 401(k) Match</span>
-                        <span className="text-blue-600 text-sm">(Free Money)</span>
-                      </div>
-                      <div className="flex items-center space-x-3 p-3 bg-green-50 rounded-lg border border-green-200">
-                        <span className="w-6 h-6 bg-green-500 text-white rounded-full flex items-center justify-center text-sm font-bold">3</span>
-                        <span className="font-medium">Retirement Savings</span>
-                        <span className="text-green-600 text-sm">(Long-term)</span>
-                      </div>
-                      {financialPlan.housePlan && (
-                        <div className="flex items-center space-x-3 p-3 bg-purple-50 rounded-lg border border-purple-200">
-                          <span className="w-6 h-6 bg-purple-500 text-white rounded-full flex items-center justify-center text-sm font-bold">4</span>
-                          <span className="font-medium">House Down Payment</span>
-                          <span className="text-purple-600 text-sm">(Goal-based)</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <h4 className="font-semibold text-gray-900 mb-3">Optimization Tips</h4>
-                    <div className="space-y-3 text-sm">
-                      <div className="flex items-start space-x-2">
-                        <span className="text-green-500 mt-1">✓</span>
-                        <span>Automate all savings to avoid decision fatigue</span>
-                      </div>
-                      <div className="flex items-start space-x-2">
-                        <span className="text-green-500 mt-1">✓</span>
-                        <span>Use high-yield savings for emergency fund</span>
-                      </div>
-                      <div className="flex items-start space-x-2">
-                        <span className="text-green-500 mt-1">✓</span>
-                        <span>Increase savings rate by 1% annually</span>
-                      </div>
-                      <div className="flex items-start space-x-2">
-                        <span className="text-green-500 mt-1">✓</span>
-                        <span>Review and adjust goals quarterly</span>
-                      </div>
-                      <div className="flex items-start space-x-2">
-                        <span className="text-green-500 mt-1">✓</span>
-                        <span>Consider tax-loss harvesting in taxable accounts</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Card>
+                </>
+              )}
             </div>
-          )}
+          </div>
 
-          {activeTab === 'profile' && (
-            <div className="max-w-2xl mx-auto">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Your Financial Profile</h2>
-              
-              <div className="space-y-6">
-                <Card>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Basic Information</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Age</label>
-                      <input
-                        type="number"
-                        value={userProfile.age}
-                        onChange={(e) => handleProfileChange('age', parseInt(e.target.value))}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                      />
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Annual Income</label>
-                      <input
-                        type="number"
-                        value={userProfile.income}
-                        onChange={(e) => handleProfileChange('income', parseInt(e.target.value))}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Current Savings</label>
-                      <input
-                        type="number"
-                        value={userProfile.currentSavings}
-                        onChange={(e) => handleProfileChange('currentSavings', parseInt(e.target.value))}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Monthly Expenses</label>
-                      <input
-                        type="number"
-                        value={userProfile.monthlyExpenses}
-                        onChange={(e) => handleProfileChange('monthlyExpenses', parseInt(e.target.value))}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                      />
-                    </div>
-                  </div>
-                </Card>
-
-                <Card>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Investment Preferences</h3>
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Risk Tolerance</label>
-                      <select
-                        value={userProfile.riskTolerance}
-                        onChange={(e) => handleProfileChange('riskTolerance', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                      >
-                        <option value="Conservative">Conservative - Lower risk, steady growth</option>
-                        <option value="Moderate">Moderate - Balanced approach</option>
-                        <option value="Aggressive">Aggressive - Higher risk, maximum growth</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Primary Investment Goal</label>
-                      <select
-                        value={userProfile.investmentGoal}
-                        onChange={(e) => handleProfileChange('investmentGoal', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                      >
-                        <option value="Retirement">Retirement Planning</option>
-                        <option value="House">Buying a House</option>
-                        <option value="Education">Education Funding</option>
-                        <option value="Emergency Fund">Emergency Fund</option>
-                        <option value="Wealth Building">General Wealth Building</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Time Horizon</label>
-                      <select
-                        value={userProfile.timeHorizon}
-                        onChange={(e) => handleProfileChange('timeHorizon', e.target.value)}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                      >
-                        <option value="5 years">5 years - Short term</option>
-                        <option value="10 years">10 years - Medium term</option>
-                        <option value="20 years">20 years - Long term</option>
-                        <option value="30 years">30 years - Very long term</option>
-                        <option value="40 years">40+ years - Ultra long term</option>
-                      </select>
-                    </div>
-                  </div>
-                </Card>
-
-                <Card>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Employment Benefits</h3>
-                  <div className="space-y-4">
-                    <div className="flex items-center space-x-3">
-                      <input
-                        type="checkbox"
-                        id="has401k"
-                        checked={userProfile.has401k}
-                        onChange={(e) => handleProfileChange('has401k', e.target.checked)}
-                        className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                      />
-                      <label htmlFor="has401k" className="text-sm font-medium text-gray-700">
-                        I have access to a 401(k) plan
-                      </label>
-                    </div>
-
-                    {userProfile.has401k && (
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          Employer Match Percentage
-                        </label>
-                        <select
-                          value={userProfile.employerMatch}
-                          onChange={(e) => handleProfileChange('employerMatch', parseFloat(e.target.value))}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                        >
-                          <option value={0}>No match</option>
-                          <option value={0.03}>3% match</option>
-                          <option value={0.04}>4% match</option>
-                          <option value={0.05}>5% match</option>
-                          <option value={0.06}>6% match</option>
-                          <option value={0.075}>7.5% match</option>
-                        </select>
-                      </div>
-                    )}
-
-                    <div className="flex items-center space-x-3">
-                      <input
-                        type="checkbox"
-                        id="hasEmergencyFund"
-                        checked={userProfile.hasEmergencyFund}
-                        onChange={(e) => handleProfileChange('hasEmergencyFund', e.target.checked)}
-                        className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                      />
-                      <label htmlFor="hasEmergencyFund" className="text-sm font-medium text-gray-700">
-                        I have an adequate emergency fund
-                      </label>
-                    </div>
-                  </div>
-                </Card>
-
-                <div className="flex space-x-4">
-                  <button 
-                    onClick={generateFinancialPlan}
-                    className="flex-1 bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-semibold py-3 px-6 rounded-lg hover:from-indigo-600 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-                    disabled={loading}
-                  >
-                    {loading ? 'Updating Plan...' : 'Update Financial Plan'}
-                  </button>
-                  
-                  {!plaidConnected && (
-                    <button 
-                      onClick={connectPlaid}
-                      className="px-6 py-3 border border-indigo-600 text-indigo-600 font-semibold rounded-lg hover:bg-indigo-50 transition-all duration-200"
+          {/* Portfolio Allocation */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-white p-6 rounded-lg shadow-lg">
+              <h3 className="text-xl font-semibold mb-4">Recommended Portfolio</h3>
+              <div className="h-[300px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={portfolioAllocation}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                      outerRadius={80}
+                      fill="#8884d8"
+                      dataKey="value"
                     >
-                      Connect Bank
-                    </button>
-                  )}
-                </div>
+                      {portfolioAllocation.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
               </div>
             </div>
-          )}
+
+            {/* Risk Analysis Breakdown */}
+            <div className="bg-white p-6 rounded-lg shadow-lg">
+              <h3 className="text-xl font-semibold mb-4">Risk Analysis</h3>
+              <div className="space-y-4">
+                {riskAnalysis.breakdown.map((factor, index) => (
+                  <div key={index}>
+                    <div className="flex justify-between mb-1">
+                      <span className="text-sm font-medium text-gray-700">{factor.name}</span>
+                      <span className="text-sm font-medium text-gray-700">{factor.score}/25</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2.5">
+                      <div
+                        className="bg-purple-600 h-2.5 rounded-full"
+                        style={{ width: `${(factor.score / 25) * 100}%` }}
+                      ></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* AI Insights and Recommendations */}
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <h3 className="text-xl font-semibold mb-4">Professional Insights</h3>
+            <div className="space-y-4">
+              {aiTips.map((tip, index) => (
+                <div key={index} className="flex items-start space-x-3">
+                  <div className="flex-shrink-0">
+                    <svg className="h-6 w-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <p className="text-gray-700">{tip}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
-        </>
-      )}
     </div>
   );
 }
