@@ -991,22 +991,22 @@ function FinancialPlanning() {
           </div>
 
           {/* Retirement Projection Chart */}
-          <div className="bg-white p-4 lg:p-6 rounded-lg shadow-lg">
-            <h3 className="text-xl font-semibold mb-4">Retirement Projection</h3>
+          <div className="bg-white p-4 lg:p-6 rounded-lg shadow-md">
+            <h3 className="text-xl font-bold mb-4 text-purple-600">Retirement Projection</h3>
             {projections.retirement.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-[400px] lg:h-[500px] text-center text-gray-500">
-                {/* Bar chart icon */}
-                <svg className="w-16 h-16 mb-4 text-gray-300" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 48 48">
-                  <rect x="8" y="28" width="6" height="12" rx="2" fill="#e0e7ff" />
-                  <rect x="20" y="20" width="6" height="20" rx="2" fill="#a5b4fc" />
-                  <rect x="32" y="12" width="6" height="28" rx="2" fill="#6366f1" />
+                {/* Bar chart icon with purple tint */}
+                <svg className="w-16 h-16 mb-4 text-purple-200" fill="none" viewBox="0 0 48 48">
+                  <rect x="8" y="28" width="6" height="12" rx="2" fill="#ede9fe" />
+                  <rect x="20" y="20" width="6" height="20" rx="2" fill="#c7d2fe" />
+                  <rect x="32" y="12" width="6" height="28" rx="2" fill="#a5b4fc" />
                 </svg>
-                <div className="text-lg font-semibold text-gray-700 mb-1">Retirement Projection</div>
-                <div className="text-sm mb-4">Fill in your financial details to see your retirement projection chart</div>
-                <div className="flex justify-center space-x-4 mt-2">
-                  <span className="flex items-center text-xs"><span className="inline-block w-3 h-3 rounded-full mr-1" style={{background:'#ff4d4d'}}></span>Aggressive Growth</span>
-                  <span className="flex items-center text-xs"><span className="inline-block w-3 h-3 rounded-full mr-1" style={{background:'#8884d8'}}></span>Expected Growth</span>
-                  <span className="flex items-center text-xs"><span className="inline-block w-3 h-3 rounded-full mr-1" style={{background:'#82ca9d'}}></span>Conservative Growth</span>
+                <div className="text-base font-semibold text-purple-700 mb-1">Retirement Projection</div>
+                <div className="text-sm mb-4 text-gray-600">Fill in your financial details to see your retirement projection chart</div>
+                <div className="flex justify-center space-x-2 mt-2">
+                  <span className="flex items-center text-xs font-medium rounded px-2 py-1 bg-red-50 text-red-600"><span className="inline-block w-3 h-3 rounded-full mr-1" style={{background:'#ff4d4d'}}></span>Aggressive</span>
+                  <span className="flex items-center text-xs font-medium rounded px-2 py-1 bg-purple-50 text-purple-700"><span className="inline-block w-3 h-3 rounded-full mr-1" style={{background:'#8884d8'}}></span>Expected</span>
+                  <span className="flex items-center text-xs font-medium rounded px-2 py-1 bg-green-50 text-green-700"><span className="inline-block w-3 h-3 rounded-full mr-1" style={{background:'#82ca9d'}}></span>Conservative</span>
                 </div>
               </div>
             ) : (
@@ -1153,25 +1153,25 @@ function FinancialPlanning() {
 
           {/* Portfolio Allocation */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="bg-white p-4 lg:p-6 rounded-lg shadow-lg">
-              <h3 className="text-xl font-semibold mb-4">Recommended Portfolio</h3>
+            <div className="bg-white p-4 lg:p-6 rounded-lg shadow-md">
+              <h3 className="text-xl font-bold mb-4 text-purple-600">Recommended Portfolio</h3>
               {portfolioAllocation.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-[250px] lg:h-[300px] text-center text-gray-500">
-                  {/* Pie chart icon */}
-                  <svg className="w-16 h-16 mb-4 text-gray-300" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 48 48">
-                    <circle cx="24" cy="24" r="20" stroke="#e0e7ff" strokeWidth="4" fill="none" />
-                    <path d="M24 24 L24 4 A20 20 0 0 1 44 24 Z" fill="#a5b4fc" />
-                    <path d="M24 24 L44 24 A20 20 0 0 1 24 44 Z" fill="#6366f1" />
+                  {/* Pie chart icon with purple tint */}
+                  <svg className="w-16 h-16 mb-4 text-purple-200" fill="none" viewBox="0 0 48 48">
+                    <circle cx="24" cy="24" r="20" stroke="#ede9fe" strokeWidth="4" fill="none" />
+                    <path d="M24 24 L24 4 A20 20 0 0 1 44 24 Z" fill="#c7d2fe" />
+                    <path d="M24 24 L44 24 A20 20 0 0 1 24 44 Z" fill="#a5b4fc" />
                     <path d="M24 24 L24 44 A20 20 0 0 1 4 24 Z" fill="#fde68a" />
                     <path d="M24 24 L4 24 A20 20 0 0 1 24 4 Z" fill="#fca5a5" />
                   </svg>
-                  <div className="text-lg font-semibold text-gray-700 mb-1">Portfolio Allocation</div>
-                  <div className="text-sm mb-4">Enter your risk appetite to see recommended portfolio allocation</div>
-                  <div className="flex justify-center space-x-4 mt-2">
-                    <span className="flex items-center text-xs"><span className="inline-block w-3 h-3 rounded-full mr-1" style={{background:'#6366f1'}}></span>Stocks</span>
-                    <span className="flex items-center text-xs"><span className="inline-block w-3 h-3 rounded-full mr-1" style={{background:'#22c55e'}}></span>Bonds</span>
-                    <span className="flex items-center text-xs"><span className="inline-block w-3 h-3 rounded-full mr-1" style={{background:'#fde68a'}}></span>Gold</span>
-                    <span className="flex items-center text-xs"><span className="inline-block w-3 h-3 rounded-full mr-1" style={{background:'#fca5a5'}}></span>Cash</span>
+                  <div className="text-base font-semibold text-purple-700 mb-1">Portfolio Allocation</div>
+                  <div className="text-sm mb-4 text-gray-600">Enter your risk appetite to see recommended portfolio allocation</div>
+                  <div className="flex justify-center space-x-2 mt-2">
+                    <span className="flex items-center text-xs font-medium rounded px-2 py-1 bg-purple-50 text-purple-700"><span className="inline-block w-3 h-3 rounded-full mr-1" style={{background:'#6366f1'}}></span>Stocks</span>
+                    <span className="flex items-center text-xs font-medium rounded px-2 py-1 bg-green-50 text-green-700"><span className="inline-block w-3 h-3 rounded-full mr-1" style={{background:'#22c55e'}}></span>Bonds</span>
+                    <span className="flex items-center text-xs font-medium rounded px-2 py-1 bg-yellow-50 text-yellow-700"><span className="inline-block w-3 h-3 rounded-full mr-1" style={{background:'#fde68a'}}></span>Gold</span>
+                    <span className="flex items-center text-xs font-medium rounded px-2 py-1 bg-red-50 text-red-600"><span className="inline-block w-3 h-3 rounded-full mr-1" style={{background:'#fca5a5'}}></span>Cash</span>
                   </div>
                 </div>
               ) : (
@@ -1200,46 +1200,29 @@ function FinancialPlanning() {
             </div>
 
             {/* Risk Analysis Breakdown */}
-            <div className="bg-white p-4 lg:p-6 rounded-lg shadow-lg">
-              <h3 className="text-xl font-semibold mb-4">Risk Analysis</h3>
+            <div className="bg-white p-4 lg:p-6 rounded-lg shadow-md">
+              <h3 className="text-xl font-bold mb-4 text-purple-600">Risk Analysis</h3>
               {riskAnalysis.breakdown.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-[250px] lg:h-[300px] text-center text-gray-500">
-                  {/* Checkmark icon */}
-                  <svg className="w-16 h-16 mb-4 text-gray-300" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 48 48">
-                    <circle cx="24" cy="24" r="20" stroke="#e0e7ff" strokeWidth="4" fill="none" />
-                    <path d="M16 24l6 6 10-10" stroke="#6366f1" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                  {/* Checkmark icon with purple tint */}
+                  <svg className="w-16 h-16 mb-4 text-purple-200" fill="none" viewBox="0 0 48 48">
+                    <circle cx="24" cy="24" r="20" stroke="#ede9fe" strokeWidth="4" fill="#f3f0ff" />
+                    <path d="M16 24l6 6 10-10" stroke="#a5b4fc" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
-                  <div className="text-lg font-semibold text-gray-700 mb-1">Risk Assessment</div>
-                  <div className="text-sm mb-4">Complete your profile to see personalized risk analysis</div>
+                  <div className="text-base font-semibold text-purple-700 mb-1">Risk Assessment</div>
+                  <div className="text-sm mb-4 text-gray-600">Complete your profile to see personalized risk analysis</div>
                   <div className="w-full max-w-xs mx-auto space-y-2 mt-2">
-                    <div className="flex justify-between mb-1">
-                      <span className="text-sm font-medium text-gray-700">Age Factor</span>
-                      <span className="text-sm font-medium text-gray-700">--/25</span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2.5">
-                      <div className="bg-purple-100 h-2.5 rounded-full" style={{ width: '0%' }}></div>
-                    </div>
-                    <div className="flex justify-between mb-1">
-                      <span className="text-sm font-medium text-gray-700">Income Stability</span>
-                      <span className="text-sm font-medium text-gray-700">--/25</span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2.5">
-                      <div className="bg-purple-100 h-2.5 rounded-full" style={{ width: '0%' }}></div>
-                    </div>
-                    <div className="flex justify-between mb-1">
-                      <span className="text-sm font-medium text-gray-700">Debt Management</span>
-                      <span className="text-sm font-medium text-gray-700">--/25</span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2.5">
-                      <div className="bg-purple-100 h-2.5 rounded-full" style={{ width: '0%' }}></div>
-                    </div>
-                    <div className="flex justify-between mb-1">
-                      <span className="text-sm font-medium text-gray-700">Investment Horizon</span>
-                      <span className="text-sm font-medium text-gray-700">--/25</span>
-                    </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2.5">
-                      <div className="bg-purple-100 h-2.5 rounded-full" style={{ width: '0%' }}></div>
-                    </div>
+                    {['Age Factor','Income Stability','Debt Management','Investment Horizon'].map((label) => (
+                      <div key={label}>
+                        <div className="flex justify-between mb-1">
+                          <span className="text-sm font-medium text-gray-700">{label}</span>
+                          <span className="text-sm font-medium text-gray-700">--/25</span>
+                        </div>
+                        <div className="w-full bg-purple-50 rounded-full h-2.5">
+                          <div className="bg-purple-200 h-2.5 rounded-full" style={{ width: '0%' }}></div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
               ) : (
