@@ -993,191 +993,273 @@ function FinancialPlanning() {
           {/* Retirement Projection Chart */}
           <div className="bg-white p-4 lg:p-6 rounded-lg shadow-lg">
             <h3 className="text-xl font-semibold mb-4">Retirement Projection</h3>
-            <div className="h-[400px] lg:h-[500px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart 
-                  data={projections.retirement}
-                  margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis 
-                    dataKey="age" 
-                    label={{ value: 'Age', position: 'bottom', offset: -10 }}
-                    tick={{ fontSize: 12 }}
-                  />
-                  <YAxis 
-                    label={{ 
-                      value: 'Portfolio Value (₹L)', 
-                      angle: -90, 
-                      position: 'insideLeft',
-                      offset: -5
-                    }}
-                    tickFormatter={(value) => `₹${(value/100000).toFixed(0)}L`}
-                    tick={{ fontSize: 12 }}
-                  />
-                  <Tooltip 
-                    formatter={(value, name) => {
-                      const formattedValue = (value/100000).toFixed(2);
-                      const labels = {
-                        aggressiveValue: 'Aggressive Growth',
-                        projectedValue: 'Expected Growth',
-                        conservativeValue: 'Conservative Growth',
-                        inflationAdjustedValue: 'Inflation Adjusted',
-                        requiredCorpus: 'Required Corpus',
-                        epfBalance: 'EPF Balance',
-                        postTaxValue: 'Post-Tax Value'
-                      };
-                      return [`₹${formattedValue}L`, labels[name] || name];
-                    }}
-                    labelFormatter={(age) => `Age: ${age} years`}
-                  />
-                  <Legend verticalAlign="top" height={36}/>
-                  <Line 
-                    type="monotone" 
-                    dataKey="aggressiveValue" 
-                    name="Aggressive Growth" 
-                    stroke="#ff4d4d" 
-                    strokeWidth={2}
-                    dot={false}
-                  />
-                  <Line 
-                    type="monotone" 
-                    dataKey="projectedValue" 
-                    name="Expected Growth" 
-                    stroke="#8884d8" 
-                    strokeWidth={2}
-                    dot={false}
-                  />
-                  <Line 
-                    type="monotone" 
-                    dataKey="conservativeValue" 
-                    name="Conservative Growth" 
-                    stroke="#82ca9d" 
-                    strokeWidth={2}
-                    dot={false}
-                  />
-                  <Line 
-                    type="monotone" 
-                    dataKey="epfBalance" 
-                    name="EPF Balance" 
-                    stroke="#40a9ff" 
-                    strokeWidth={2}
-                    dot={false}
-                  />
-                  <Line 
-                    type="monotone" 
-                    dataKey="postTaxValue" 
-                    name="Post-Tax Value" 
-                    stroke="#722ed1" 
-                    strokeWidth={2}
-                    dot={false}
-                    strokeDasharray="4 4"
-                  />
-                  <Line 
-                    type="monotone" 
-                    dataKey="inflationAdjustedValue" 
-                    name="Inflation Adjusted" 
-                    stroke="#ffc658" 
-                    strokeWidth={2}
-                    dot={false}
-                    strokeDasharray="5 5"
-                  />
-                  <Line 
-                    type="monotone" 
-                    dataKey="requiredCorpus" 
-                    name="Required Corpus" 
-                    stroke="#ff7300" 
-                    strokeWidth={2}
-                    dot={false}
-                    strokeDasharray="3 3"
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-            
-            {/* Retirement Summary Cards */}
-            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {projections.retirement.length > 0 && (
-                <>
-                  <div className="bg-gradient-to-r from-purple-50 to-purple-100 p-4 rounded-lg">
-                    <h4 className="text-sm font-semibold text-gray-600">Expected Corpus at 60</h4>
-                    <p className="text-2xl font-bold text-purple-600">
-                      ₹{(projections.retirement[Math.min(30, projections.retirement.length - 1)]?.totalSavings/100000 || 0).toFixed(1)}L
-                    </p>
-                    <p className="text-xs text-gray-500">Including EPF balance</p>
-                  </div>
-                  <div className="bg-gradient-to-r from-green-50 to-green-100 p-4 rounded-lg">
-                    <h4 className="text-sm font-semibold text-gray-600">Monthly Income at Retirement</h4>
-                    <p className="text-2xl font-bold text-green-600">
-                      ₹{(projections.retirement[Math.min(30, projections.retirement.length - 1)]?.monthly/1000 || 0).toFixed(1)}K
-                    </p>
-                    <p className="text-xs text-gray-500">Inflation adjusted</p>
-                  </div>
-                  <div className="bg-gradient-to-r from-blue-50 to-blue-100 p-4 rounded-lg">
-                    <h4 className="text-sm font-semibold text-gray-600">Required Corpus</h4>
-                    <p className="text-2xl font-bold text-blue-600">
-                      ₹{(projections.retirement[Math.min(30, projections.retirement.length - 1)]?.requiredCorpus/100000 || 0).toFixed(1)}L
-                    </p>
-                    <p className="text-xs text-gray-500">For desired lifestyle</p>
-                  </div>
-                  <div className="bg-gradient-to-r from-red-50 to-red-100 p-4 rounded-lg">
-                    <h4 className="text-sm font-semibold text-gray-600">Projected Shortfall</h4>
-                    <p className="text-2xl font-bold text-red-600">
-                      ₹{(projections.retirement[Math.min(30, projections.retirement.length - 1)]?.shortfall/100000 || 0).toFixed(1)}L
-                    </p>
-                    <p className="text-xs text-gray-500">Additional savings needed</p>
-                  </div>
-                </>
-              )}
-            </div>
+            {projections.retirement.length === 0 ? (
+              <div className="flex flex-col items-center justify-center h-[400px] lg:h-[500px] text-center text-gray-500">
+                {/* Bar chart icon */}
+                <svg className="w-16 h-16 mb-4 text-gray-300" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 48 48">
+                  <rect x="8" y="28" width="6" height="12" rx="2" fill="#e0e7ff" />
+                  <rect x="20" y="20" width="6" height="20" rx="2" fill="#a5b4fc" />
+                  <rect x="32" y="12" width="6" height="28" rx="2" fill="#6366f1" />
+                </svg>
+                <div className="text-lg font-semibold text-gray-700 mb-1">Retirement Projection</div>
+                <div className="text-sm mb-4">Fill in your financial details to see your retirement projection chart</div>
+                <div className="flex justify-center space-x-4 mt-2">
+                  <span className="flex items-center text-xs"><span className="inline-block w-3 h-3 rounded-full mr-1" style={{background:'#ff4d4d'}}></span>Aggressive Growth</span>
+                  <span className="flex items-center text-xs"><span className="inline-block w-3 h-3 rounded-full mr-1" style={{background:'#8884d8'}}></span>Expected Growth</span>
+                  <span className="flex items-center text-xs"><span className="inline-block w-3 h-3 rounded-full mr-1" style={{background:'#82ca9d'}}></span>Conservative Growth</span>
+                </div>
+              </div>
+            ) : (
+              <>
+                <div className="h-[400px] lg:h-[500px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart 
+                      data={projections.retirement}
+                      margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" />
+                      <XAxis 
+                        dataKey="age" 
+                        label={{ value: 'Age', position: 'bottom', offset: -10 }}
+                        tick={{ fontSize: 12 }}
+                      />
+                      <YAxis 
+                        label={{ 
+                          value: 'Portfolio Value (₹L)', 
+                          angle: -90, 
+                          position: 'insideLeft',
+                          offset: -5
+                        }}
+                        tickFormatter={(value) => `₹${(value/100000).toFixed(0)}L`}
+                        tick={{ fontSize: 12 }}
+                      />
+                      <Tooltip 
+                        formatter={(value, name) => {
+                          const formattedValue = (value/100000).toFixed(2);
+                          const labels = {
+                            aggressiveValue: 'Aggressive Growth',
+                            projectedValue: 'Expected Growth',
+                            conservativeValue: 'Conservative Growth',
+                            inflationAdjustedValue: 'Inflation Adjusted',
+                            requiredCorpus: 'Required Corpus',
+                            epfBalance: 'EPF Balance',
+                            postTaxValue: 'Post-Tax Value'
+                          };
+                          return [`₹${formattedValue}L`, labels[name] || name];
+                        }}
+                        labelFormatter={(age) => `Age: ${age} years`}
+                      />
+                      <Legend verticalAlign="top" height={36}/>
+                      <Line 
+                        type="monotone" 
+                        dataKey="aggressiveValue" 
+                        name="Aggressive Growth" 
+                        stroke="#ff4d4d" 
+                        strokeWidth={2}
+                        dot={false}
+                      />
+                      <Line 
+                        type="monotone" 
+                        dataKey="projectedValue" 
+                        name="Expected Growth" 
+                        stroke="#8884d8" 
+                        strokeWidth={2}
+                        dot={false}
+                      />
+                      <Line 
+                        type="monotone" 
+                        dataKey="conservativeValue" 
+                        name="Conservative Growth" 
+                        stroke="#82ca9d" 
+                        strokeWidth={2}
+                        dot={false}
+                      />
+                      <Line 
+                        type="monotone" 
+                        dataKey="epfBalance" 
+                        name="EPF Balance" 
+                        stroke="#40a9ff" 
+                        strokeWidth={2}
+                        dot={false}
+                      />
+                      <Line 
+                        type="monotone" 
+                        dataKey="postTaxValue" 
+                        name="Post-Tax Value" 
+                        stroke="#722ed1" 
+                        strokeWidth={2}
+                        dot={false}
+                        strokeDasharray="4 4"
+                      />
+                      <Line 
+                        type="monotone" 
+                        dataKey="inflationAdjustedValue" 
+                        name="Inflation Adjusted" 
+                        stroke="#ffc658" 
+                        strokeWidth={2}
+                        dot={false}
+                        strokeDasharray="5 5"
+                      />
+                      <Line 
+                        type="monotone" 
+                        dataKey="requiredCorpus" 
+                        name="Required Corpus" 
+                        stroke="#ff7300" 
+                        strokeWidth={2}
+                        dot={false}
+                        strokeDasharray="3 3"
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+                {/* Retirement Summary Cards */}
+                <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {projections.retirement.length > 0 && (
+                    <>
+                      <div className="bg-gradient-to-r from-purple-50 to-purple-100 p-4 rounded-lg">
+                        <h4 className="text-sm font-semibold text-gray-600">Expected Corpus at 60</h4>
+                        <p className="text-2xl font-bold text-purple-600">
+                          ₹{(projections.retirement[Math.min(30, projections.retirement.length - 1)]?.totalSavings/100000 || 0).toFixed(1)}L
+                        </p>
+                        <p className="text-xs text-gray-500">Including EPF balance</p>
+                      </div>
+                      <div className="bg-gradient-to-r from-green-50 to-green-100 p-4 rounded-lg">
+                        <h4 className="text-sm font-semibold text-gray-600">Monthly Income at Retirement</h4>
+                        <p className="text-2xl font-bold text-green-600">
+                          ₹{(projections.retirement[Math.min(30, projections.retirement.length - 1)]?.monthly/1000 || 0).toFixed(1)}K
+                        </p>
+                        <p className="text-xs text-gray-500">Inflation adjusted</p>
+                      </div>
+                      <div className="bg-gradient-to-r from-blue-50 to-blue-100 p-4 rounded-lg">
+                        <h4 className="text-sm font-semibold text-gray-600">Required Corpus</h4>
+                        <p className="text-2xl font-bold text-blue-600">
+                          ₹{(projections.retirement[Math.min(30, projections.retirement.length - 1)]?.requiredCorpus/100000 || 0).toFixed(1)}L
+                        </p>
+                        <p className="text-xs text-gray-500">For desired lifestyle</p>
+                      </div>
+                      <div className="bg-gradient-to-r from-red-50 to-red-100 p-4 rounded-lg">
+                        <h4 className="text-sm font-semibold text-gray-600">Projected Shortfall</h4>
+                        <p className="text-2xl font-bold text-red-600">
+                          ₹{(projections.retirement[Math.min(30, projections.retirement.length - 1)]?.shortfall/100000 || 0).toFixed(1)}L
+                        </p>
+                        <p className="text-xs text-gray-500">Additional savings needed</p>
+                      </div>
+                    </>
+                  )}
+                </div>
+              </>
+            )}
           </div>
 
           {/* Portfolio Allocation */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="bg-white p-4 lg:p-6 rounded-lg shadow-lg">
               <h3 className="text-xl font-semibold mb-4">Recommended Portfolio</h3>
-              <div className="h-[250px] lg:h-[300px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={portfolioAllocation}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={false}
-                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                      outerRadius={80}
-                      fill="#8884d8"
-                      dataKey="value"
-                    >
-                      {portfolioAllocation.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
+              {portfolioAllocation.length === 0 ? (
+                <div className="flex flex-col items-center justify-center h-[250px] lg:h-[300px] text-center text-gray-500">
+                  {/* Pie chart icon */}
+                  <svg className="w-16 h-16 mb-4 text-gray-300" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 48 48">
+                    <circle cx="24" cy="24" r="20" stroke="#e0e7ff" strokeWidth="4" fill="none" />
+                    <path d="M24 24 L24 4 A20 20 0 0 1 44 24 Z" fill="#a5b4fc" />
+                    <path d="M24 24 L44 24 A20 20 0 0 1 24 44 Z" fill="#6366f1" />
+                    <path d="M24 24 L24 44 A20 20 0 0 1 4 24 Z" fill="#fde68a" />
+                    <path d="M24 24 L4 24 A20 20 0 0 1 24 4 Z" fill="#fca5a5" />
+                  </svg>
+                  <div className="text-lg font-semibold text-gray-700 mb-1">Portfolio Allocation</div>
+                  <div className="text-sm mb-4">Enter your risk appetite to see recommended portfolio allocation</div>
+                  <div className="flex justify-center space-x-4 mt-2">
+                    <span className="flex items-center text-xs"><span className="inline-block w-3 h-3 rounded-full mr-1" style={{background:'#6366f1'}}></span>Stocks</span>
+                    <span className="flex items-center text-xs"><span className="inline-block w-3 h-3 rounded-full mr-1" style={{background:'#22c55e'}}></span>Bonds</span>
+                    <span className="flex items-center text-xs"><span className="inline-block w-3 h-3 rounded-full mr-1" style={{background:'#fde68a'}}></span>Gold</span>
+                    <span className="flex items-center text-xs"><span className="inline-block w-3 h-3 rounded-full mr-1" style={{background:'#fca5a5'}}></span>Cash</span>
+                  </div>
+                </div>
+              ) : (
+                <div className="h-[250px] lg:h-[300px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={portfolioAllocation}
+                        cx="50%"
+                        cy="50%"
+                        labelLine={false}
+                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                        outerRadius={80}
+                        fill="#8884d8"
+                        dataKey="value"
+                      >
+                        {portfolioAllocation.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <Tooltip />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+              )}
             </div>
 
             {/* Risk Analysis Breakdown */}
             <div className="bg-white p-4 lg:p-6 rounded-lg shadow-lg">
               <h3 className="text-xl font-semibold mb-4">Risk Analysis</h3>
-              <div className="space-y-4">
-                {riskAnalysis.breakdown.map((factor, index) => (
-                  <div key={index}>
+              {riskAnalysis.breakdown.length === 0 ? (
+                <div className="flex flex-col items-center justify-center h-[250px] lg:h-[300px] text-center text-gray-500">
+                  {/* Checkmark icon */}
+                  <svg className="w-16 h-16 mb-4 text-gray-300" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 48 48">
+                    <circle cx="24" cy="24" r="20" stroke="#e0e7ff" strokeWidth="4" fill="none" />
+                    <path d="M16 24l6 6 10-10" stroke="#6366f1" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  <div className="text-lg font-semibold text-gray-700 mb-1">Risk Assessment</div>
+                  <div className="text-sm mb-4">Complete your profile to see personalized risk analysis</div>
+                  <div className="w-full max-w-xs mx-auto space-y-2 mt-2">
                     <div className="flex justify-between mb-1">
-                      <span className="text-sm font-medium text-gray-700">{factor.name}</span>
-                      <span className="text-sm font-medium text-gray-700">{factor.score}/25</span>
+                      <span className="text-sm font-medium text-gray-700">Age Factor</span>
+                      <span className="text-sm font-medium text-gray-700">--/25</span>
                     </div>
                     <div className="w-full bg-gray-200 rounded-full h-2.5">
-                      <div
-                        className="bg-purple-600 h-2.5 rounded-full"
-                        style={{ width: `${(factor.score / 25) * 100}%` }}
-                      ></div>
+                      <div className="bg-purple-100 h-2.5 rounded-full" style={{ width: '0%' }}></div>
+                    </div>
+                    <div className="flex justify-between mb-1">
+                      <span className="text-sm font-medium text-gray-700">Income Stability</span>
+                      <span className="text-sm font-medium text-gray-700">--/25</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2.5">
+                      <div className="bg-purple-100 h-2.5 rounded-full" style={{ width: '0%' }}></div>
+                    </div>
+                    <div className="flex justify-between mb-1">
+                      <span className="text-sm font-medium text-gray-700">Debt Management</span>
+                      <span className="text-sm font-medium text-gray-700">--/25</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2.5">
+                      <div className="bg-purple-100 h-2.5 rounded-full" style={{ width: '0%' }}></div>
+                    </div>
+                    <div className="flex justify-between mb-1">
+                      <span className="text-sm font-medium text-gray-700">Investment Horizon</span>
+                      <span className="text-sm font-medium text-gray-700">--/25</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2.5">
+                      <div className="bg-purple-100 h-2.5 rounded-full" style={{ width: '0%' }}></div>
                     </div>
                   </div>
-                ))}
-              </div>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {riskAnalysis.breakdown.map((factor, index) => (
+                    <div key={index}>
+                      <div className="flex justify-between mb-1">
+                        <span className="text-sm font-medium text-gray-700">{factor.name}</span>
+                        <span className="text-sm font-medium text-gray-700">{factor.score}/25</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2.5">
+                        <div
+                          className="bg-purple-600 h-2.5 rounded-full"
+                          style={{ width: `${(factor.score / 25) * 100}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
 
