@@ -583,64 +583,173 @@ function FinancialPlanning() {
     setProjections(prev => ({ ...prev, retirement: projectionData }));
   };
 
-  // Calculate portfolio allocation based on risk appetite
+  // Calculate portfolio allocation based on user profile (dynamic, multi-field, 'or' logic)
   const calculatePortfolioAllocation = () => {
-    const allocations = {
-      Low: [
-        { name: 'Fixed Deposits', value: 40 },
-        { name: 'Government Bonds', value: 30 },
-        { name: 'Blue Chip Stocks', value: 20 },
-        { name: 'Gold', value: 10 }
-      ],
-      Medium: [
-        { name: 'Stocks', value: 40 },
-        { name: 'Mutual Funds', value: 30 },
-        { name: 'Bonds', value: 20 },
-        { name: 'Cash', value: 10 }
-      ],
-      High: [
-        { name: 'Growth Stocks', value: 50 },
-        { name: 'International Stocks', value: 20 },
-        { name: 'Cryptocurrency', value: 20 },
-        { name: 'Bonds', value: 10 }
-      ]
-    };
+    // Default allocation (if nothing is filled)
+    let stocks = 30, mutualFunds = 30, bonds = 20, gold = 10, cash = 10;
 
-    setPortfolioAllocation(allocations[userProfile.riskAppetite || 'Medium']);
+    // Use 'or' logic: as more fields are filled, adjust allocation
+    const {
+      age,
+      monthlyIncome,
+      monthlyInvestment,
+      investmentHorizon,
+      lumpSum,
+      savingsSurplus,
+      riskAppetite
+    } = userProfile;
+
+    // Age logic
+    if (age) {
+      if (age < 30) {
+        stocks += 20; bonds -= 10; cash -= 5;
+      } else if (age < 45) {
+        stocks += 10; bonds += 0; cash -= 5;
+      } else if (age >= 45) {
+        stocks -= 10; bonds += 10; cash += 5;
+      }
+    }
+
+    // Investment horizon logic
+    if (investmentHorizon) {
+      if (investmentHorizon === '5+ years') {
+        stocks += 10; bonds -= 5; gold += 0;
+      } else if (investmentHorizon === '1-3 years') {
+        stocks -= 5; bonds += 5; gold += 5;
+      } else if (investmentHorizon === '<1 year') {
+        stocks -= 10; bonds += 10; cash += 5;
+      }
+    }
+
+    // Risk appetite logic
+    if (riskAppetite) {
+      if (riskAppetite === 'High') {
+        stocks += 10; mutualFunds += 5; bonds -= 10; cash -= 5;
+      } else if (riskAppetite === 'Low') {
+        stocks -= 10; bonds += 10; cash += 5;
+      }
+      // Medium: no change
+    }
+
+    // Monthly investment logic
+    if (monthlyInvestment && monthlyInvestment > 0) {
+      if (monthlyInvestment > 20000) {
+        stocks += 5; gold += 5;
+      } else if (monthlyInvestment < 5000) {
+        bonds += 5; cash += 5;
+      }
+    }
+
+    // Lump sum logic
+    if (lumpSum && lumpSum > 0) {
+      if (lumpSum > 100000) {
+        gold += 5; stocks += 5;
+      } else if (lumpSum < 20000) {
+        cash += 5;
+      }
+    }
+
+    // Savings surplus logic
+    if (savingsSurplus && savingsSurplus > 0) {
+      if (savingsSurplus > 10000) {
+        stocks += 5;
+      } else if (savingsSurplus < 2000) {
+        bonds += 5;
+      }
+    }
+
+    // Monthly income logic
+    if (monthlyIncome && monthlyIncome > 0) {
+      if (monthlyIncome > 50000) {
+        stocks += 5; mutualFunds += 5;
+      } else if (monthlyIncome < 15000) {
+        bonds += 5; cash += 5;
+      }
+    }
+
+    // Clamp and normalize values
+    let allocations = [
+      { name: 'Stocks', value: stocks },
+      { name: 'Mutual Funds', value: mutualFunds },
+      { name: 'Bonds', value: bonds },
+      { name: 'Gold', value: gold },
+      { name: 'Cash', value: cash }
+    ];
+    // Remove negative values
+    allocations = allocations.map(a => ({ ...a, value: Math.max(0, a.value) }));
+    // Normalize to 100
+    const total = allocations.reduce((sum, a) => sum + a.value, 0);
+    allocations = allocations.map(a => ({ ...a, value: Math.round((a.value / total) * 100) }));
+
+    setPortfolioAllocation(allocations);
   };
 
-  // Calculate risk score
+  // Calculate risk score (dynamic, only 4 factors, 'or' logic)
   const calculateRiskAnalysis = () => {
     let score = 0;
     const factors = [];
+    const {
+      age,
+      monthlyIncome,
+      recurringExpenses,
+      investmentHorizon
+    } = userProfile;
 
-    // Age factor
-    const age = userProfile.age || 30;
-    const ageFactor = Math.max(0, Math.min(100 - age, 100)) / 100;
-    score += ageFactor * 25;
-    factors.push({ name: 'Age Factor', score: Math.round(ageFactor * 25) });
+    // Age Factor (younger = higher risk capacity)
+    let ageScore = 0;
+    if (age) {
+      if (age < 30) ageScore = 25;
+      else if (age < 45) ageScore = 18;
+      else if (age < 60) ageScore = 10;
+      else ageScore = 5;
+    } else {
+      ageScore = 12; // neutral if missing
+    }
+    score += ageScore;
+    factors.push({ name: 'Age Factor', score: ageScore });
 
-    // Income stability
-    const incomeStability = userProfile.monthlyIncome > 0 ? 25 : 0;
-    score += incomeStability;
-    factors.push({ name: 'Income Stability', score: incomeStability });
+    // Income Stability (higher income = higher risk capacity)
+    let incomeScore = 0;
+    if (monthlyIncome) {
+      if (monthlyIncome > 50000) incomeScore = 25;
+      else if (monthlyIncome > 20000) incomeScore = 18;
+      else if (monthlyIncome > 10000) incomeScore = 12;
+      else incomeScore = 6;
+    } else {
+      incomeScore = 12;
+    }
+    score += incomeScore;
+    factors.push({ name: 'Income Stability', score: incomeScore });
 
-    // Debt ratio
-    const debtRatio = userProfile.recurringExpenses / userProfile.monthlyIncome;
-    const debtScore = Math.max(0, 25 * (1 - debtRatio));
+    // Debt Management (lower ratio = higher risk capacity)
+    let debtScore = 0;
+    if (monthlyIncome && recurringExpenses) {
+      const debtRatio = recurringExpenses / monthlyIncome;
+      if (debtRatio < 0.3) debtScore = 25;
+      else if (debtRatio < 0.5) debtScore = 18;
+      else if (debtRatio < 0.7) debtScore = 12;
+      else debtScore = 6;
+    } else {
+      debtScore = 12;
+    }
     score += debtScore;
-    factors.push({ name: 'Debt Management', score: Math.round(debtScore) });
+    factors.push({ name: 'Debt Management', score: debtScore });
 
-    // Investment horizon
-    const horizonScore = {
-      '<1 year': 5,
-      '1-3 years': 15,
-      '5+ years': 25
-    }[userProfile.investmentHorizon] || 15;
+    // Investment Horizon (longer = higher risk capacity)
+    let horizonScore = 0;
+    if (investmentHorizon) {
+      if (investmentHorizon === '5+ years') horizonScore = 25;
+      else if (investmentHorizon === '1-3 years') horizonScore = 15;
+      else if (investmentHorizon === '<1 year') horizonScore = 5;
+    } else {
+      horizonScore = 15;
+    }
     score += horizonScore;
     factors.push({ name: 'Investment Horizon', score: horizonScore });
 
-    setRiskAnalysis({ score: Math.round(score), breakdown: factors });
+    // Normalize score to 100
+    let normalizedScore = Math.round((score / 100) * 100);
+    setRiskAnalysis({ score: normalizedScore, breakdown: factors });
   };
 
   useEffect(() => {
