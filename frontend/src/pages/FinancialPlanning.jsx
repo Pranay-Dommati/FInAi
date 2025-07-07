@@ -245,9 +245,14 @@ function FinancialPlanning() {
     // Validate and convert numeric values
     let processedValue = value;
     if (['age', 'monthlyIncome', 'recurringExpenses', 'currentSavings', 'monthlyInvestment', 'lumpSum'].includes(field)) {
-      processedValue = parseFloat(value) || 0;
-      if (isNaN(processedValue)) {
+      // If the input is empty, keep it as empty string for display, but store as 0 for calculations
+      if (value === '' || value === null || value === undefined) {
         processedValue = 0;
+      } else {
+        processedValue = parseFloat(value) || 0;
+        if (isNaN(processedValue)) {
+          processedValue = 0;
+        }
       }
     }
     
@@ -262,7 +267,7 @@ function FinancialPlanning() {
     setInputChanged(true);
     
     // Trigger real-time analysis only if we have valid values
-    if (!isNaN(processedValue) && processedValue !== '' && processedValue !== null) {
+    if (!isNaN(processedValue) && processedValue !== '' && processedValue !== null && processedValue > 0) {
       analyzeChange(field, processedValue, oldProfile);
     }
   };
@@ -684,14 +689,16 @@ function FinancialPlanning() {
           <input
             type="number"
             className="w-full p-2 border rounded mb-4"
-            value={userProfile.monthlyIncome}
+            placeholder="Enter your monthly income"
+            value={userProfile.monthlyIncome === 0 ? '' : userProfile.monthlyIncome}
             onChange={(e) => handleProfileChange('monthlyIncome', e.target.value)}
           />
           <label className="block mb-2">Monthly Fixed Expenses:</label>
           <input
             type="number"
             className="w-full p-2 border rounded mb-4"
-            value={userProfile.recurringExpenses}
+            placeholder="Enter your monthly expenses"
+            value={userProfile.recurringExpenses === 0 ? '' : userProfile.recurringExpenses}
             onChange={(e) => handleProfileChange('recurringExpenses', e.target.value)}
           />
           <label className="block mb-2">Monthly Investment Amount:</label>
@@ -699,7 +706,7 @@ function FinancialPlanning() {
             type="number"
             className="w-full p-2 border rounded mb-4"
             placeholder="How much can you invest monthly?"
-            value={userProfile.monthlyInvestment}
+            value={userProfile.monthlyInvestment === 0 ? '' : userProfile.monthlyInvestment}
             onChange={(e) => handleProfileChange('monthlyInvestment', e.target.value)}
           />
           <div className="mb-4 text-sm text-gray-600">
@@ -750,14 +757,16 @@ function FinancialPlanning() {
           <input
             type="number"
             className="w-full p-2 border rounded mb-4"
-            value={userProfile.lumpSum}
+            placeholder="Enter any lump sum amount available"
+            value={userProfile.lumpSum === 0 ? '' : userProfile.lumpSum}
             onChange={(e) => handleProfileChange('lumpSum', e.target.value)}
           />
           <label className="block mb-2">Current Age:</label>
           <input
             type="number"
             className="w-full p-2 border rounded mb-4"
-            value={userProfile.age}
+            placeholder="Enter your current age"
+            value={userProfile.age === 0 ? '' : userProfile.age}
             onChange={(e) => handleProfileChange('age', e.target.value)}
           />
           <label className="block mb-2">Current Savings:</label>
@@ -765,7 +774,7 @@ function FinancialPlanning() {
             type="number"
             className="w-full p-2 border rounded mb-4"
             placeholder="Total current savings/investments"
-            value={userProfile.currentSavings}
+            value={userProfile.currentSavings === 0 ? '' : userProfile.currentSavings}
             onChange={(e) => handleProfileChange('currentSavings', e.target.value)}
           />
           </div>
