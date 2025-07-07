@@ -5,19 +5,17 @@
 [![Tech Stack](https://img.shields.io/badge/Stack-React%20+%20Express-blue)](#tech-stack)
 [![Financial Planning](https://img.shields.io/badge/Financial-Professional%20Grade-green)](#financial-planning)
 [![Real-Time Data](https://img.shields.io/badge/Data-Real--Time-orange)](#market-data)
-[![Plaid Integration](https://img.shields.io/badge/Banking-Plaid%20API-purple)](#banking-integration)
 
 ---
 
 ## 🌟 Overview
 
-FinAI is a **professional-grade financial planning platform** that delivers institutional-quality analysis through an intuitive, modern interface. Built with 20+ years of financial expertise, it provides personalized investment strategies, retirement planning, and comprehensive financial health assessment using real-time market data and secure banking integration.
+FinAI is a **professional-grade financial planning platform** that delivers institutional-quality analysis through an intuitive, modern interface. Built with 20+ years of financial expertise, it provides personalized investment strategies, retirement planning, and comprehensive financial health assessment using real-time market data.
 
 ### 💡 Value Proposition
 
 - **Professional-Grade Analysis**: Bank-level financial planning tools accessible to everyone
 - **Real-Time Intelligence**: Live market data, economic indicators, and portfolio analysis
-- **Secure Banking Integration**: Plaid-powered connection to 11,000+ financial institutions
 - **AI-Powered Recommendations**: Personalized strategies based on proven methodologies
 - **Interactive Experience**: Modern, responsive UI with real-time insights
 
@@ -39,11 +37,10 @@ FinAI is a **professional-grade financial planning platform** that delivers inst
 - **Company Filings**: SEC data and financial statements analysis
 - **Forex & Commodities**: Global market coverage with trend analysis
 
-### 🔒 **Secure Banking Integration**
-- **Plaid API**: Connect to 11,000+ banks and credit unions
-- **Account Analysis**: Automated expense tracking and cash flow analysis
-- **Portfolio Assessment**: Real-time investment holdings evaluation
-- **Privacy First**: No storage of sensitive data, encrypted communications
+### 🔒 **Secure Data Handling**
+- **Privacy First**: No storage of sensitive financial data, encrypted communications
+- **Real-time Analysis**: Dynamic calculations without data persistence
+- **Security Standards**: HTTPS/TLS encryption for all API communications
 
 ### 🤖 **AI-Powered Insights**
 - **Real-Time Recommendations**: Dynamic analysis as you modify your profile
@@ -53,23 +50,58 @@ FinAI is a **professional-grade financial planning platform** that delivers inst
 
 ---
 
+
 ## 🏗️ Technical Architecture
 
-### **Full-Stack Modern Architecture**
+### **Project Structure**
 ```
-Frontend (React + Vite)     ←→     Backend (Express.js)     ←→     External APIs
-├── Interactive UI                 ├── Financial Engine            ├── Plaid Banking
-├── Real-time Charts               ├── Market Data Service         ├── Yahoo Finance
-├── Responsive Design              ├── Economic Indicators         ├── Federal Reserve
-└── Progressive Web App            └── News Aggregation            └── Financial News
+finai/
+├── backend/                 # Express.js API server
+│   ├── src/
+│   │   ├── routes/         # API endpoints (marketData, financialPlanning, news, etc.)
+│   │   ├── services/       # Business logic (aiAnalysis, stockData, companyFilings, etc.)
+│   │   └── utils/          # Utilities & logging
+│   ├── logs/               # Application logs
+│   └── test-*.js           # API test suites
+├── frontend/                # React application (Vite + TailwindCSS)
+│   ├── src/
+│   │   ├── components/     # Reusable UI components (Card, Header, Navbar, charts, etc.)
+│   │   ├── pages/          # Main application pages (FinancialPlanning, StockAnalysis, etc.)
+│   │   └── assets/         # Static assets
+│   └── public/             # Public assets
+└── docs/                   # Documentation
 ```
 
 ### **Tech Stack**
-- **Frontend**: React 19, Vite, TailwindCSS, Chart.js, React Router
+- **Frontend**: React 19, Vite, TailwindCSS, Recharts, React Router
 - **Backend**: Node.js, Express.js, Winston Logging
-- **APIs**: Plaid (Banking), Yahoo Finance (Market Data), FRED (Economic Data)
+- **APIs**: Yahoo Finance (Market Data), FRED (Economic Data)
 - **Architecture**: RESTful API, Modular Design, Microservices Ready
 - **Security**: HTTPS, Token-based Auth, Data Encryption
+
+---
+
+## 🖥️ Main Application Pages
+
+### **Financial Planning**
+- Interactive financial profile form (income, expenses, goals, risk, etc.)
+- Real-time savings surplus and investment calculations
+- Goal progress tracking (retirement, emergency fund, investment targets)
+- Retirement projection chart (compound interest, inflation, tax, EPF)
+- Portfolio allocation and risk analysis (visual charts)
+- AI-powered professional insights and recommendations
+
+### **Stock Analysis**
+- Search and analyze stocks by symbol or name
+- Real-time price, technicals, and news
+- Interactive charts and widgets
+
+### **Economic Trends**
+- Visualize key economic indicators (GDP, inflation, employment, etc.)
+- Global and Indian market coverage
+
+### **Other Features**
+- Recent updates log, financial health check, and more
 
 ---
 
@@ -78,7 +110,7 @@ Frontend (React + Vite)     ←→     Backend (Express.js)     ←→     Exter
 ### **Prerequisites**
 - Node.js 18+ 
 - npm or yarn
-- Plaid API credentials (optional for enhanced features)
+- API keys for external services (optional for enhanced features)
 
 ### **Installation**
 
@@ -95,7 +127,7 @@ Frontend (React + Vite)     ←→     Backend (Express.js)     ←→     Exter
    
    # Create environment file
    cp .env.example .env
-   # Add your API keys (Plaid, Alpha Vantage, etc.)
+   # Add your API keys (Alpha Vantage, etc.)
    
    # Start development server
    npm run dev
@@ -119,8 +151,6 @@ Frontend (React + Vite)     ←→     Backend (Express.js)     ←→     Exter
 ```env
 # Backend (.env)
 PORT=5000
-PLAID_CLIENT_ID=your_plaid_client_id
-PLAID_SECRET=your_plaid_secret_key
 ALPHA_VANTAGE_API_KEY=your_alpha_vantage_key
 NODE_ENV=development
 ```
@@ -146,7 +176,10 @@ Content-Type: application/json
     "currentSavings": 25000,
     "monthlyExpenses": 4200
   },
-  "accessToken": "optional-plaid-token"
+  "preferences": {
+    "currency": "USD",
+    "region": "US"
+  }
 }
 ```
 
@@ -223,13 +256,11 @@ requiredNestEgg = (annualIncome × 0.8 × inflationFactor) / withdrawalRate
 ### **Data Sources & Reliability**
 - **Market Data**: Yahoo Finance (5-minute cache for real-time performance)
 - **Economic Data**: Federal Reserve Economic Data (FRED) - Official US data
-- **Banking Data**: Plaid API (Bank-grade security, 11,000+ institutions)
 - **News Sources**: Curated financial news with bias detection
 
 ### **Security & Privacy**
 - **No Data Storage**: Financial data never stored permanently
 - **Encryption**: All API communications use HTTPS/TLS
-- **Token Security**: Plaid access tokens encrypted in transit
 - **GDPR/CCPA**: Compliant data handling practices
 
 ---
@@ -276,17 +307,17 @@ finai/
 └── docs/                   # Documentation
 ```
 
-### **Testing Suite**
+
+### **Testing & Development**
 ```bash
 # Backend API testing
 cd backend
 node test-financial-planning.js
 node test-alpha-vantage.js
-node test-plaid.js
 
 # Frontend development
 cd frontend
-npm run dev      # Development server
+npm run dev      # Start development server
 npm run build    # Production build
 npm run lint     # Code linting
 ```
