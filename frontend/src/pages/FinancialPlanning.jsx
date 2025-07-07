@@ -994,105 +994,129 @@ function FinancialPlanning() {
           <div className="bg-white p-4 lg:p-6 rounded-lg shadow-lg">
             <h3 className="text-xl font-semibold mb-4">Retirement Projection</h3>
             <div className="h-[400px] lg:h-[500px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart 
-                  data={projections.retirement}
-                  margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis 
-                    dataKey="age" 
-                    label={{ value: 'Age', position: 'bottom', offset: -10 }}
-                    tick={{ fontSize: 12 }}
-                  />
-                  <YAxis 
-                    label={{ 
-                      value: 'Portfolio Value (₹L)', 
-                      angle: -90, 
-                      position: 'insideLeft',
-                      offset: -5
-                    }}
-                    tickFormatter={(value) => `₹${(value/100000).toFixed(0)}L`}
-                    tick={{ fontSize: 12 }}
-                  />
-                  <Tooltip 
-                    formatter={(value, name) => {
-                      const formattedValue = (value/100000).toFixed(2);
-                      const labels = {
-                        aggressiveValue: 'Aggressive Growth',
-                        projectedValue: 'Expected Growth',
-                        conservativeValue: 'Conservative Growth',
-                        inflationAdjustedValue: 'Inflation Adjusted',
-                        requiredCorpus: 'Required Corpus',
-                        epfBalance: 'EPF Balance',
-                        postTaxValue: 'Post-Tax Value'
-                      };
-                      return [`₹${formattedValue}L`, labels[name] || name];
-                    }}
-                    labelFormatter={(age) => `Age: ${age} years`}
-                  />
-                  <Legend verticalAlign="top" height={36}/>
-                  <Line 
-                    type="monotone" 
-                    dataKey="aggressiveValue" 
-                    name="Aggressive Growth" 
-                    stroke="#ff4d4d" 
-                    strokeWidth={2}
-                    dot={false}
-                  />
-                  <Line 
-                    type="monotone" 
-                    dataKey="projectedValue" 
-                    name="Expected Growth" 
-                    stroke="#8884d8" 
-                    strokeWidth={2}
-                    dot={false}
-                  />
-                  <Line 
-                    type="monotone" 
-                    dataKey="conservativeValue" 
-                    name="Conservative Growth" 
-                    stroke="#82ca9d" 
-                    strokeWidth={2}
-                    dot={false}
-                  />
-                  <Line 
-                    type="monotone" 
-                    dataKey="epfBalance" 
-                    name="EPF Balance" 
-                    stroke="#40a9ff" 
-                    strokeWidth={2}
-                    dot={false}
-                  />
-                  <Line 
-                    type="monotone" 
-                    dataKey="postTaxValue" 
-                    name="Post-Tax Value" 
-                    stroke="#722ed1" 
-                    strokeWidth={2}
-                    dot={false}
-                    strokeDasharray="4 4"
-                  />
-                  <Line 
-                    type="monotone" 
-                    dataKey="inflationAdjustedValue" 
-                    name="Inflation Adjusted" 
-                    stroke="#ffc658" 
-                    strokeWidth={2}
-                    dot={false}
-                    strokeDasharray="5 5"
-                  />
-                  <Line 
-                    type="monotone" 
-                    dataKey="requiredCorpus" 
-                    name="Required Corpus" 
-                    stroke="#ff7300" 
-                    strokeWidth={2}
-                    dot={false}
-                    strokeDasharray="3 3"
-                  />
-                </LineChart>
-              </ResponsiveContainer>
+              {projections.retirement.length > 0 ? (
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart 
+                    data={projections.retirement}
+                    margin={{ top: 20, right: 30, left: 20, bottom: 20 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis 
+                      dataKey="age" 
+                      label={{ value: 'Age', position: 'bottom', offset: -10 }}
+                      tick={{ fontSize: 12 }}
+                    />
+                    <YAxis 
+                      label={{ 
+                        value: 'Portfolio Value (₹L)', 
+                        angle: -90, 
+                        position: 'insideLeft',
+                        offset: -5
+                      }}
+                      tickFormatter={(value) => `₹${(value/100000).toFixed(0)}L`}
+                      tick={{ fontSize: 12 }}
+                    />
+                    <Tooltip 
+                      formatter={(value, name) => {
+                        const formattedValue = (value/100000).toFixed(2);
+                        const labels = {
+                          aggressiveValue: 'Aggressive Growth',
+                          projectedValue: 'Expected Growth',
+                          conservativeValue: 'Conservative Growth',
+                          inflationAdjustedValue: 'Inflation Adjusted',
+                          requiredCorpus: 'Required Corpus',
+                          epfBalance: 'EPF Balance',
+                          postTaxValue: 'Post-Tax Value'
+                        };
+                        return [`₹${formattedValue}L`, labels[name] || name];
+                      }}
+                      labelFormatter={(age) => `Age: ${age} years`}
+                    />
+                    <Legend verticalAlign="top" height={36}/>
+                    <Line 
+                      type="monotone" 
+                      dataKey="aggressiveValue" 
+                      name="Aggressive Growth" 
+                      stroke="#ff4d4d" 
+                      strokeWidth={2}
+                      dot={false}
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="projectedValue" 
+                      name="Expected Growth" 
+                      stroke="#8884d8" 
+                      strokeWidth={2}
+                      dot={false}
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="conservativeValue" 
+                      name="Conservative Growth" 
+                      stroke="#82ca9d" 
+                      strokeWidth={2}
+                      dot={false}
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="epfBalance" 
+                      name="EPF Balance" 
+                      stroke="#40a9ff" 
+                      strokeWidth={2}
+                      dot={false}
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="postTaxValue" 
+                      name="Post-Tax Value" 
+                      stroke="#722ed1" 
+                      strokeWidth={2}
+                      dot={false}
+                      strokeDasharray="4 4"
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="inflationAdjustedValue" 
+                      name="Inflation Adjusted" 
+                      stroke="#ffc658" 
+                      strokeWidth={2}
+                      dot={false}
+                      strokeDasharray="5 5"
+                    />
+                    <Line 
+                      type="monotone" 
+                      dataKey="requiredCorpus" 
+                      name="Required Corpus" 
+                      stroke="#ff7300" 
+                      strokeWidth={2}
+                      dot={false}
+                      strokeDasharray="3 3"
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              ) : (
+                <div className="flex flex-col items-center justify-center h-full text-gray-500">
+                  <svg className="w-16 h-16 mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                  <h4 className="text-lg font-medium mb-2">Retirement Projection</h4>
+                  <p className="text-center text-sm">Fill in your financial details to see your retirement projection chart</p>
+                  <div className="mt-4 flex flex-wrap gap-2 justify-center">
+                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-red-100 text-red-600">
+                      <div className="w-2 h-2 bg-red-500 rounded mr-1"></div>
+                      Aggressive Growth
+                    </span>
+                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-600">
+                      <div className="w-2 h-2 bg-blue-500 rounded mr-1"></div>
+                      Expected Growth
+                    </span>
+                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-green-100 text-green-600">
+                      <div className="w-2 h-2 bg-green-500 rounded mr-1"></div>
+                      Conservative Growth
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
             
             {/* Retirement Summary Cards */}
@@ -1137,25 +1161,54 @@ function FinancialPlanning() {
             <div className="bg-white p-4 lg:p-6 rounded-lg shadow-lg">
               <h3 className="text-xl font-semibold mb-4">Recommended Portfolio</h3>
               <div className="h-[250px] lg:h-[300px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={portfolioAllocation}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={false}
-                      label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                      outerRadius={80}
-                      fill="#8884d8"
-                      dataKey="value"
-                    >
-                      {portfolioAllocation.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                      ))}
-                    </Pie>
-                    <Tooltip />
-                  </PieChart>
-                </ResponsiveContainer>
+                {portfolioAllocation.length > 0 ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={portfolioAllocation}
+                        cx="50%"
+                        cy="50%"
+                        labelLine={false}
+                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                        outerRadius={80}
+                        fill="#8884d8"
+                        dataKey="value"
+                      >
+                        {portfolioAllocation.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <Tooltip />
+                    </PieChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="flex flex-col items-center justify-center h-full text-gray-500">
+                    <svg className="w-16 h-16 mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
+                    </svg>
+                    <h4 className="text-lg font-medium mb-2">Portfolio Allocation</h4>
+                    <p className="text-center text-sm mb-4">Enter your risk appetite to see recommended portfolio allocation</p>
+                    <div className="flex flex-wrap gap-2 justify-center text-xs">
+                      <span className="flex items-center px-3 py-1 bg-blue-100 text-blue-600 rounded-full">
+                        <div className="w-2 h-2 bg-blue-500 rounded-full mr-2"></div>
+                        Stocks
+                      </span>
+                      <span className="flex items-center px-3 py-1 bg-green-100 text-green-600 rounded-full">
+                        <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                        Bonds
+                      </span>
+                      <span className="flex items-center px-3 py-1 bg-yellow-100 text-yellow-600 rounded-full">
+                        <div className="w-2 h-2 bg-yellow-500 rounded-full mr-2"></div>
+                        Gold
+                      </span>
+                      <span className="flex items-center px-3 py-1 bg-purple-100 text-purple-600 rounded-full">
+                        <div className="w-2 h-2 bg-purple-500 rounded-full mr-2"></div>
+                        Cash
+                      </span>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -1163,20 +1216,60 @@ function FinancialPlanning() {
             <div className="bg-white p-4 lg:p-6 rounded-lg shadow-lg">
               <h3 className="text-xl font-semibold mb-4">Risk Analysis</h3>
               <div className="space-y-4">
-                {riskAnalysis.breakdown.map((factor, index) => (
-                  <div key={index}>
-                    <div className="flex justify-between mb-1">
-                      <span className="text-sm font-medium text-gray-700">{factor.name}</span>
-                      <span className="text-sm font-medium text-gray-700">{factor.score}/25</span>
+                {riskAnalysis.breakdown.length > 0 ? (
+                  riskAnalysis.breakdown.map((factor, index) => (
+                    <div key={index}>
+                      <div className="flex justify-between mb-1">
+                        <span className="text-sm font-medium text-gray-700">{factor.name}</span>
+                        <span className="text-sm font-medium text-gray-700">{factor.score}/25</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2.5">
+                        <div
+                          className="bg-purple-600 h-2.5 rounded-full"
+                          style={{ width: `${(factor.score / 25) * 100}%` }}
+                        ></div>
+                      </div>
                     </div>
-                    <div className="w-full bg-gray-200 rounded-full h-2.5">
-                      <div
-                        className="bg-purple-600 h-2.5 rounded-full"
-                        style={{ width: `${(factor.score / 25) * 100}%` }}
-                      ></div>
+                  ))
+                ) : (
+                  <div className="flex flex-col items-center justify-center py-8 text-gray-500">
+                    <svg className="w-16 h-16 mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <h4 className="text-lg font-medium mb-2">Risk Assessment</h4>
+                    <p className="text-center text-sm mb-4">Complete your profile to see personalized risk analysis</p>
+                    <div className="space-y-3 w-full max-w-xs">
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs text-gray-400">Age Factor</span>
+                        <span className="text-xs text-gray-400">--/25</span>
+                      </div>
+                      <div className="w-full bg-gray-100 rounded-full h-2">
+                        <div className="bg-gray-300 h-2 rounded-full w-0"></div>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs text-gray-400">Income Stability</span>
+                        <span className="text-xs text-gray-400">--/25</span>
+                      </div>
+                      <div className="w-full bg-gray-100 rounded-full h-2">
+                        <div className="bg-gray-300 h-2 rounded-full w-0"></div>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs text-gray-400">Debt Management</span>
+                        <span className="text-xs text-gray-400">--/25</span>
+                      </div>
+                      <div className="w-full bg-gray-100 rounded-full h-2">
+                        <div className="bg-gray-300 h-2 rounded-full w-0"></div>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-xs text-gray-400">Investment Horizon</span>
+                        <span className="text-xs text-gray-400">--/25</span>
+                      </div>
+                      <div className="w-full bg-gray-100 rounded-full h-2">
+                        <div className="bg-gray-300 h-2 rounded-full w-0"></div>
+                      </div>
                     </div>
                   </div>
-                ))}
+                )}
               </div>
             </div>
           </div>
