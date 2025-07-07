@@ -18,15 +18,54 @@ import {
   Cell
 } from 'recharts';
 
+// Server port configuration with fallback
+const API_BASE_PORTS = [5000, 5001, 5002, 5003, 5004];
+let currentPortIndex = 0;
+let API_BASE_URL = `http://localhost:${API_BASE_PORTS[currentPortIndex]}`;
+
+// Function to try the next available port
+const tryNextPort = () => {
+  currentPortIndex = (currentPortIndex + 1) % API_BASE_PORTS.length;
+  API_BASE_URL = `http://localhost:${API_BASE_PORTS[currentPortIndex]}`;
+  console.log(`Trying next backend port: ${API_BASE_PORTS[currentPortIndex]}`);
+  return API_BASE_PORTS[currentPortIndex];
+};
+
+// Function to fetch with port fallback
+const fetchWithPortFallback = async (endpoint, options = {}, retries = API_BASE_PORTS.length) => {
+  try {
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
+    if (response.ok) {
+      return response;
+    }
+    throw new Error(`API responded with status: ${response.status}`);
+  } catch (error) {
+    console.error(`Error connecting to ${API_BASE_URL}:`, error);
+    
+    if (retries > 1) {
+      tryNextPort();
+      return fetchWithPortFallback(endpoint, options, retries - 1);
+    }
+    
+    throw new Error(`Failed to connect to backend after trying all ports. Please check if the backend server is running.`);
+  }
+};
+
 function FinancialPlanning() {
   const [showQuestionnaire, setShowQuestionnaire] = useState(false);
   const [userProfile, setUserProfile] = useState({
     monthlyIncome: 0,
     recurringExpenses: 0,
     monthlyInvestment: 0,
-    financialGoals: [],
+    financialGoals: '',
     riskTolerance: 'Moderate',
-    savingsSurplus: 0
+    savingsSurplus: 0,
+    age: 0,
+    currentSavings: 0,
+    lumpSum: 0,
+    riskAppetite: 'Medium',
+    investmentHorizon: '5+ years',
+    savingsRate: ''
   });
 
   const [activeTab, setActiveTab] = useState('overview');
@@ -51,6 +90,7 @@ function FinancialPlanning() {
     breakdown: []
   });
 
+
   // Check if user has completed the questionnaire
   const hasValidProfile = () => {
     return userProfile.age > 0 && 
@@ -60,12 +100,16 @@ function FinancialPlanning() {
            userProfile.timeHorizon;
   };
 
+
+
   // Show questionnaire if profile is incomplete
   useEffect(() => {
     if (!hasValidProfile()) {
       setShowQuestionnaire(true);
     }
   }, []);
+
+
 
   const handleQuestionnaireComplete = (profile) => {
     setUserProfile(profile);
@@ -200,7 +244,7 @@ function FinancialPlanning() {
     
     // Validate and convert numeric values
     let processedValue = value;
-    if (['age', 'income', 'currentSavings', 'monthlyExpenses', 'employerMatch', 'monthlyInvestment'].includes(field)) {
+    if (['age', 'monthlyIncome', 'recurringExpenses', 'currentSavings', 'monthlyInvestment', 'lumpSum'].includes(field)) {
       processedValue = parseFloat(value) || 0;
       if (isNaN(processedValue)) {
         processedValue = 0;
@@ -208,6 +252,11 @@ function FinancialPlanning() {
     }
     
     const newProfile = { ...userProfile, [field]: processedValue };
+    
+    // Calculate savings surplus when income or expenses change
+    if (field === 'monthlyIncome' || field === 'recurringExpenses') {
+      newProfile.savingsSurplus = (newProfile.monthlyIncome || 0) - (newProfile.recurringExpenses || 0);
+    }
     
     setUserProfile(newProfile);
     setInputChanged(true);
@@ -625,10 +674,11 @@ function FinancialPlanning() {
       <h1 className="text-3xl font-bold text-purple-700 mb-6">Professional Financial Planning</h1>
       
       {/* Grid layout for the dashboard */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Input Form - Takes 1/3 of the width */}
-        <div className="bg-white p-6 rounded-lg shadow-lg">
-          <h2 className="text-xl font-semibold mb-4">Financial Profile</h2>
+      <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+        {/* Input Form and Additional Components - Takes 1/4 of the width on xl screens */}
+        <div className="xl:col-span-1 space-y-6">
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <h2 className="text-xl font-semibold mb-4">Financial Profile</h2>
           {/* ... existing input form ... */}
           <label className="block mb-2">Monthly Income:</label>
           <input
@@ -703,12 +753,215 @@ function FinancialPlanning() {
             value={userProfile.lumpSum}
             onChange={(e) => handleProfileChange('lumpSum', e.target.value)}
           />
+          <label className="block mb-2">Current Age:</label>
+          <input
+            type="number"
+            className="w-full p-2 border rounded mb-4"
+            value={userProfile.age}
+            onChange={(e) => handleProfileChange('age', e.target.value)}
+          />
+          <label className="block mb-2">Current Savings:</label>
+          <input
+            type="number"
+            className="w-full p-2 border rounded mb-4"
+            placeholder="Total current savings/investments"
+            value={userProfile.currentSavings}
+            onChange={(e) => handleProfileChange('currentSavings', e.target.value)}
+          />
+          </div>
+
+          {/* Additional Components Below the Form */}
+          <div className="space-y-4">
+            {/* Quick Financial Health Indicators */}
+            <div className="bg-white p-4 rounded-lg shadow-lg">
+              <h3 className="text-lg font-semibold mb-3 text-gray-700">Financial Health Check</h3>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Savings Rate</span>
+                  <div className="flex items-center">
+                    <div className="w-16 bg-gray-200 rounded-full h-2 mr-2">
+                      <div 
+                        className={`h-2 rounded-full ${
+                          ((userProfile.savingsSurplus || 0) / (userProfile.monthlyIncome || 1) * 100) >= 20 
+                            ? 'bg-green-500' 
+                            : ((userProfile.savingsSurplus || 0) / (userProfile.monthlyIncome || 1) * 100) >= 10 
+                            ? 'bg-yellow-500' 
+                            : 'bg-red-500'
+                        }`}
+                        style={{ width: `${Math.min(100, Math.max(0, (userProfile.savingsSurplus || 0) / (userProfile.monthlyIncome || 1) * 100))}%` }}
+                      ></div>
+                    </div>
+                    <span className="text-xs font-medium">
+                      {userProfile.monthlyIncome > 0 ? ((userProfile.savingsSurplus || 0) / userProfile.monthlyIncome * 100).toFixed(1) : '0.0'}%
+                    </span>
+                  </div>
+                </div>
+                
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Emergency Fund</span>
+                  <div className="flex items-center">
+                    <div className="w-16 bg-gray-200 rounded-full h-2 mr-2">
+                      <div 
+                        className={`h-2 rounded-full ${
+                          ((userProfile.currentSavings || 0) / ((userProfile.recurringExpenses || 0) * 6 || 1)) >= 1 
+                            ? 'bg-green-500' 
+                            : ((userProfile.currentSavings || 0) / ((userProfile.recurringExpenses || 0) * 6 || 1)) >= 0.5 
+                            ? 'bg-yellow-500' 
+                            : 'bg-red-500'
+                        }`}
+                        style={{ width: `${Math.min(100, Math.max(0, (userProfile.currentSavings || 0) / ((userProfile.recurringExpenses || 0) * 6 || 1) * 100))}%` }}
+                      ></div>
+                    </div>
+                    <span className="text-xs font-medium">
+                      {(userProfile.recurringExpenses > 0) ? ((userProfile.currentSavings || 0) / (userProfile.recurringExpenses * 6) * 100).toFixed(0) : '0'}%
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Investment Ratio</span>
+                  <div className="flex items-center">
+                    <div className="w-16 bg-gray-200 rounded-full h-2 mr-2">
+                      <div 
+                        className={`h-2 rounded-full ${
+                          ((userProfile.monthlyInvestment || 0) / (userProfile.monthlyIncome || 1) * 100) >= 15 
+                            ? 'bg-green-500' 
+                            : ((userProfile.monthlyInvestment || 0) / (userProfile.monthlyIncome || 1) * 100) >= 10 
+                            ? 'bg-yellow-500' 
+                            : 'bg-red-500'
+                        }`}
+                        style={{ width: `${Math.min(100, Math.max(0, (userProfile.monthlyInvestment || 0) / (userProfile.monthlyIncome || 1) * 100))}%` }}
+                      ></div>
+                    </div>
+                    <span className="text-xs font-medium">
+                      {userProfile.monthlyIncome > 0 ? ((userProfile.monthlyInvestment || 0) / userProfile.monthlyIncome * 100).toFixed(1) : '0.0'}%
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Goal Progress Tracker */}
+            <div className="bg-white p-4 rounded-lg shadow-lg">
+              <h3 className="text-lg font-semibold mb-3 text-gray-700">Goal Progress</h3>
+              <div className="space-y-3">
+                <div className="bg-gradient-to-r from-blue-50 to-blue-100 p-3 rounded-lg">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-sm font-medium text-blue-800">Retirement Goal</span>
+                    <span className="text-xs text-blue-600">
+                      {userProfile.investmentHorizon ? `${userProfile.investmentHorizon}` : 'Set timeline'}
+                    </span>
+                  </div>
+                  <div className="w-full bg-blue-200 rounded-full h-2">
+                    <div 
+                      className="bg-blue-600 h-2 rounded-full" 
+                      style={{ 
+                        width: `${Math.min(100, Math.max(0, (() => {
+                          const currentSavings = userProfile.currentSavings || 0;
+                          const monthlyInvestment = userProfile.monthlyInvestment || 0;
+                          const years = userProfile.investmentHorizon === '5+ years' ? 10 : 
+                                       userProfile.investmentHorizon === '1-3 years' ? 3 : 1;
+                          const returnRate = 0.12; // 12% annual return
+                          
+                          // Future value calculation with compound interest
+                          const futureValue = currentSavings * Math.pow(1 + returnRate, years) + 
+                            monthlyInvestment * 12 * (Math.pow(1 + returnRate, years) - 1) / returnRate;
+                          
+                          return (futureValue / 10000000) * 100; // Target: 1 Cr
+                        })()))}%` 
+                      }}
+                    ></div>
+                  </div>
+                  <div className="flex justify-between text-xs text-blue-600 mt-1">
+                    <span>₹{(() => {
+                      const currentSavings = userProfile.currentSavings || 0;
+                      const monthlyInvestment = userProfile.monthlyInvestment || 0;
+                      const years = userProfile.investmentHorizon === '5+ years' ? 10 : 
+                                   userProfile.investmentHorizon === '1-3 years' ? 3 : 1;
+                      const returnRate = 0.12;
+                      
+                      const futureValue = currentSavings * Math.pow(1 + returnRate, years) + 
+                        monthlyInvestment * 12 * (Math.pow(1 + returnRate, years) - 1) / returnRate;
+                      
+                      return (futureValue/100000).toFixed(1);
+                    })()}L</span>
+                    <span>Target: ₹1Cr</span>
+                  </div>
+                </div>
+
+                <div className="bg-gradient-to-r from-green-50 to-green-100 p-3 rounded-lg">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-sm font-medium text-green-800">Emergency Fund</span>
+                    <span className="text-xs text-green-600">6 months expenses</span>
+                  </div>
+                  <div className="w-full bg-green-200 rounded-full h-2">
+                    <div 
+                      className="bg-green-600 h-2 rounded-full" 
+                      style={{ 
+                        width: `${Math.min(100, Math.max(0, ((userProfile.currentSavings || 0) / ((userProfile.recurringExpenses || 0) * 6 || 1)) * 100))}%` 
+                      }}
+                    ></div>
+                  </div>
+                  <div className="flex justify-between text-xs text-green-600 mt-1">
+                    <span>₹{((userProfile.currentSavings || 0)/1000).toFixed(0)}K</span>
+                    <span>Target: ₹{(((userProfile.recurringExpenses || 0) * 6)/1000).toFixed(0)}K</span>
+                  </div>
+                </div>
+
+                <div className="bg-gradient-to-r from-purple-50 to-purple-100 p-3 rounded-lg">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-sm font-medium text-purple-800">Monthly Investment Target</span>
+                    <span className="text-xs text-purple-600">20% of income</span>
+                  </div>
+                  <div className="w-full bg-purple-200 rounded-full h-2">
+                    <div 
+                      className="bg-purple-600 h-2 rounded-full" 
+                      style={{ 
+                        width: `${Math.min(100, Math.max(0, ((userProfile.monthlyInvestment || 0) / (((userProfile.monthlyIncome || 0) * 0.2) || 1)) * 100))}%` 
+                      }}
+                    ></div>
+                  </div>
+                  <div className="flex justify-between text-xs text-purple-600 mt-1">
+                    <span>₹{(userProfile.monthlyInvestment || 0).toLocaleString()}</span>
+                    <span>Target: ₹{(((userProfile.monthlyIncome || 0) * 0.2)).toLocaleString()}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+
+            {/* Recent Changes Log */}
+            {realTimeInsights.length > 0 && (
+              <div className="bg-white p-4 rounded-lg shadow-lg">
+                <h3 className="text-lg font-semibold mb-3 text-gray-700">Recent Updates</h3>
+                <div className="space-y-2">
+                  {realTimeInsights.slice(0, 3).map((insight, index) => (
+                    <div key={insight.id} className="flex items-start space-x-3 p-2 bg-gray-50 rounded">
+                      <div className="flex-shrink-0 mt-1">
+                        <div className={`w-2 h-2 rounded-full ${
+                          insight.impact === 'positive' ? 'bg-green-500' : 
+                          insight.impact === 'negative' ? 'bg-red-500' : 'bg-yellow-500'
+                        }`}></div>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-gray-700 capitalize">
+                          {insight.field.replace(/([A-Z])/g, ' $1').trim()}
+                        </p>
+                        <p className="text-xs text-gray-500">{insight.timestamp}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Main dashboard area - Takes 2/3 of the width */}
-        <div className="lg:col-span-2 space-y-4">
+        {/* Main dashboard area - Takes 3/4 of the width on xl screens */}
+        <div className="xl:col-span-3 space-y-6">
           {/* Key Metrics */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <div className="bg-white p-4 rounded-lg shadow-lg">
               <h3 className="text-lg font-semibold text-gray-700">Risk Score</h3>
               <div className="text-3xl font-bold text-purple-600">{riskAnalysis.score}/100</div>
@@ -716,22 +969,22 @@ function FinancialPlanning() {
             </div>
             <div className="bg-white p-4 rounded-lg shadow-lg">
               <h3 className="text-lg font-semibold text-gray-700">Monthly Surplus</h3>
-              <div className="text-3xl font-bold text-green-600">₹{userProfile.savingsSurplus}</div>
+              <div className="text-3xl font-bold text-green-600">₹{userProfile.savingsSurplus || 0}</div>
               <div className="text-sm text-gray-500">Available for investment</div>
             </div>
             <div className="bg-white p-4 rounded-lg shadow-lg">
               <h3 className="text-lg font-semibold text-gray-700">Investment Potential</h3>
               <div className="text-3xl font-bold text-blue-600">
-                ₹{Math.round((parseFloat(userProfile.monthlyInvestment) || userProfile.savingsSurplus) * 12 * 1.15)}
+                ₹{Math.round((parseFloat(userProfile.monthlyInvestment) || userProfile.savingsSurplus || 0) * 12 * 1.15)}
               </div>
               <div className="text-sm text-gray-500">Annual potential with returns</div>
             </div>
           </div>
 
           {/* Retirement Projection Chart */}
-          <div className="bg-white p-6 rounded-lg shadow-lg">
+          <div className="bg-white p-4 lg:p-6 rounded-lg shadow-lg">
             <h3 className="text-xl font-semibold mb-4">Retirement Projection</h3>
-            <div className="h-[500px]">
+            <div className="h-[400px] lg:h-[500px]">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart 
                   data={projections.retirement}
@@ -834,34 +1087,34 @@ function FinancialPlanning() {
             </div>
             
             {/* Retirement Summary Cards */}
-            <div className="mt-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {projections.retirement.length > 0 && (
                 <>
                   <div className="bg-gradient-to-r from-purple-50 to-purple-100 p-4 rounded-lg">
                     <h4 className="text-sm font-semibold text-gray-600">Expected Corpus at 60</h4>
                     <p className="text-2xl font-bold text-purple-600">
-                      ₹{(projections.retirement[Math.min(30, projections.retirement.length - 1)].totalSavings/100000).toFixed(1)}L
+                      ₹{(projections.retirement[Math.min(30, projections.retirement.length - 1)]?.totalSavings/100000 || 0).toFixed(1)}L
                     </p>
                     <p className="text-xs text-gray-500">Including EPF balance</p>
                   </div>
                   <div className="bg-gradient-to-r from-green-50 to-green-100 p-4 rounded-lg">
                     <h4 className="text-sm font-semibold text-gray-600">Monthly Income at Retirement</h4>
                     <p className="text-2xl font-bold text-green-600">
-                      ₹{(projections.retirement[Math.min(30, projections.retirement.length - 1)].monthly/1000).toFixed(1)}K
+                      ₹{(projections.retirement[Math.min(30, projections.retirement.length - 1)]?.monthly/1000 || 0).toFixed(1)}K
                     </p>
                     <p className="text-xs text-gray-500">Inflation adjusted</p>
                   </div>
                   <div className="bg-gradient-to-r from-blue-50 to-blue-100 p-4 rounded-lg">
                     <h4 className="text-sm font-semibold text-gray-600">Required Corpus</h4>
                     <p className="text-2xl font-bold text-blue-600">
-                      ₹{(projections.retirement[Math.min(30, projections.retirement.length - 1)].requiredCorpus/100000).toFixed(1)}L
+                      ₹{(projections.retirement[Math.min(30, projections.retirement.length - 1)]?.requiredCorpus/100000 || 0).toFixed(1)}L
                     </p>
                     <p className="text-xs text-gray-500">For desired lifestyle</p>
                   </div>
                   <div className="bg-gradient-to-r from-red-50 to-red-100 p-4 rounded-lg">
                     <h4 className="text-sm font-semibold text-gray-600">Projected Shortfall</h4>
                     <p className="text-2xl font-bold text-red-600">
-                      ₹{(projections.retirement[Math.min(30, projections.retirement.length - 1)].shortfall/100000).toFixed(1)}L
+                      ₹{(projections.retirement[Math.min(30, projections.retirement.length - 1)]?.shortfall/100000 || 0).toFixed(1)}L
                     </p>
                     <p className="text-xs text-gray-500">Additional savings needed</p>
                   </div>
@@ -871,10 +1124,10 @@ function FinancialPlanning() {
           </div>
 
           {/* Portfolio Allocation */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="bg-white p-6 rounded-lg shadow-lg">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="bg-white p-4 lg:p-6 rounded-lg shadow-lg">
               <h3 className="text-xl font-semibold mb-4">Recommended Portfolio</h3>
-              <div className="h-[300px]">
+              <div className="h-[250px] lg:h-[300px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
@@ -898,7 +1151,7 @@ function FinancialPlanning() {
             </div>
 
             {/* Risk Analysis Breakdown */}
-            <div className="bg-white p-6 rounded-lg shadow-lg">
+            <div className="bg-white p-4 lg:p-6 rounded-lg shadow-lg">
               <h3 className="text-xl font-semibold mb-4">Risk Analysis</h3>
               <div className="space-y-4">
                 {riskAnalysis.breakdown.map((factor, index) => (
@@ -920,7 +1173,7 @@ function FinancialPlanning() {
           </div>
 
           {/* AI Insights and Recommendations */}
-          <div className="bg-white p-6 rounded-lg shadow-lg">
+          <div className="bg-white p-4 lg:p-6 rounded-lg shadow-lg">
             <h3 className="text-xl font-semibold mb-4">Professional Insights</h3>
             <div className="space-y-4">
               {aiTips.map((tip, index) => (

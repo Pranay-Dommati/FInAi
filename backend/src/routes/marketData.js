@@ -367,4 +367,106 @@ router.get('/alpha/analysis/:symbol', async (req, res) => {
   }
 });
 
+// Get Indian market indices (NIFTY 50, SENSEX, Gold)
+router.get('/indian-indices', async (req, res) => {
+  try {
+    logger.info('API request for Indian market indices');
+    
+    const indices = [
+      { symbol: '^NSEI', name: 'NIFTY 50' },
+      { symbol: '^BSESN', name: 'BSE SENSEX' },
+      { symbol: 'GC=F', name: 'Gold Futures' } // Gold in USD
+    ];
+    
+    const promises = indices.map(async (index) => {
+      try {
+        const stockData = await stockDataService.getYahooFinanceData(index.symbol);
+        if (stockData && !stockData.error) {
+          return {
+            name: index.name,
+            symbol: index.symbol,
+            price: stockData.currentPrice,
+            change: stockData.change,
+            changePercent: stockData.changePercent,
+            currency: stockData.currency || (index.symbol === 'GC=F' ? 'USD' : 'INR'),
+            lastUpdated: new Date().toISOString()
+          };
+        }
+        return null;
+      } catch (error) {
+        logger.error(`Error fetching ${index.name}:`, error.message);
+        return null;
+      }
+    });
+    
+    const results = await Promise.all(promises);
+    const validResults = results.filter(result => result !== null);
+    
+    res.json({
+      success: true,
+      data: validResults,
+      count: validResults.length,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    logger.error('Error in Indian indices API:', error.message);
+    res.status(500).json({
+      success: false,
+      error: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
+// Get Indian market indices (NIFTY 50, SENSEX, Gold)
+router.get('/indian-indices', async (req, res) => {
+  try {
+    logger.info('API request for Indian market indices');
+    
+    const indices = [
+      { symbol: '^NSEI', name: 'NIFTY 50' },
+      { symbol: '^BSESN', name: 'BSE SENSEX' },
+      { symbol: 'GC=F', name: 'Gold Futures' } // Gold in USD
+    ];
+    
+    const promises = indices.map(async (index) => {
+      try {
+        const stockData = await stockDataService.getYahooFinanceData(index.symbol);
+        if (stockData && !stockData.error) {
+          return {
+            name: index.name,
+            symbol: index.symbol,
+            price: stockData.currentPrice,
+            change: stockData.change,
+            changePercent: stockData.changePercent,
+            currency: stockData.currency || (index.symbol === 'GC=F' ? 'USD' : 'INR'),
+            lastUpdated: new Date().toISOString()
+          };
+        }
+        return null;
+      } catch (error) {
+        logger.error(`Error fetching ${index.name}:`, error.message);
+        return null;
+      }
+    });
+    
+    const results = await Promise.all(promises);
+    const validResults = results.filter(result => result !== null);
+    
+    res.json({
+      success: true,
+      data: validResults,
+      count: validResults.length,
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    logger.error('Error in Indian indices API:', error.message);
+    res.status(500).json({
+      success: false,
+      error: error.message,
+      timestamp: new Date().toISOString()
+    });
+  }
+});
+
 export default router;
