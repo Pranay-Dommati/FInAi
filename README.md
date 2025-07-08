@@ -413,7 +413,7 @@ npm run lint     # Code linting
 - **Discussions**: GitHub Discussions for community support
 
 ### **Contributing**
-We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+We welcome contributions!
 
 ---
 
