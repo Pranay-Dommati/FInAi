@@ -415,23 +415,6 @@ npm run lint     # Code linting
 ### **Contributing**
 We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
-### **License**
-This project is licensed under the MIT License - see [LICENSE.md](LICENSE.md) for details.
-
-### **Contact**
-- **Email**: support@finai.com
-- **Website**: [www.finai.com](https://www.finai.com)
-- **LinkedIn**: [FinAI Platform](https://linkedin.com/company/finai)
-
----
-
-## 🏆 Awards & Recognition
-
-*This platform represents the culmination of 20+ years of financial expertise, modern software engineering, and user-centered design. Built for the future of financial planning.*
-
-**Ready to transform your financial future?** 
-[Get Started →](http://localhost:5173) | [View API Docs →](backend/API_ENDPOINTS.md) | [Try Demo →](demo/)
-
 ---
 
 *© 2024 FinAI Platform. Empowering financial decisions through technology.*
